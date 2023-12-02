@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:customControls="clr-namespace:AppWeatherEventNotifier.Views.CustomControls"
+             x:Class="AppWeatherEventNotifier.Views.Splash.SplashLogin" 
+             Padding="0" 
+             Title="AppWeatherEventNotifier"
+             NavigationPage.HasNavigationBar="False" >
+    <StackLayout HorizontalOptions="FillAndExpand" 
+                 VerticalOptions="Fill" 
+                 Margin="0" 
+                 BackgroundColor="White"  >
+        <VerticalStackLayout  VerticalOptions="Center" Margin="0" >
+            <VerticalStackLayout.Background>
+                <LinearGradientBrush EndPoint="0,1">
+                    <GradientStop Color="#20509b" Offset="0.1" />
+                    <GradientStop Color="#00cd82"   Offset="1.0" />
+                </LinearGradientBrush>
+            </VerticalStackLayout.Background>
+            <VerticalStackLayout 
+                    Padding="0" 
+                    VerticalOptions="CenterAndExpand"
+                    HorizontalOptions="Start"
+                    Margin="25,30,25,30">
+             
+                <Label     
+                           TextColor="White"  
+                           FontAttributes="Bold"
+                           Text="AppWeatherEventNotifier"
+                           FontSize="50"
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Start" />
+                <Label     
+                           x:Name="name_user"
+                           TextColor="White" 
+                           FontSize="16" 
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Start" 
+                           ></Label>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+        <VerticalStackLayout  BackgroundColor="White" 
+                                  VerticalOptions="CenterAndExpand" 
+                                  Spacing="0" 
+                                  Padding="40" 
+                                  >
+            <Image x:Name="img1"  IsVisible="false"  VerticalOptions="CenterAndExpand"  MaximumHeightRequest="64" MaximumWidthRequest="64" HorizontalOptions="Start"     Source="meteo.jpg" ></Image>
+            <Image x:Name="img2" IsVisible="false"  VerticalOptions="CenterAndExpand"   MaximumHeightRequest="64" MaximumWidthRequest="64" HorizontalOptions="Center"      Source="meteo.jpg" ></Image>
+            <Image x:Name="img3" IsVisible="false"  VerticalOptions="CenterAndExpand"   MaximumHeightRequest="64" MaximumWidthRequest="64" HorizontalOptions="End"    Source="meteo.jpg" ></Image>
+            
+            <Image x:Name="corsa1"  IsVisible="false"  VerticalOptions="CenterAndExpand"  MaximumHeightRequest="64" HorizontalOptions="Start"     Source="corsa.png" ></Image>
+            <Image x:Name="corsa2" IsVisible="false"  VerticalOptions="CenterAndExpand"   MaximumHeightRequest="64" HorizontalOptions="Center"      Source="corsa.png" ></Image>
+            <Image x:Name="corsa3" IsVisible="false"  VerticalOptions="CenterAndExpand"   MaximumHeightRequest="64" HorizontalOptions="End"    Source="corsa.png" ></Image>
+
+
+        </VerticalStackLayout>
+        <Image x:Name="background"  VerticalOptions="End"  HorizontalOptions="Fill"      Source="background_city.png" ></Image>
+    </StackLayout>
+</ContentPage>

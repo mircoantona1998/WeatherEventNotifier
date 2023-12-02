@@ -1,0 +1,185 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
+		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
+		<OutputType>Exe</OutputType>
+		<RootNamespace>AppWeatherEventNotifier</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- Display name -->
+		<ApplicationTitle>AppWeatherEventNotifier</ApplicationTitle>
+
+		<!-- App Identifier -->
+		<ApplicationId>com.companyname.appweathereventnotifier</ApplicationId>
+		<ApplicationIdGuid>0d85bf2c-c743-4cf6-b181-70da163041e1</ApplicationIdGuid>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\meteo.jpg" ForegroundFile="Resources\AppIcon\meteo.jpg" Resize="64,64" />
+
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\meteo.jpg" Color="White" Resize="true" />
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
+
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiFont Remove="Resources\Fonts\Mona-Sans-Bold.ttf" />
+	  <MauiFont Remove="Resources\Fonts\Mona-Sans-Medium.ttf" />
+	</ItemGroup>
+
+<ItemGroup>
+	
+<PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
+	
+<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+	
+<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="7.0.92" />
+	
+<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+ <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
+<PackageReference Include="SQLitePCLRaw.core" Version="2.1.5" />
+<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.5" />
+<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.5" />
+<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
+	</ItemGroup>
+		<ItemGroup>
+	  <None Remove="Resources\Images\amministratore.png" />
+	  <None Remove="Resources\Images\assistente.png" />
+	  <None Remove="Resources\Images\background_city.PNG" />
+	  <None Remove="Resources\Images\CEnodata.png" />
+	  <None Remove="Resources\Images\chat.png" />
+	  <None Remove="Resources\Images\chat_dark.png" />
+	  <None Remove="Resources\Images\contatore.png" />
+	  <None Remove="Resources\Images\corsa.png" />
+	  <None Remove="Resources\Images\dashboard.png" />
+	  <None Remove="Resources\Images\meteo.jpg" />
+	  <None Remove="Resources\Images\fullscreen.png" />
+	  <None Remove="Resources\Images\guida_rapida.png" />
+	  <None Remove="Resources\Images\help_faq.png" />
+	  <None Remove="Resources\Images\impostazioni.png" />
+	  <None Remove="Resources\Images\lavatrice.png" />
+	  <None Remove="Resources\Images\logoalgowattmono.png" />
+	  <None Remove="Resources\Images\logout.png" />
+	  <None Remove="Resources\Images\map.png" />
+	  <None Remove="Resources\Images\mappin.png" />
+	  <None Remove="Resources\Images\password.png" />
+	  <None Remove="Resources\Images\podconsgood.png" />
+	  <None Remove="Resources\Images\podconsmax.png" />
+	  <None Remove="Resources\Images\podconsmin.png" />
+	  <None Remove="Resources\Images\podmax.png" />
+	  <None Remove="Resources\Images\podnodata.png" />
+	  <None Remove="Resources\Images\profilo.png" />
+	  <None Remove="Resources\Images\pvprodmax.png" />
+	  <None Remove="Resources\Images\pvprodmin.png" />
+	  <None Remove="Resources\Images\pvprodzero.png" />
+	  <None Remove="Resources\Images\realtime.png" />
+	  <None Remove="Resources\Images\refresh.png" />
+	  <None Remove="Resources\Images\sacchetto.png" />
+	  <None Remove="Resources\Images\storico.png" />
+	  <None Remove="Resources\Images\svg_bot.svg" />
+	  <None Remove="Resources\Images\svg_brand_dark.svg" />
+	  <None Remove="Resources\Images\svg_brand_light.svg" />
+	  <None Remove="Resources\Images\svg_microphone.svg" />
+	  <None Remove="Resources\Images\svg_mode_image.svg" />
+	  <None Remove="Resources\Images\svg_mode_message.svg" />
+	  <None Remove="Resources\Images\svg_send_message.svg" />
+	  <None Remove="Resources\Images\svg_user.svg" />
+	  <None Remove="Resources\Images\theme.png" />
+	  <None Remove="Resources\Images\tutorial1.jpg" />
+	  <None Remove="Resources\Images\tutorial2.jpg" />
+	  <None Remove="Resources\Images\tutorial2_1.jpg" />
+	  <None Remove="Resources\Images\tutorial2_2.jpg" />
+	  <None Remove="Resources\Images\tutorial2_3.jpg" />
+	  <None Remove="Resources\Images\tutorial3.jpg" />
+	  <None Remove="Resources\Images\tutorial4.jpg" />
+	  <None Remove="Resources\Images\username.png" />
+	  <None Remove="Resources\Raw\AndroidVideo.mp4" />
+	  <None Remove="Resources\Raw\emptychat_dark.json" />
+	  <None Remove="Resources\Raw\emptychat_light.json" />
+	  <None Remove="Resources\Raw\loading.json" />
+	  <None Remove="Resources\Raw\video.MOV" />
+	  <None Remove="Resources\Raw\video.mp4" />
+	</ItemGroup>
+
+	<ItemGroup>
+			<PackageReference Include="SampleBrowser.Maui.Base" version="21.1.38" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Syncfusion.Maui.Charts" Version="22.1.38" />
+		<PackageReference Include="Syncfusion.Maui.Core" Version="22.1.38" />
+		<PackageReference Include="Syncfusion.Maui.DataGrid" Version="22.1.38" />
+		<PackageReference Include="Syncfusion.Maui.Gauges" Version="22.1.38" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="5.0.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="2.0.0-preview.61" />
+	<PackageReference Include="Syncfusion.Maui.Inputs" version="22.1.38" />
+			<PackageReference Include="Syncfusion.Maui.Calendar" version="22.1.38" />
+			<PackageReference Include="Syncfusion.Maui.Maps" Version="22.1.38" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\Home\Home.xaml.cs">
+	    <DependentUpon>Home.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Login\LoginPage.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Registration\RegisterPage.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Splash\SplashLogin.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Resources\Styles\Labels.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CustomControls\ActivityIndicatorControl.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CustomControls\ButtonControl.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Home\Home.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Login\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Registration\RegisterPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Splash\SplashLogin.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+
+</Project>

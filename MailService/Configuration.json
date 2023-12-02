@@ -1,5 +1,5 @@
 {
   "ConfigurationMailTable": "MailConfiguration",
-  "ConnectionString": "Data Source=127.0.0.1,1433;Initial Catalog=Userdata;User ID=sa;Password=RootRoot.1; Encrypt=False;",
+  "ConnectionString": "Data Source=172.17.0.2,1433;Initial Catalog=Userdata;User ID=sa;Password=RootRoot.1; Encrypt=False;",
   "MailsTable": "Mail"
 }

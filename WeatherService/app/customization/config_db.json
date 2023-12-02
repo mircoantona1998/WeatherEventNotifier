@@ -1,0 +1,9 @@
+{
+  "usr": "root",
+  "dialect": "mysql+pymysql",
+  "schema": "Weather",
+  "pwd": "root",
+  "port": 3306,
+  "address": "172.17.0.2",
+  "ssl_ca": ""
+}

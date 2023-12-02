@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Frame xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        x:Name="loading"
+
+       Padding="10"
+       x:Class="AppWeatherEventNotifier.Views.CustomControls.ActivityIndicatorControl"
+       VerticalOptions="Center" HorizontalOptions="Center" IsVisible="false"
+       Margin="15"  HasShadow="True" BorderColor="#f5f6fa"    CornerRadius="10" >
+    <Frame.Background>
+        <LinearGradientBrush EndPoint="0,1">
+            <GradientStop Color="#20509b" Offset="0.1" />
+            <GradientStop Color="#00cd82"   Offset="1.0" />
+        </LinearGradientBrush>
+    </Frame.Background>
+    <StackLayout   Margin="0" Padding="0" VerticalOptions="Center">
+
+        <ActivityIndicator  x:Name="barLoading"  VerticalOptions="Center" Color="#f5f6fa"></ActivityIndicator>
+        
+        <!--    <ProgressBar  x:Name="progressBarLoading" IsVisible="false"  VerticalOptions="Center" ProgressColor="#00cd82" Progress="1"></ProgressBar> -->
+        <Label x:Name="textBarLoading"  Text="Caricamento..." TextColor="#f5f6fa" HorizontalOptions="Center"></Label>
+        </StackLayout>
+    </Frame>
