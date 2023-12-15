@@ -2,76 +2,93 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppWeatherEventNotifier.Views.Registration.RegisterPage"
-             Title="RegisterPage">
+             Title="Registrazione">
+    <ContentPage.Background>
+        <LinearGradientBrush >
+            <GradientStop Color="#20509b" Offset="0.1" />
+            <GradientStop Color="#00cd82"   Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
     <ContentPage.Content >
-        <VerticalStackLayout Margin="0"
+        <ScrollView x:Name="scrolla">
+            <VerticalStackLayout Margin="10"
         BackgroundColor="Transparent"
          VerticalOptions="FillAndExpand" 
-        Spacing="25">
-            <VerticalStackLayout.Background>
-                <LinearGradientBrush >
-                    <GradientStop Color="#20509b" Offset="0.1" />
-                    <GradientStop Color="#00cd82"   Offset="1.0" />
-                </LinearGradientBrush>
-            </VerticalStackLayout.Background>
-            <ScrollView x:Name="scrolla">
-                <Grid RowSpacing="0" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                        <RowDefinition   Height="auto"/>
-                    </Grid.RowDefinitions>
-
-                   <Label TextColor="White"  Text="Nome" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="20" Margin="10"  HorizontalOptions="Center"
+        Spacing="5">
+                <Label TextColor="White"  Text="Nome"    HorizontalOptions="Start"
                 FontAttributes="Bold"     FontSize="16"   
                   ></Label>
-                    <Entry MaxLength="50" TextColor="White"  BackgroundColor="White" x:Name="entryName" Grid.Row="2" Keyboard="Plain" Grid.Column="0" Grid.ColumnSpan="20" Margin="10" Text="{Binding NameEntry}" VerticalOptions="Start" HorizontalOptions="FillAndExpand"
+                <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                 <Entry MaxLength="50" TextColor="Black"  BackgroundColor="White" x:Name="entryName" Keyboard="Plain"    VerticalOptions="Center" HorizontalOptions="FillAndExpand"
                 FontAttributes="None"     FontSize="16"   
                   ></Entry>
-
-                   <Label TextColor="White"  Text="Cognome " Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="20" Margin="10"  HorizontalOptions="Center"
+                </Frame>
+                <Label TextColor="White"  Text="Cognome"   HorizontalOptions="Start"
                 FontAttributes="Bold"     FontSize="16"   
                   ></Label>
-                    <Entry MaxLength="50" TextColor="White" BackgroundColor="White" x:Name="entrySurname" Grid.Row="4" Keyboard="Plain" Grid.Column="0" Grid.ColumnSpan="20" Margin="10" Text="{Binding SurnameEntry}" VerticalOptions="Start"  HorizontalOptions="FillAndExpand"
+                <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                    <Entry MaxLength="50" TextColor="Black" BackgroundColor="White" x:Name="entrySurname"  Keyboard="Plain"   VerticalOptions="Center"  HorizontalOptions="FillAndExpand"
                 FontAttributes="None"     FontSize="16"   
                   ></Entry>
-
-                   <Label TextColor="White"  Text="Username" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="20" Margin="10"  HorizontalOptions="Center"
+                </Frame>
+                <Label TextColor="White"  Text="Username"    HorizontalOptions="Start"
                 FontAttributes="Bold"    FontSize="16"   
                   ></Label>
-                    <Entry MaxLength="50"  TextColor="White" BackgroundColor="White" x:Name="entryUsername" Grid.Row="6" Keyboard="Plain" Grid.Column="0" Margin="10" Grid.ColumnSpan="20" Text="{Binding UsernamePupilEntry}" VerticalOptions="Start"  HorizontalOptions="FillAndExpand"
+                    <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                        <Entry MaxLength="50"  TextColor="Black" BackgroundColor="White" x:Name="entryUsername" Keyboard="Plain"    VerticalOptions="Center"  HorizontalOptions="FillAndExpand"
                 FontAttributes="None"     FontSize="16"   
                   ></Entry>
-                   <Label TextColor="White" x:Name="Date" Text="Data nascita" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="20" Margin="10"  HorizontalOptions="Center"
-                FontAttributes="Bold"    FontSize="16"   
-                  ></Label>
-                    <DatePicker x:Name="entryDate" TextColor="White"  Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="20" Margin="10" />
-                   <Label TextColor="White"  Text="Mail" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="20" Margin="10"  HorizontalOptions="Center"
+                    </Frame>
+                    <Label TextColor="White"  Text="Email"    HorizontalOptions="Start"
                 FontAttributes="Bold"     FontSize="16"   
                   ></Label>
-                    <Entry MaxLength="50" TextColor="White"  BackgroundColor="White" x:Name="entryMail" Grid.Row="10" Keyboard="Email" Grid.Column="0" Grid.ColumnSpan="20"  Margin="10" Text="{Binding MailEntry}" VerticalOptions="Start"  HorizontalOptions="FillAndExpand"
+                        <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                            <Entry MaxLength="50" TextColor="Black"  BackgroundColor="White" x:Name="entryMail"  Keyboard="Email"    VerticalOptions="Center"  HorizontalOptions="FillAndExpand"
                 FontAttributes="None"     FontSize="16"   
                   ></Entry>
-
-                   <Label TextColor="White"  Text="Password"  Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="20" Margin="10" HorizontalOptions="Center"
+                        </Frame>
+                        <Label TextColor="White"  Text="Password"  HorizontalOptions="Start"
                 FontAttributes="Bold"     FontSize="16"   
                   ></Label>
-                    <Entry MaxLength="50"  TextColor="White" BackgroundColor="White" x:Name="entryPassword" Grid.Row="12" Grid.Column="0" Keyboard="Plain"  Grid.ColumnSpan="20" Margin="10" Text="{Binding PassEntry}" VerticalOptions="Start" HorizontalOptions="FillAndExpand"
+                <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                    <Entry MaxLength="50"  TextColor="Black" BackgroundColor="White" x:Name="entryPassword" Keyboard="Plain"     VerticalOptions="Center" HorizontalOptions="FillAndExpand"
                 FontAttributes="None"     FontSize="16"   
                   ></Entry>
-                </Grid>
-            </ScrollView>
-            <Button   BackgroundColor="#20509b" Clicked="RegisterClicked"     BorderColor="{StaticResource White}" BorderWidth="1"   HorizontalOptions="FillAndExpand"     VerticalOptions="Center" Text="Registrati"   CornerRadius="10"  Padding="3"  FontAttributes="Bold"  ></Button>
+                            </Frame>
+                            <Label TextColor="White"  Text="Città"   HorizontalOptions="Start"
+                FontAttributes="Bold"     FontSize="16"   
+                  ></Label>
+                <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                    <Entry MaxLength="50"  TextColor="Black" BackgroundColor="White" x:Name="entryCity"   Keyboard="Plain"     VerticalOptions="Center" HorizontalOptions="FillAndExpand"
+                FontAttributes="None"     FontSize="16"   
+                  ></Entry>
+                                </Frame>
+                                <Label TextColor="White"  Text="Indirizzo"   HorizontalOptions="Start"
+                FontAttributes="Bold"     FontSize="16"   
+                  ></Label>
+                <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                    <Entry MaxLength="50"  TextColor="Black" BackgroundColor="White" x:Name="entryAddress"  Keyboard="Plain"    VerticalOptions="Center" HorizontalOptions="FillAndExpand"
+                FontAttributes="None"     FontSize="16"   
+                  ></Entry>
+                                    </Frame>
+                                    <Label TextColor="White"  Text="CAP"    HorizontalOptions="Start"
+                FontAttributes="Bold"     FontSize="16"   
+                  ></Label>
+                <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                    <Entry MaxLength="50" TextColor="Black" BackgroundColor="White" x:Name="entryCAP" Keyboard="Numeric"     VerticalOptions="Center" HorizontalOptions="FillAndExpand"
+                FontAttributes="None"     FontSize="16"   
+                  ></Entry>
+                                        </Frame>
+                                        <Label TextColor="White"  Text="Telefono"   HorizontalOptions="Start"
+                FontAttributes="Bold"     FontSize="16"   
+                  ></Label>
+                                            <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                    <Entry MaxLength="50" TextColor="Black" BackgroundColor="White" x:Name="entryTelefono"   Keyboard="Numeric"    VerticalOptions="Center" HorizontalOptions="FillAndExpand"
+                    FontAttributes="None"     FontSize="16"   
+                      ></Entry>
+                                            </Frame>
+                                            <Button   BackgroundColor="#20509b" Clicked="RegisterClicked"     BorderColor="{StaticResource White}" BorderWidth="1"   HorizontalOptions="FillAndExpand"     VerticalOptions="Center" Text="Registrati"   CornerRadius="10"  Padding="3"  FontAttributes="Bold"  ></Button>
         </VerticalStackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

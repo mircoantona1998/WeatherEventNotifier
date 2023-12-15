@@ -5,10 +5,8 @@ namespace AppWeatherEventNotifier.ViewModels;
 
     public class BaseViewModel : INotifyPropertyChanged
     {
-        string _ServerEntry;
         string _usernameEntry;
         string _passwordEntry;
-        bool _NoCorsi;
         public string PasswordEntry
         {
             set
@@ -29,27 +27,6 @@ namespace AppWeatherEventNotifier.ViewModels;
 
             get { return _usernameEntry; }
         }
-        public string ServerEntry
-            {
-                set
-                {
-                    SetProperty(ref _ServerEntry, value);
-
-                }
-
-                get { return _ServerEntry; }
-            }
-            public bool NoCorsi
-            {
-                set
-                {
-                    SetProperty(ref _NoCorsi, value);
-
-                }
-
-                get { return _NoCorsi; }
-            }
-
             protected bool SetProperty<T>(ref T backingStore, T value,
                     [CallerMemberName] string propertyName = "",
                     Action onChanged = null)

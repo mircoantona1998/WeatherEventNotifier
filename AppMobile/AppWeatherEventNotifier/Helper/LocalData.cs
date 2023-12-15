@@ -37,12 +37,7 @@ namespace AppWeatherEventNotifier.Helper
             set => SetProperty(ref isLoggedIn, value);
         }
         public string UserId { get; set; }
-        private string username;
-        public string Username
-        {
-            get => username;
-            set => SetProperty(ref username, value);
-        }
+       
         public  List<Tip> TipsUser { get; set; }  //lista notifiche dell'utente  
         public List<Language> ListLanguages { get; set; }
         private Language selLanguage;

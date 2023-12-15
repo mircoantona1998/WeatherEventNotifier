@@ -1,10 +1,6 @@
 ﻿using AppWeatherEventNotifier.Helper;
 using AppWeatherEventNotifier.Models;
-using System;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 
 namespace AppWeatherEventNotifier.Services.RestController
@@ -13,7 +9,7 @@ namespace AppWeatherEventNotifier.Services.RestController
     {    
         public static async Task<bool> login_request(string usernameEntry, string passEntry)
         {
-            string endPoint = "/auth/login";
+            string endPoint = "/Auth/Login";
             var body = new
             {
                 Username = usernameEntry,
@@ -26,13 +22,13 @@ namespace AppWeatherEventNotifier.Services.RestController
             }
             if (res?.Token != null)
             {
-               
+
                 TodoItemDatabase.Instance.Token = res.Token["access_token"];
                 TodoItemDatabase.Instance.Refresh_Token = res.Token["refresh_token"];
                 TodoItemDatabase.Instance.IsLoggedIn = true;
-                TodoItemDatabase.Instance.Username = usernameEntry;
                 TodoItemDatabase.Instance.UsernameEntry = usernameEntry;
                 TodoItemDatabase.Instance.PasswordEntry = passEntry;
+                TodoItemDatabase.Instance.UserId= res.Token["idUser"];
             }
             else
             {

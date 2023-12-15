@@ -1,7 +1,6 @@
 ﻿using AppWeatherEventNotifier.Services;
 using AppWeatherEventNotifier.Models;
 using AppWeatherEventNotifier.Services.RestController;
-using AppWeatherEventNotifier.Views.Home;
 
 namespace AppWeatherEventNotifier.Views.Splash;
 
@@ -14,7 +13,7 @@ public partial class SplashLogin : ContentPage
     public SplashLogin()
 	{
 		InitializeComponent();
-        name_user.Text ="Benvenuto, "+ AppWeatherEventNotifier.Helper.TodoItemDatabase.Instance.Username+"!";    
+        name_user.Text ="Benvenuto, "+ AppWeatherEventNotifier.Helper.TodoItemDatabase.Instance.UsernameEntry+"!";    
     }
     protected override bool OnBackButtonPressed()
     {
@@ -30,7 +29,7 @@ public partial class SplashLogin : ContentPage
         // await Refresh.refreshInfoUser();
 
         await PingController.mqtt_timer();
-        App.Current.MainPage = new NavigationPage(new HomePage());
+        App.Current.MainPage = new NavigationPage(new AppShell());
 
     }
     async void  DoSomething()

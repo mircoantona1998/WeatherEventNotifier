@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Userdata.Models
+namespace Userdata.Models;
+
+public partial class MailConfiguration
 {
-    public partial class MailConfiguration
-    {
-        public int Id { get; set; }
-        public string? Mail { get; set; }
-        public string? Name { get; set; }
-        public string? Password { get; set; }
-    }
+    public int Id { get; set; }
+
+    public string? Mail { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? Password { get; set; }
 }

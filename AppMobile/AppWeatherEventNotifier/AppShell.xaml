@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="AppWeatherEventNotifier.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localProfile="clr-namespace:AppWeatherEventNotifier.Views.HeaderProfile"
+    xmlns:settings="AppWeatherEventNotifier.Views.HomePage.SettingsPage"
+    xmlns:tips="AppWeatherEventNotifier.Views.HomePage.TipsPage"
+    xmlns:configuration="AppWeatherEventNotifier.Views.HomePage.AlertConfigurationPage"
+    Shell.TabBarIsVisible="False"
+    Shell.FlyoutBehavior="Disabled"
+    NavigationPage.HasNavigationBar="False" BackgroundColor="#20509b" >
+    <Shell.Resources >
+        <ResourceDictionary>
+            <Style x:Key="BaseStyle" TargetType="Element">
+                <Setter Property="Shell.BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="Shell.ForegroundColor" Value="{StaticResource White}" />
+                <Setter Property="Shell.TitleColor" Value="{StaticResource White}" />
+                <Setter Property="Shell.DisabledColor" Value="#E0E0E0" />
+                <Setter Property="Shell.UnselectedColor" Value="#E0E0E0" />
+                <Setter Property="Shell.TabBarForegroundColor" Value="#E0E0E0"/>
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#7fa1dc"/>
+                <Setter Property="Shell.TabBarTitleColor" Value="White"/>
+                <Setter Property="Shell.FlyoutBackgroundColor" Value="#f5f6fa"/>
+            </Style>
+            <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
+            <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />
+            <Style Class="FlyoutItemLabelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="White"></Setter>
+            </Style>
+            <Style Class="FlyoutItemLayoutStyle" TargetType="Layout" ApplyToDerivedTypes="True" >
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter TargetName="FlyoutItemLabel" Property="Label.TextColor" Value="{StaticResource Primary}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="#20509b" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Unselected">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+            <Style Class="MenuItemLayoutStyle" TargetType="Layout" ApplyToDerivedTypes="True" >
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter TargetName="FlyoutItemLabel" Property="Label.TextColor" Value="{StaticResource Primary}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
+    <Shell.FlyoutHeader Shell.TabBarIsVisible="False"  >
+        <localProfile:HeaderContentView VerticalOptions="FillAndExpand"/>
+    </Shell.FlyoutHeader>
+    <FlyoutItem Shell.TabBarIsVisible="True" CurrentItem="{x:Reference tips}"  
+               FlyoutDisplayOptions="AsSingleItem" Icon="feedback.png" Title="Home" >
+        <Tab x:Name="AlertConf" Title="Configurazioni"  Icon="configuration.png" >
+            <ShellContent x:Name="configurazione"   ContentTemplate="{DataTemplate configuration:AlertConfigurationPage}" />
+        </Tab>
+        <Tab x:Name="tips"   Title="Notifiche"    Icon="feedback.png" >
+            <ShellContent    ContentTemplate="{DataTemplate  tips:TipsPage}" />
+        </Tab>
+        <Tab x:Name="settings"   Title="Impostazioni"  Icon="setting.png">
+            <ShellContent      ContentTemplate="{DataTemplate  settings:SettingsPage}" />
+        </Tab>
+    </FlyoutItem>
+    <MenuItem IconImageSource="logout.png"  Text="Logout" StyleClass="MenuItemLayoutStyle" Clicked="OnMenuItemClicked">
+    </MenuItem>
+    <Shell.FlyoutFooterTemplate  >
+        <DataTemplate >
+            <StackLayout VerticalOptions="End" BackgroundColor="#20509b" >
+                <Grid VerticalOptions="End" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition x:Name="riga0"  Height="Auto" />
+                        <RowDefinition x:Name="riga1"  Height="Auto" />
+                        <RowDefinition x:Name="riga2"  Height="*" />
+                        <RowDefinition x:Name="riga3"  Height="*" />
+                    </Grid.RowDefinitions>
+                </Grid>
+                <Label Text="AppWeatherEventNotifier" Grid.Row="0"                     
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center" TextColor="White"/>
+                <Label Text="v1.0.1" Grid.Row="1"                     
+                       HorizontalOptions="Center" TextColor="White"/>
+            </StackLayout>
+        </DataTemplate>
+    </Shell.FlyoutFooterTemplate>
+</Shell>
+
+

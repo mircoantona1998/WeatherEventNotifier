@@ -143,8 +143,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\Home\Home.xaml.cs">
-	    <DependentUpon>Home.xaml</DependentUpon>
+	  <Compile Update="Views\Home\AlertConfigurationPage.xaml.cs">
+	    <DependentUpon>AlertConfigurationPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Home\TipsPage.xaml.cs">
+	    <DependentUpon>TipsPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Home\SettingsPage.xaml.cs">
+	    <DependentUpon>SettingsPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\Login\LoginPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
@@ -158,6 +164,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="AppShell.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Resources\Styles\Labels.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -167,7 +176,16 @@
 	  <MauiXaml Update="Views\CustomControls\ButtonControl.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\Home\Home.xaml">
+	  <MauiXaml Update="Views\HeaderProfile\HeaderContentView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Home\AlertConfigurationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Home\TipsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Home\SettingsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Login\LoginPage.xaml">

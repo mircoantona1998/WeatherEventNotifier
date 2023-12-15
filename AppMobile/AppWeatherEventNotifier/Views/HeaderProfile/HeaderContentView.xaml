@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"          
+             VerticalOptions="FillAndExpand"
+              xmlns:customControls="clr-namespace:AppWeatherEventNotifier.Views.CustomControls"          
+             x:Class="AppWeatherEventNotifier.Views.HeaderProfile.HeaderContentView" 
+             >
+    <ContentView.Background>
+            <LinearGradientBrush EndPoint="0,1">
+            <GradientStop Color="#20509b"
+                                                  Offset="0.1" />
+                <GradientStop Color="#00cd82"
+                                                      Offset="1.0" />
+            </LinearGradientBrush>
+    </ContentView.Background>
+    <ContentView.Content>
+       
+        <Grid 
+            HorizontalOptions="Fill"
+            VerticalOptions="FillAndExpand" ColumnSpacing="20" Margin="10" >
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+
+            <ImageButton x:Name="foto"  
+                         BackgroundColor="White"
+                         VerticalOptions="Center" 
+                         HorizontalOptions="Center" 
+                         Aspect="AspectFill"                                       
+                        Grid.ColumnSpan="2"
+                        Grid.RowSpan="4"
+                         CornerRadius="50"  
+                         HeightRequest="100"
+                         WidthRequest="100"
+                        Grid.Column="0" 
+                        Grid.Row="0"                     
+                        >
+                <ImageButton.Source >
+                    <FontImageSource
+                FontFamily="{DynamicResource MaterialFontFamily}"
+                Glyph="{DynamicResource IconClose}"
+                Size="60"
+                 />
+                </ImageButton.Source>
+            </ImageButton>
+            <StackLayout VerticalOptions="Center" 
+                         Grid.Row="0" 
+                         Grid.RowSpan="4"  
+                         HorizontalOptions="Fill"
+                        Grid.Column="2" 
+                         Grid.ColumnSpan="4" 
+                         Orientation="Vertical" >
+               
+                <Label  x:Name="nome" FontAttributes="Bold"
+                        TextTransform="Uppercase" 
+                        HorizontalTextAlignment="Start"
+                        VerticalTextAlignment="Center"
+                        VerticalOptions="Center"
+                        TextColor="White"
+                        Text="Admin"
+                        FontSize="12"/>
+                <Label x:Name="ruolo" FontAttributes="Italic" 
+                       TextTransform="Uppercase" 
+                       TextDecorations="Underline"
+                        HorizontalTextAlignment="Start"
+                        FontSize="10"
+                        VerticalTextAlignment="Center"
+                        TextColor="Gold" Text="Utente"/>
+
+                <HorizontalStackLayout Spacing="2">
+                    <Label  x:Name="podDescription" FontAttributes="Bold"
+                        TextTransform="Uppercase" 
+                        HorizontalTextAlignment="Start"
+                        VerticalTextAlignment="Center"
+                        VerticalOptions="Center"
+                        TextColor="White"
+                        Text=""
+                        FontSize="12"/>
+                    <Ellipse Stroke="Red"
+                             x:Name="activePod" 
+                         StrokeThickness="4"
+                         WidthRequest="20"
+                         HeightRequest="20"
+                         HorizontalOptions="Start"
+                             Fill="Red"
+                                      ></Ellipse>
+                </HorizontalStackLayout>
+                <Label x:Name="pod" FontAttributes="Italic" 
+                       TextTransform="Uppercase" 
+                       TextDecorations="Underline"
+                        HorizontalTextAlignment="Start"
+                        FontSize="10"
+                        VerticalTextAlignment="Center"
+                        TextColor="Gold" Text=""/>
+                <Label x:Name="podType" FontAttributes="Italic" 
+                       TextTransform="Uppercase" 
+                       TextDecorations="Underline"
+                        HorizontalTextAlignment="Start"
+                        FontSize="10"
+                        VerticalTextAlignment="Center"
+                        TextColor="Gold" Text=""/>
+
+
+
+
+            </StackLayout>
+            <VerticalStackLayout Margin="5,15,5,15"
+                  VerticalOptions="FillAndExpand" 
+                         Grid.Row="4" 
+                         Grid.RowSpan="2"  
+                         HorizontalOptions="Fill"
+                        Grid.Column="0" 
+                         Grid.ColumnSpan="6"
+                                 Spacing="10">
+                <HorizontalStackLayout Spacing="1">
+                    <Label  FontAttributes="Italic"
+                            TextTransform="Uppercase"
+                        HorizontalTextAlignment="Start"
+                        VerticalTextAlignment="Center"
+                        TextColor="White" Text="Ricezione dati "
+                            FontSize="10"
+                        Margin="0"/>
+
+                    <Ellipse Stroke="Red"
+                             x:Name="mqttStatus" 
+                         StrokeThickness="4"
+                         WidthRequest="20"
+                         HeightRequest="20"
+                         HorizontalOptions="Start"
+                             Fill="Red"
+                                      ></Ellipse>
+                </HorizontalStackLayout>
+                <customControls:ButtonControl x:Name="refresh" 
+                                              BorderColor="{StaticResource White}"  
+                                              VerticalOptions="Center" 
+                                                Text="Aggiorna tutto"  
+                                              CornerRadius="10" 
+                                              Padding="3" 
+                                              Tapped="refresh_Clicked"
+                                              HorizontalOptions="Start" 
+                                              Margin="0"         >
+
+                </customControls:ButtonControl>
+            </VerticalStackLayout>
+        </Grid>
+    </ContentView.Content>
+</ContentView>

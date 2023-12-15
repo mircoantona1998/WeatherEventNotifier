@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppWeatherEventNotifier.Views.HomePage.SettingsPage"
+             xmlns:customControls="AppWeatherEventNotifie.Views.CustomControls"
+             Title="Impostazioni"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="refresh.png"  Clicked="RefreshClicked" />
+        <ToolbarItem IconImageSource="logout.png"  Clicked="logout" />
+    </ContentPage.ToolbarItems >
+    <ContentPage.Background>
+        <LinearGradientBrush >
+            <GradientStop Color="#20509b" Offset="0.1" />
+            <GradientStop Color="#00cd82"   Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+    <ContentPage.Content >
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                <Label FontAttributes="Bold" Text="Telegram" HorizontalOptions="Center" VerticalOptions="Center"   FontSize="Medium" ></Label>
+                <Switch  x:Name="TelegramSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="Center"   />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                <Label FontAttributes="Bold" Text="Mail"   VerticalOptions="Center" HorizontalOptions="Center"  FontSize="Medium" ></Label>
+                <Switch x:Name="MailSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="Center"  />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                <Label FontAttributes="Bold" Text="Telegram ID:" HorizontalOptions="Center" VerticalOptions="Center"  FontSize="Medium" ></Label>
+                <Frame VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="10" Padding="0">
+                    <Editor x:Name="TelegramID" Text="11123232232ds"  BackgroundColor="White"   FontSize="Medium" />
+                </Frame>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                <Label FontAttributes="Bold" Text="Mail:"    HorizontalOptions="Center" VerticalOptions="Center" FontSize="Medium" ></Label>
+                <Frame VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="10" Padding="0">
+                    <Editor x:Name="Mail" Text="mircoantona1998@libero.it"  BackgroundColor="White"    FontSize="Medium" />
+                </Frame>
+            </HorizontalStackLayout>
+            <Button x:Name="modificaButton" Text="Modifica" Clicked="Button_Modifica" HorizontalOptions="End"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -22,7 +22,7 @@ namespace AppWeatherEventNotifier.Helper
         public static bool first=false;
         public static bool IsConnected = false;
         public static bool MqttStatus = false;
-        public static string server=Constants.SERVER_COLLAUDO;
+        public static string server=Constants.SERVER;
         public static string page_current = "";
 
         public static HomeViewModel homeViewModel;
@@ -68,8 +68,7 @@ namespace AppWeatherEventNotifier.Helper
             TodoItemDatabase.Instance.IsLoggedIn = false;
             TodoItemDatabase.Instance.Token = null;
             TodoItemDatabase.Instance.UserId = null;
-            TodoItemDatabase.Instance.Username = string.Empty;
-            TodoItemDatabase.Instance.UsernameEntry= string.Empty;
+            TodoItemDatabase.Instance.UsernameEntry = string.Empty;
             TodoItemDatabase.Instance.PasswordEntry = string.Empty;
         }
 

@@ -23,7 +23,7 @@ public partial class LoginPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        Globals.page_current = "LoginPage";
+        Globals.page_current = "Login";
         if (Globals.first == false)
         {
 
@@ -56,7 +56,6 @@ public partial class LoginPage : ContentPage
     }
     private async  void LoginClicked(object sender, EventArgs e)
     {
-        // progressBarLoading.IsVisible = true;
         activityController.turnOn();
         disabledAllButton();
 
@@ -97,14 +96,12 @@ public partial class LoginPage : ContentPage
     private void disabledAllButton()
     {
         login.IsEnabled = false;
-        //reg.IsEnabled = false;
-        //server.IsEnabled = false;
+        reg.IsEnabled = false;
     }
     private void enabledAllButton()
     {
         login.IsEnabled = true;
-        //reg.IsEnabled = true;
-        //server.IsEnabled = true;
+        reg.IsEnabled = true;
     }
     private async void RegisterClicked(object sender, EventArgs e)
     {

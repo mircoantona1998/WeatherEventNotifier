@@ -62,7 +62,7 @@
                             <CheckBox VerticalOptions="Center" HorizontalOptions="Fill" Margin="0" x:Name="check"></CheckBox>
                             <Button x:Name="labcheck"  Clicked="CheckClicked" Padding="1" Margin="0"  VerticalOptions="Center" HorizontalOptions="Start" Text="Ricordami" BackgroundColor="Transparent" InputTransparent="False" TextColor="White"></Button>
                         </HorizontalStackLayout>
-                        <Button   BackgroundColor="#20509b" Clicked="RegisterClicked"     BorderColor="{StaticResource White}" BorderWidth="1"   HorizontalOptions="FillAndExpand"     VerticalOptions="Center" 
+                        <Button x:Name="reg"   BackgroundColor="#20509b" Clicked="RegisterClicked"     BorderColor="{StaticResource White}" BorderWidth="1"   HorizontalOptions="FillAndExpand"     VerticalOptions="Center" 
                             Text="Registrati"   CornerRadius="10"  Padding="3"  Margin="30,40,30,10"         FontAttributes="Bold"  >
                         </Button>
                     </StackLayout>
