@@ -59,6 +59,7 @@ namespace ExposeAPI.Kafka
                             catch
                             {
                                 await saveMessageWithErrorInDeserialization(result);
+                                break;
                             }                                   
                         }
                     }

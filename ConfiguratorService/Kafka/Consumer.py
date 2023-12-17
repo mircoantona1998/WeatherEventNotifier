@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from confluent_kafka import Consumer, KafkaError
 from sqlalchemy.sql import null
-from DB.Repository.EventsConfigurationRepo import EventsConfigurationRepo
+from DB.Repository.ConfigurationUserRepo import ConfigurationUserRepo
 from DB.Repository.MessageReceivedRepo import MessageReceivedRepo
 from Kafka.KafkaMessage import KafkaMessage
 from Kafka.Producer import ProducerClass

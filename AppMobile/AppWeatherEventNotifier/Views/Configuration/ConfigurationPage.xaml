@@ -34,57 +34,44 @@
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
+                        <Label Text="Latitudine" Margin="0"  VerticalOptions="Center" Grid.Row="0" Grid.Column="0"></Label>
+                        <Label  x:Name="Latitudine" Margin="0"  VerticalOptions="Center"  Grid.Row="0" Grid.Column="1"></Label>
 
-                        <Label Text="ID" Margin="0"  VerticalOptions="Center" Grid.Row="0" Grid.Column="0"></Label>
-                        <Label x:Name="id" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="0" Grid.Column="1"></Label>
+                        <Label Text="Longitudine" Margin="0"  VerticalOptions="Center" Grid.Row="1" Grid.Column="0"></Label>
+                        <Label  x:Name="Longitudine"  Margin="0"   VerticalOptions="Center" Grid.Row="1" Grid.Column="1"></Label>
 
-                        <Label Text="Titolo"  Margin="0"  VerticalOptions="Center" Grid.Row="1" Grid.Column="0"></Label>
-                        <Label x:Name="titolo" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="1" Grid.Column="1"></Label>
+                        <Label Text="Data creazione" Margin="0"  VerticalOptions="Center" Grid.Row="2" Grid.Column="0"></Label>
+                        <Label x:Name="Data_creazione" Margin="0"   VerticalOptions="Center"  Grid.Row="2" Grid.Column="1"></Label>
 
-                        <Label Text="Impianto" Margin="0"  VerticalOptions="Center" Grid.Row="2" Grid.Column="0"></Label>
-                        <Label x:Name="impianto" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="2" Grid.Column="1"></Label>
+                        <Label Text="Data attivazione" Margin="0"  VerticalOptions="Center" Grid.Row="3" Grid.Column="0"></Label>
+                        <Label x:Name="Data_attivazione" Margin="0"   VerticalOptions="Center"  Grid.Row="3" Grid.Column="1"></Label>
 
-                        <Label Text="Data" Margin="0"  VerticalOptions="Center" Grid.Row="3" Grid.Column="0"></Label>
-                        <Label x:Name="data" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="3" Grid.Column="1"></Label>
+                        <Label Text="Metrica" Margin="0"  VerticalOptions="Center" Grid.Row="4" Grid.Column="0"></Label>
+                        <Label x:Name="Metrica" Margin="0"   VerticalOptions="Center"  Grid.Row="4" Grid.Column="1"></Label>
 
-                        <Label Text="Sorgente" Margin="0"  VerticalOptions="Center" Grid.Row="4" Grid.Column="0"></Label>
-                        <Label x:Name="sorgente" Margin="0"   VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="4" Grid.Column="1"></Label>
+                        <Label Text="Condizione"  Grid.Row="5" Grid.Column="0"  VerticalOptions="Center" HorizontalOptions="Start" ></Label>
+                        <HorizontalStackLayout  Grid.Row="5" Grid.Column="1" Margin="0" HorizontalOptions="FillAndExpand" Spacing="10">
+                            <Label  x:Name="Simbolo" Margin="0"  VerticalOptions="Center" HorizontalOptions="Start"/>
+                            <Label  x:Name="Valore" Margin="0"   HorizontalOptions="FillAndExpand" VerticalOptions="Center" ></Label>
+                            <Label x:Name="ValueUnit"  Margin="0"  HorizontalOptions="EndAndExpand" VerticalOptions="Center" ></Label>
+                        </HorizontalStackLayout>
+                        <Label Text="Frequenza" Margin="0"  VerticalOptions="Center" Grid.Row="6" Grid.Column="0"></Label>
+                        <Label  x:Name="Frequenza" Margin="0"   VerticalOptions="Center"  Grid.Row="6" Grid.Column="1"></Label>
 
-                        <Label Text="Codice allarme" Margin="0"  VerticalOptions="Center" Grid.Row="5" Grid.Column="0"></Label>
-                        <Label x:Name="codice_allarme" Margin="0"   VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="5" Grid.Column="1"></Label>
-
-                        <Label Text="Stato" Margin="0"  VerticalOptions="Center" Grid.Row="6" Grid.Column="0"></Label>
-                        <Label x:Name="stato" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="6" Grid.Column="1"></Label>
-
-                        <Label Text="Priorità" Margin="0"  VerticalOptions="Center" Grid.Row="7" Grid.Column="0"></Label>
-                        <Label x:Name="priorita" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="7" Grid.Column="1"></Label>
-
-                        <Label Text="Gruppo" Margin="0"  VerticalOptions="Center" Grid.Row="8" Grid.Column="0"></Label>
-                        <Label x:Name="gruppo" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="8" Grid.Column="1"></Label>
-
-                        <Label x:Name="dateUpdateName" Margin="0"  VerticalOptions="Center" Text="Data ultima modifica" Grid.Row="9" Grid.Column="0" IsVisible="false"></Label>
-                        <Label x:Name="dateUpdateValue" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="9" Grid.Column="1" IsVisible="false"></Label>
-
-                        <Label x:Name="ownerName" Margin="0"  VerticalOptions="Center" Text="ID Owner" Grid.Row="10" Grid.Column="0" IsVisible="false"></Label>
-                        <Label x:Name="ownerValue" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="10" Grid.Column="1" IsVisible="false"></Label>
-
-                        <Label Text="Descrizione" Margin="0"   VerticalOptions="Center" Grid.Row="11" Grid.Column="0"></Label>
-                        <Label x:Name="descrizione" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"   Grid.Row="11" Grid.Column="1"></Label>
-
-                        <Label x:Name="noteLabel" Margin="0"  VerticalOptions="Center" Text="Nota di risoluzione" Grid.Row="12" Grid.Column="0"  IsVisible="false" Padding="0" ></Label>
-                        <Frame x:Name="noteEntryFrame" Margin="0"   Grid.Row="12" Grid.Column="1" Padding="0" HorizontalOptions="Fill" VerticalOptions="Fill" IsVisible="False">
-                            <Editor  MaxLength="255" x:Name="noteEntry"  Margin="0" AutoSize="TextChanges"  VerticalOptions="FillAndExpand" Placeholder="Note *" TextColor="{StaticResource Primary}"   IsEnabled="false" IsVisible="false"></Editor>
-                        </Frame>
+                        <Label Grid.Row="7" Grid.Column="0" VerticalOptions="Center" Text="Attiva" />
+                        <Switch x:Name="Attiva" Grid.Row="7" Grid.Column="1" IsEnabled="False"  HorizontalOptions="Start" VerticalOptions="Start"  >
+                            <Switch.Resources>
+                                <Style TargetType="Switch">
+                                    <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
+                                    <Setter Property="OnColor" Value="{StaticResource Secondary}" />
+                                </Style>
+                            </Switch.Resources>
+                        </Switch>
                     </Grid>
                 </ScrollView>
                 <Grid Grid.Row="5" ColumnSpacing="10" RowSpacing="10" VerticalOptions="CenterAndExpand">

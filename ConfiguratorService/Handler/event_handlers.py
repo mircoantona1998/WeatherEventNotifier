@@ -1,12 +1,13 @@
 import json
 from datetime import datetime
 from DB.Model import Frequency
-from DB.Repository.EventsConfigurationRepo import EventsConfigurationRepo
+from DB.Repository.ConfigurationUserRepo import ConfigurationUserRepo
 from DB.Repository.MetricRepo import MetricRepo
 from DB.Repository.FrequencyRepo import FrequencyRepo
 from Kafka.KafkaMessage import KafkaMessage
 from Utils.EnumMessageType import MessageType
 class EventHandlers:
+    
     #CONFIGURATION
     def handle_tag_AddConfiguration(offset, data,tag):
         dtActivation=data["DateTimeActivation"]
@@ -30,6 +31,11 @@ class EventHandlers:
         if data["IdMetric"]==None or data["IdMetric"]==0:
             raise Exception(str("Il campo IdMetric non puo essere vuoto"))
             return
+        if data["Symbol"]==None or data["Symbol"]==0:
+            raise Exception(str("Il campo Symbol non puo essere vuoto"))
+            return
+        if data["Value"]==None:
+            data["Value"]==0
         result =FrequencyRepo.get_element(data["IdFrequency"])
         if result is None:
             raise Exception(str("Non esiste la frequenza selezionata"))
@@ -48,8 +54,10 @@ class EventHandlers:
             'DateTimeActivation': formatted_datetime, 
             'IsActive': True,
             'IdMetric': data["IdMetric"], 
+            'Symbol': data["Symbol"], 
+            'Value': data["Value"]
         }
-        EventsConfigurationRepo.add_element(new_element_data)
+        ConfigurationUserRepo.add_element(new_element_data)
         kf = KafkaMessage(offset, MessageType.Response.value, tag, True)
         json_data = json.dumps(kf.__dict__, indent=2)
         return json_data
@@ -77,17 +85,18 @@ class EventHandlers:
             'DateTimeUpdate': datetime.utcnow(),
             'DateTimeActivation': formatted_datetime,  
             'IsActive': True,
-            'IdMetric': data["IdMetric"] 
+            'IdMetric': data["IdMetric"] ,
+            'Symbol': data["Symbol"], 
+            'Value': data["Value"]
         }
-        EventsConfigurationRepo.patch_element(data["IdConfiguration"], new_element_data)
+        ConfigurationUserRepo.patch_element(data["IdConfiguration"], new_element_data)
         kf = KafkaMessage(offset,MessageType.Response.value, tag, True)
         json_data = json.dumps(kf.__dict__, indent=2)
         return json_data
 
     def handle_tag_GetConfiguration(offset, data,tag):
-        events_configurations = EventsConfigurationRepo.get_all_by_user(data["IdUser"])
-        serialized_data = [event_config.as_dict() for event_config in events_configurations]
-        kf = KafkaMessage(offset, MessageType.Response.value, tag, serialized_data)
+        events_configurations = ConfigurationUserRepo.get_all_by_user(data["IdUser"])
+        kf = KafkaMessage(offset, MessageType.Response.value, tag, events_configurations)
         json_data = json.dumps(kf.__dict__, indent=2)
         return json_data
 
@@ -98,7 +107,7 @@ class EventHandlers:
         if data["IdConfiguration"]==None or data["IdConfiguration"]==0:
             raise Exception(str("Il campo IdConfiguration non puo essere vuoto"))
             return
-        EventsConfigurationRepo.delete_element(data["IdUser"], data["IdConfiguration"])
+        ConfigurationUserRepo.delete_element(data["IdUser"], data["IdConfiguration"])
         kf = KafkaMessage(offset, MessageType.Response.value, tag, True)
         json_data = json.dumps(kf.__dict__, indent=2)
         return json_data

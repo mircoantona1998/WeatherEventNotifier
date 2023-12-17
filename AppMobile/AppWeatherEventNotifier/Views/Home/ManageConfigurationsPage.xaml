@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppWeatherEventNotifier.Views.HomePage.ManageConfigurationsPage"
              Title="Configurazioni"
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasNavigationBar="False">         
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="add.png"  Clicked="Button_Clicked_Add" />
         <ToolbarItem IconImageSource="refresh.png"  Clicked="RefreshClicked" />
@@ -34,6 +34,7 @@
                                 <RowDefinition Height="auto"></RowDefinition>
                                 <RowDefinition Height="auto"></RowDefinition>
                                 <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"></ColumnDefinition>
@@ -46,11 +47,24 @@
                             <Label Grid.Row="2" Grid.Column="0" Text="Data creazione" />
                             <Label Grid.Row="2" Grid.Column="1" Text="{Binding DateTimeCreate}" />
                             <Label Grid.Row="3" Grid.Column="0" Text="Metrica" />
-                            <Label Grid.Row="3" Grid.Column="1" Text="{Binding IdMetric}" />
-                            <Label Grid.Row="4" Grid.Column="0" Text="Frequenza" />
-                            <Label Grid.Row="4" Grid.Column="1" Text="{Binding IdFrequencyType}" />
-                            <Label Grid.Row="5" Grid.Column="0" Text="Attiva" />
-                            <Label Grid.Row="5" Grid.Column="1" Text="{Binding IsActive}" />
+                            <Label Grid.Row="3" Grid.Column="1" Text="{Binding Field}" />
+                            <Label Grid.Row="4" Grid.Column="0" Text="Condizione" />
+                            <HorizontalStackLayout Grid.Row="4" Grid.Column="1">
+                                <Label  Text="{Binding Symbol}" />
+                                <Label  Text="{Binding Value}" />
+                                <Label Text="{Binding ValueUnit}" ></Label>
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="5" Grid.Column="0" Text="Frequenza" />
+                            <Label Grid.Row="5" Grid.Column="1" Text="{Binding FrequencyName}" />
+                            <Label Grid.Row="6" Grid.Column="0" VerticalOptions="Center" Text="Attiva" />
+                            <Switch Grid.Row="6" Grid.Column="1"  IsToggled="{Binding IsActive}" HorizontalOptions="Start" VerticalOptions="Start" IsEnabled="False" >
+                                <Switch.Resources>
+                                    <Style TargetType="Switch">
+                                        <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
+                                        <Setter Property="OnColor" Value="{StaticResource Secondary}" />
+                                    </Style>
+                                </Switch.Resources>
+                            </Switch>
                         </Grid>
                     </Frame>
                 </DataTemplate>

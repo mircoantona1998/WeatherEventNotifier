@@ -1,3 +1,4 @@
+using AppWeatherEventNotifier.Helper;
 using AppWeatherEventNotifier.Models;
 using AppWeatherEventNotifier.Services.RestController;
 using AppWeatherEventNotifier.ViewModels;
@@ -21,42 +22,50 @@ public partial class EditConfiguration : ContentPage
     protected override async void OnAppearing()
     {
         disableAll();
-
-        List<Metric> listMetric = await MetricController.get_metrics();
+        listMetric = await MetricController.get_metrics();
         if (listMetric != null)
         {
             metrica.ItemsSource = listMetric;
             metrica.ItemDisplayBinding = new Binding("Field");
-            metrica.SelectedIndexChanged += OnPickerSelectedIndexChangedMetric;
         }
-        frequenza.ItemsSource = frequencyList;
-        frequenza.ItemDisplayBinding = new Binding("FrequencyName");
-        frequenza.SelectedIndexChanged += OnPickerSelectedIndexChangedFrequency;
-
-        //if (Globals.ConfigurationSelected.IdConfiguration != null)
-        //    idLabel.Text = Globals.ConfigurationSelected.IdConfiguration.ToString();
-        //if (Globals.ConfigurationSelected.Title != null)
-        //    titoloLabel.Text = Globals.ConfigurationSelected.Title.ToString();
-        //if (Globals.ConfigurationSelected.Note != null)
-        //    descrizioneEntry.Text = Globals.ConfigurationSelected.Note.ToString();
-        //if (Globals.ConfigurationSelected.Date != null)
-        //    data.Text = Globals.ConfigurationSelected.Date.ToString();
-        //if (Globals.ConfigurationSelected.Source != null)
-        //    sorgente.Text = Globals.ConfigurationSelected.Source.ToString();
-        //if (Globals.ConfigurationSelected.GroupingTAG != null)
-        //    gruppo.Text = Globals.ConfigurationSelected.GroupingTAG.ToString();
-        //if (Globals.ConfigurationSelected.IdAlarm != null)
-        //    codice_allarme.Text = Globals.ConfigurationSelected.IdAlarm.ToString();
-        //if (Globals.ConfigurationSelected.Priority != null)
-        //    prioritàLabel.Text = Globals.ConfigurationSelected.Priority.ToString();
-        //if (Globals.ConfigurationSelected.Plant != null)
-        //    impiantoLabel.Text = Globals.ConfigurationSelected.Plant.ToString();
-        //if (Globals.ConfigurationSelected.IdStatusConfiguration != null)
-        //    if (Globals.ConfigurationSelected.IdStatusConfiguration == 1)
-        //        stato.Text = "Attivo";
-        //    else
-        //        stato.Text = "Completato";
-
+        frequencyList = await FrequencyController.get_frequencys();
+        if (frequencyList != null)
+        {
+            frequenza.ItemsSource = frequencyList;
+            frequenza.ItemDisplayBinding = new Binding("FrequencyName");
+        }
+        if (Globals.ConfigurationSelected.IdMetric != null)
+        {
+            metricSelected = listMetric.FirstOrDefault(metric => metric.Id == Globals.ConfigurationSelected.IdMetric);
+            if (metricSelected != null)
+            {
+                metrica.SelectedItem = metricSelected;
+            }
+        }
+        if (Globals.ConfigurationSelected.IdFrequency != null)
+        {
+            frequencySelected = frequencyList.FirstOrDefault(Frequency => Frequency.Id == Globals.ConfigurationSelected.IdFrequency);
+            if (frequencySelected != null)
+            {
+                frequenza.SelectedItem = frequencySelected;
+            }
+        }
+        if (Globals.ConfigurationSelected.Longitude != null)
+            longitudine.Text = Globals.ConfigurationSelected.Longitude.ToString();
+        if (Globals.ConfigurationSelected.Latitude != null)
+            latitudine.Text = Globals.ConfigurationSelected.Latitude.ToString();
+        if (Globals.ConfigurationSelected.DateTimeActivation!= null)
+            data_attivazione.Date = Globals.ConfigurationSelected.DateTimeActivation.Value.Date.ToLocalTime();
+            time_attivazione.Time = Globals.ConfigurationSelected.DateTimeActivation.Value.ToLocalTime().TimeOfDay;
+        if (Globals.ConfigurationSelected.IsActive != null && Globals.ConfigurationSelected.IsActive == true)
+            isActive.IsToggled = true;
+        else isActive.IsToggled =false;
+        if (Globals.ConfigurationSelected.Symbol != null)
+            Simbolo.SelectedItem = Globals.ConfigurationSelected.Symbol.ToString();
+        if (Globals.ConfigurationSelected.Value != null)
+            Valore.Text = Globals.ConfigurationSelected.Value.ToString();
+        if (Globals.ConfigurationSelected.ValueUnit != null)
+            ValueUnit.Text = Globals.ConfigurationSelected.ValueUnit.ToString();
         enableAll();
     }
 
@@ -68,35 +77,27 @@ public partial class EditConfiguration : ContentPage
     {
         frequencySelected = (Frequency)((Picker)sender).SelectedItem;
     }
-    /*
-     * Save Configuration
-     */
     private async void SaveConfigurationClicked(object sender, EventArgs e)
     {
-         disableAll();
-
-        //Models.ModifiedConfiguration Configuration = new Models.ModifiedConfiguration
-        //{
-        //    IdConfiguration = Globals.ConfigurationSelected.IdConfiguration,
-        //    DateUpdate = DateTime.Now,
-        //    Note = descrizioneEntry.Text,
-        //    IdStatusConfiguration = 1,
-        //    Priority = prioritàLabel.Text.ToString(),
-        //    IdPlant = Globals.ConfigurationSelected.IdPlant
-        //};
-
-        //var resp = await _model.OnSaveModifiedConfiguration(Configuration);
-
-        //if (resp.Result == true)
-        //{
-        //    await DisplayAlert("Success", "Configuration modificato correttamente", "Chiudi");
-        //    await Services.RestController.Refresh.RefreshHomePageData.RefreshConfigurations();
-        //    Globals.ConfigurationSelected.Note = descrizioneEntry.Text;
-        //}
-        //else
-        //{
-        //    await DisplayAlert("Error", "Errore nella modifica del Configuration", "Chiudi");
-        //}
+        disableAll();
+        Frequency foundFrequency = frequencyList.FirstOrDefault(f => f.FrequencyName == frequencySelected.FrequencyName);
+        int? IdFrequency = foundFrequency.Id;
+        float Longitude = Convert.ToInt64(longitudine.Text.ToString());
+        float Latitude = Convert.ToInt64(latitudine.Text.ToString());
+        Metric foundMetric = listMetric.FirstOrDefault(f => f.Field == metricSelected.Field);
+        int? IdMetric = foundMetric.Id;
+        string Symbol = Simbolo.SelectedItem.ToString();
+        float Value = Convert.ToInt64(Valore.Text.ToString());
+        var resp = await ConfigurationController.patch_configuration(Globals.ConfigurationSelected.Id,Longitude, Latitude, IdMetric, IdFrequency, Symbol, Value);
+        if (resp == true)
+        {
+            await DisplayAlert("Successo", "Configurazione modificata correttamente", "Ok");
+            await ConfigurationController.get_configurations();
+        }
+        else
+        {
+            await DisplayAlert("Error", "Errore nella modifica della configurazione", "Ok");
+        }
         Navigation.RemovePage(this);
         enableAll();
     }

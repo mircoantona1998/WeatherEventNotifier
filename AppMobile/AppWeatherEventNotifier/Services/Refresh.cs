@@ -15,9 +15,10 @@ namespace AppWeatherEventNotifier.Services
         }
         public static async Task refreshInfoUser()
         {
-            var res= await ConfigurationController.get_configurations((int)Convert.ToInt64(TodoItemDatabase.Instance.UserId));
+            var res= await ConfigurationController.get_configurations();
             if (res!= null && res.Count > 0)
                 Globals.configurationViewModel.Intentions_configurations = new ObservableCollection<Configuration>(res);
+            else Globals.configurationViewModel.Intentions_configurations = new ObservableCollection<Configuration>();
         }
     }
 }

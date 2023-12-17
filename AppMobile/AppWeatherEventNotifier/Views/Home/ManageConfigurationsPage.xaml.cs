@@ -1,6 +1,5 @@
 using AppWeatherEventNotifier.Helper;
 using AppWeatherEventNotifier.Services;
-using AppWeatherEventNotifier.Services.RestController;
 using AppWeatherEventNotifier.Views.Configuration;
 
 namespace AppWeatherEventNotifier.Views.HomePage;
@@ -11,6 +10,9 @@ public partial class ManageConfigurationsPage : ContentPage
     public ManageConfigurationsPage()
     {
         InitializeComponent();
+    }
+    protected override void OnAppearing()
+    {
         configurationsCollectionView.ItemsSource = Globals.configurationViewModel.Intentions_configurations;
     }
     private void logout(object sender, EventArgs e)
@@ -34,25 +36,9 @@ public partial class ManageConfigurationsPage : ContentPage
             canOpen = true;
         }
     }
-
-    //private async void Button_Clicked_Get(object sender, EventArgs e)
-    //{
-    //   var res= await ConfigurationController.get_configurations((int)Convert.ToInt64( TodoItemDatabase.Instance.UserId));
-    //    Console.WriteLine(res);
-    //}
     private async void Button_Clicked_Add(object sender, EventArgs e)
     {
-        //var res = await ConfigurationController.add_configuration((int)Convert.ToInt64(TodoItemDatabase.Instance.UserId),23,23,"metric","frequency");
         await Navigation.PushAsync(new AddConfigurationPage());
     }
-    private async void Button_Clicked_Modify(object sender, EventArgs e)
-    {
-        var res = await ConfigurationController.patch_configuration(6,(int)Convert.ToInt64(TodoItemDatabase.Instance.UserId), 23, 23, "metric", "frequency");
-        Console.WriteLine(res);
-    }
-    private async void Button_Clicked_Delete(object sender, EventArgs e)
-    {
-        var res = await ConfigurationController.delete_configuration((int)Convert.ToInt64(TodoItemDatabase.Instance.UserId),2);
-        Console.WriteLine(res);
-    }
+
 }

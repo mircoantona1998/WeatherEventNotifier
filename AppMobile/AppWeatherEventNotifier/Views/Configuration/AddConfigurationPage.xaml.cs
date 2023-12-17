@@ -1,15 +1,16 @@
-using AppWeatherEventNotifier.Helper;
+using AppWeatherEventNotifier.Models;
+using AppWeatherEventNotifier.Services.RestController;
 using AppWeatherEventNotifier.ViewModels;
 
 namespace AppWeatherEventNotifier.Views.Configuration;
 
-public partial class AddConfigurationPage : ContentPage
+ public partial class AddConfigurationPage : ContentPage
 {
     private ConfigurationViewModel _model;
-    //private List<Implant> implantsList;
-    //private List<Status> statusList;
-    //private Status statusSelected;
-    //private Implant implantSelected;
+    private List<Metric> listMetric;
+    private List<Frequency> frequencyList;
+    private Frequency frequencySelected;
+    private Metric metricSelected;
 
     public AddConfigurationPage()
     {
@@ -21,70 +22,59 @@ public partial class AddConfigurationPage : ContentPage
     {
         disableAll();
 
-        //if (Globals.ConfigurationSelected.IdConfiguration != null)
-        //    idLabel.Text = Globals.ConfigurationSelected.IdConfiguration.ToString();
-        //if (Globals.ConfigurationSelected.Title != null)
-        //    titoloLabel.Text = Globals.ConfigurationSelected.Title.ToString();
-        //if (Globals.ConfigurationSelected.Note != null)
-        //    descrizioneEntry.Text = Globals.ConfigurationSelected.Note.ToString();
-        //if (Globals.ConfigurationSelected.Date != null)
-        //    data.Text = Globals.ConfigurationSelected.Date.ToString();
-        //if (Globals.ConfigurationSelected.Source != null)
-        //    sorgente.Text = Globals.ConfigurationSelected.Source.ToString();
-        //if (Globals.ConfigurationSelected.GroupingTAG != null)
-        //    gruppo.Text = Globals.ConfigurationSelected.GroupingTAG.ToString();
-        //if (Globals.ConfigurationSelected.IdAlarm != null)
-        //    codice_allarme.Text = Globals.ConfigurationSelected.IdAlarm.ToString();
-        //if (Globals.ConfigurationSelected.Priority != null)
-        //    priorit‡Label.Text = Globals.ConfigurationSelected.Priority.ToString();
-        //if (Globals.ConfigurationSelected.Plant != null)
-        //    impiantoLabel.Text = Globals.ConfigurationSelected.Plant.ToString();
-        //if (Globals.ConfigurationSelected.IdStatusConfiguration != null)
-        //    if (Globals.ConfigurationSelected.IdStatusConfiguration == 1)
-        //        stato.Text = "Attivo";
-        //    else
-        //        stato.Text = "Completato";
-
+        List<Metric> listMetric = await MetricController.get_metrics();
+        if (listMetric != null)
+        {
+            Metrica.ItemsSource = listMetric;
+            Metrica.ItemDisplayBinding = new Binding("Field");
+        }
+        List<Frequency> frequencyList = await FrequencyController.get_frequencys();
+        if (frequencyList != null)
+        {
+            Frequenza.ItemsSource = frequencyList;
+            Frequenza.ItemDisplayBinding = new Binding("FrequencyName");
+        }
         enableAll();
     }
-
-
-    // Set implant selected
-    private void OnPickerSelectedIndexChangedImplant(object sender, EventArgs e)
+    private void OnPickerSelectedIndexChangedMetric(object sender, EventArgs e)
     {
-        // Handle the selected item change event here
-      //  implantSelected = (Implant)((Picker)sender).SelectedItem;
+        metricSelected = (Metric)((Picker)sender).SelectedItem;
     }
-
-    /*
-     * Save Configuration
-     */
+    private void OnPickerSelectedIndexChangedFrequency(object sender, EventArgs e)
+    {
+        frequencySelected = (Frequency)((Picker)sender).SelectedItem;
+    }
     private async void SaveConfigurationClicked(object sender, EventArgs e)
     {
-         disableAll();
+        disableAll();
+        if(frequencySelected!=null && metricSelected != null && Longitudine.Text!="" && Latitudine.Text!="" && Simbolo.SelectedItem !=null && Valore.Text!="")
+        { 
+            Frequency foundFrequency = frequencyList.FirstOrDefault(f => f.FrequencyName == frequencySelected.FrequencyName);
+            int? IdFrequency = foundFrequency.Id;
+            float Longitude = Convert.ToInt64(Longitudine.Text.ToString());
+            float Latitude = Convert.ToInt64(Latitudine.Text.ToString());
+            Metric foundMetric = listMetric.FirstOrDefault(f => f.Field==metricSelected.Field);
+            int? IdMetric = foundMetric.Id;
+            string Symbol = Simbolo.SelectedItem.ToString();
+            float Value = Convert.ToInt64(Valore.Text.ToString());
 
-        //Models.ModifiedConfiguration Configuration = new Models.ModifiedConfiguration
-        //{
-        //    IdConfiguration = Globals.ConfigurationSelected.IdConfiguration,
-        //    DateUpdate = DateTime.Now,
-        //    Note = descrizioneEntry.Text,
-        //    IdStatusConfiguration = 1,
-        //    Priority = priorit‡Label.Text.ToString(),
-        //    IdPlant = Globals.ConfigurationSelected.IdPlant
-        //};
-
-        //var resp = await _model.OnSaveModifiedConfiguration(Configuration);
-
-        //if (resp.Result == true)
-        //{
-        //    await DisplayAlert("Success", "Configuration modificato correttamente", "Chiudi");
-        //    await Services.RestController.Refresh.RefreshHomePageData.RefreshConfigurations();
-        //    Globals.ConfigurationSelected.Note = descrizioneEntry.Text;
-        //}
-        //else
-        //{
-        //    await DisplayAlert("Error", "Errore nella modifica del Configuration", "Chiudi");
-        //}
+            var resp = await ConfigurationController.add_configuration( Longitude, Latitude, IdMetric, IdFrequency, Symbol, Value);
+            if (resp == true)
+            {
+                await DisplayAlert("Successo", "Configurazione creata correttamente", "Ok");
+                await ConfigurationController.get_configurations();
+            }
+            else
+            {
+                await DisplayAlert("Error", "Errore nella creazione della configurazione", "Ok");
+            }
+        }
+        else
+        {
+            await DisplayAlert("Attenzione", "Devi compilare tutti i campi", "Ok");
+            enableAll();
+            return;
+        }
         Navigation.RemovePage(this);
         enableAll();
     }

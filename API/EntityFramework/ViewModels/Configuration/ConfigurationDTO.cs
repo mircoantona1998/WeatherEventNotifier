@@ -11,6 +11,8 @@ namespace Userdata.ViewModels
         public float Latitude { get; set; }
         public int IdMetric { get; set; }
         public int IdFrequency { get; set; }
+        public string Symbol { get; set; }
+        public float Value { get; set; }
         public DateTime? DateTimeActivation{ get; set; }
     }
     public class ConfigurationCreateRequestKafka : ConfigurationCreateDTO
@@ -25,6 +27,8 @@ namespace Userdata.ViewModels
                 IdMetric = dto.IdMetric,
                 IdFrequency = dto.IdFrequency,
                 DateTimeActivation = dto.DateTimeActivation,
+                Symbol=dto.Symbol,
+                Value=dto.Value,
                 IdUser = idUser
             };
         }
@@ -37,6 +41,8 @@ namespace Userdata.ViewModels
         public float? Latitude { get; set; }
         public int? IdMetric { get; set; }
         public int? IdFrequency { get; set; }
+        public string? Symbol { get; set; }
+        public float? Value { get; set; }
         public DateTime? DateTimeActivation { get; set; }
     }
     public class ConfigurationPatchRequestKafka : ConfigurationPatchDTO
@@ -52,6 +58,8 @@ namespace Userdata.ViewModels
                 IdMetric = dto.IdMetric,
                 IdFrequency = dto.IdFrequency,
                 DateTimeActivation = dto.DateTimeActivation,
+                Symbol = dto.Symbol,
+                Value = dto.Value,
                 IdUser = idUser
             };
         }
