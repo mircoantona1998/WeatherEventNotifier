@@ -1,4 +1,5 @@
 using AppWeatherEventNotifier.Models;
+using AppWeatherEventNotifier.Services;
 using AppWeatherEventNotifier.Services.RestController;
 using AppWeatherEventNotifier.ViewModels;
 
@@ -22,13 +23,13 @@ namespace AppWeatherEventNotifier.Views.Configuration;
     {
         disableAll();
 
-        List<Metric> listMetric = await MetricController.get_metrics();
+        listMetric = await MetricController.get_metrics();
         if (listMetric != null)
         {
             Metrica.ItemsSource = listMetric;
             Metrica.ItemDisplayBinding = new Binding("Field");
         }
-        List<Frequency> frequencyList = await FrequencyController.get_frequencys();
+        frequencyList = await FrequencyController.get_frequencys();
         if (frequencyList != null)
         {
             Frequenza.ItemsSource = frequencyList;
@@ -62,7 +63,7 @@ namespace AppWeatherEventNotifier.Views.Configuration;
             if (resp == true)
             {
                 await DisplayAlert("Successo", "Configurazione creata correttamente", "Ok");
-                await ConfigurationController.get_configurations();
+                await Refresh.refreshInfoUser();
             }
             else
             {

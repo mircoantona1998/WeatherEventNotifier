@@ -1,5 +1,6 @@
 using AppWeatherEventNotifier.Helper;
 using AppWeatherEventNotifier.Models;
+using AppWeatherEventNotifier.Services;
 using AppWeatherEventNotifier.Services.RestController;
 using AppWeatherEventNotifier.ViewModels;
 
@@ -92,13 +93,14 @@ public partial class EditConfiguration : ContentPage
         if (resp == true)
         {
             await DisplayAlert("Successo", "Configurazione modificata correttamente", "Ok");
-            await ConfigurationController.get_configurations();
+            await Refresh.refreshInfoUser();
         }
         else
         {
             await DisplayAlert("Error", "Errore nella modifica della configurazione", "Ok");
         }
-        Navigation.RemovePage(this);
+        await Navigation.PopAsync();
+        await Navigation.PopAsync();
         enableAll();
     }
     private void disableAll()
