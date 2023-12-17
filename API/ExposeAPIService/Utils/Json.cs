@@ -18,7 +18,7 @@ namespace ExposeAPI.Utils
         {
             return JsonConvert.DeserializeObject<T>(jsonString);
         }
-        public static string PackagingMessage(object element, MessageType type, MessageTag tag, int? IdOffsetResponse)
+        public static string PackagingMessage(object element, MessageType type, MessageTag tag, int? IdOffsetResponse,bool? code=true)
         {
             var data = ConvertObjectToJson(element);
             string json = JsonConvert.SerializeObject(new
@@ -26,6 +26,7 @@ namespace ExposeAPI.Utils
                 IdOffsetResponse = IdOffsetResponse,
                 Type = EnumUtils.EnumToString(type),
                 Tag = EnumUtils.EnumToString(tag),
+                Code = code,
                 Data = data
             }, Formatting.Indented);
             return json;

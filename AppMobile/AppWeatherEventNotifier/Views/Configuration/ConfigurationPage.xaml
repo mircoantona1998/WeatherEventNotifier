@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppWeatherEventNotifier.Views.Configuration.ConfigurationPage"
+             xmlns:customControls="clr-namespace:AppWeatherEventNotifier.Views.CustomControls"
+             NavigationPage.HasNavigationBar="False"       
+             Shell.TabBarIsVisible="False"
+             x:Name="info" Title="Gestione configurazione" BackgroundColor="#f5f6fa"  IconImageSource="info.png">
+    <ContentPage.Background>
+        <LinearGradientBrush >
+            <GradientStop Color="#20509b" Offset="0.1" />
+            <GradientStop Color="#00cd82"   Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+    <Grid VerticalOptions="Fill">
+        <StackLayout>
+            <Grid VerticalOptions="FillAndExpand" Padding="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <ScrollView Grid.Row="0" Grid.RowSpan="5" Orientation="Vertical">
+                    <Grid RowSpacing="12" ColumnSpacing="12" Padding="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="ID" Margin="0"  VerticalOptions="Center" Grid.Row="0" Grid.Column="0"></Label>
+                        <Label x:Name="id" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="0" Grid.Column="1"></Label>
+
+                        <Label Text="Titolo"  Margin="0"  VerticalOptions="Center" Grid.Row="1" Grid.Column="0"></Label>
+                        <Label x:Name="titolo" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="1" Grid.Column="1"></Label>
+
+                        <Label Text="Impianto" Margin="0"  VerticalOptions="Center" Grid.Row="2" Grid.Column="0"></Label>
+                        <Label x:Name="impianto" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="2" Grid.Column="1"></Label>
+
+                        <Label Text="Data" Margin="0"  VerticalOptions="Center" Grid.Row="3" Grid.Column="0"></Label>
+                        <Label x:Name="data" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="3" Grid.Column="1"></Label>
+
+                        <Label Text="Sorgente" Margin="0"  VerticalOptions="Center" Grid.Row="4" Grid.Column="0"></Label>
+                        <Label x:Name="sorgente" Margin="0"   VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="4" Grid.Column="1"></Label>
+
+                        <Label Text="Codice allarme" Margin="0"  VerticalOptions="Center" Grid.Row="5" Grid.Column="0"></Label>
+                        <Label x:Name="codice_allarme" Margin="0"   VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="5" Grid.Column="1"></Label>
+
+                        <Label Text="Stato" Margin="0"  VerticalOptions="Center" Grid.Row="6" Grid.Column="0"></Label>
+                        <Label x:Name="stato" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="6" Grid.Column="1"></Label>
+
+                        <Label Text="Priorità" Margin="0"  VerticalOptions="Center" Grid.Row="7" Grid.Column="0"></Label>
+                        <Label x:Name="priorita" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="7" Grid.Column="1"></Label>
+
+                        <Label Text="Gruppo" Margin="0"  VerticalOptions="Center" Grid.Row="8" Grid.Column="0"></Label>
+                        <Label x:Name="gruppo" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="8" Grid.Column="1"></Label>
+
+                        <Label x:Name="dateUpdateName" Margin="0"  VerticalOptions="Center" Text="Data ultima modifica" Grid.Row="9" Grid.Column="0" IsVisible="false"></Label>
+                        <Label x:Name="dateUpdateValue" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="9" Grid.Column="1" IsVisible="false"></Label>
+
+                        <Label x:Name="ownerName" Margin="0"  VerticalOptions="Center" Text="ID Owner" Grid.Row="10" Grid.Column="0" IsVisible="false"></Label>
+                        <Label x:Name="ownerValue" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"  Grid.Row="10" Grid.Column="1" IsVisible="false"></Label>
+
+                        <Label Text="Descrizione" Margin="0"   VerticalOptions="Center" Grid.Row="11" Grid.Column="0"></Label>
+                        <Label x:Name="descrizione" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}"   Grid.Row="11" Grid.Column="1"></Label>
+
+                        <Label x:Name="noteLabel" Margin="0"  VerticalOptions="Center" Text="Nota di risoluzione" Grid.Row="12" Grid.Column="0"  IsVisible="false" Padding="0" ></Label>
+                        <Frame x:Name="noteEntryFrame" Margin="0"   Grid.Row="12" Grid.Column="1" Padding="0" HorizontalOptions="Fill" VerticalOptions="Fill" IsVisible="False">
+                            <Editor  MaxLength="255" x:Name="noteEntry"  Margin="0" AutoSize="TextChanges"  VerticalOptions="FillAndExpand" Placeholder="Note *" TextColor="{StaticResource Primary}"   IsEnabled="false" IsVisible="false"></Editor>
+                        </Frame>
+                    </Grid>
+                </ScrollView>
+                <Grid Grid.Row="5" ColumnSpacing="10" RowSpacing="10" VerticalOptions="CenterAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="deleteConfiguration" ImageSource="elimina.png" Grid.Row="0" Text="Elimina" Grid.Column="0" Clicked="DeleteConfigurationClicked"></Button>
+                    <Button x:Name="editConfiguration" ImageSource="modifica.png" Grid.Row="0" Text="Modifica" Grid.Column="1" Clicked="EditConfigurationClicked"></Button>
+                </Grid>
+            </Grid>
+        </StackLayout>
+        <customControls:ActivityIndicatorControl x:Name="activityController" VerticalOptions="Center" HorizontalOptions="Center"></customControls:ActivityIndicatorControl>
+    </Grid>
+</ContentPage>

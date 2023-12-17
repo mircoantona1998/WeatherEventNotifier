@@ -28,7 +28,7 @@ class ProducerClass:
         new=MessageSent()
         new.message=str(msg)
         new.offset=offset
-        new.timestamp=datetime.now()
+        new.timestamp=datetime.utcnow()
         new.tagMessage=message_received.Tag
         new.type=MessageType.Response.value
         if(new.type ==  MessageType.Response.value):

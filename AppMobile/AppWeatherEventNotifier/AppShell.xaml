@@ -6,7 +6,7 @@
     xmlns:localProfile="clr-namespace:AppWeatherEventNotifier.Views.HeaderProfile"
     xmlns:settings="AppWeatherEventNotifier.Views.HomePage.SettingsPage"
     xmlns:tips="AppWeatherEventNotifier.Views.HomePage.TipsPage"
-    xmlns:configuration="AppWeatherEventNotifier.Views.HomePage.AlertConfigurationPage"
+    xmlns:configuration="AppWeatherEventNotifier.Views.HomePage.ManageConfigurationsPage"
     Shell.TabBarIsVisible="False"
     Shell.FlyoutBehavior="Disabled"
     NavigationPage.HasNavigationBar="False" BackgroundColor="#20509b" >
@@ -73,7 +73,7 @@
     <FlyoutItem Shell.TabBarIsVisible="True" CurrentItem="{x:Reference tips}"  
                FlyoutDisplayOptions="AsSingleItem" Icon="feedback.png" Title="Home" >
         <Tab x:Name="AlertConf" Title="Configurazioni"  Icon="configuration.png" >
-            <ShellContent x:Name="configurazione"   ContentTemplate="{DataTemplate configuration:AlertConfigurationPage}" />
+            <ShellContent x:Name="configurazione"   ContentTemplate="{DataTemplate configuration:ManageConfigurationsPage}" />
         </Tab>
         <Tab x:Name="tips"   Title="Notifiche"    Icon="feedback.png" >
             <ShellContent    ContentTemplate="{DataTemplate  tips:TipsPage}" />

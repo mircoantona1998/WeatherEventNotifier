@@ -43,15 +43,23 @@ namespace ExposeAPI.Kafka
                         if (messLast == null || ((int)result.Offset.Value) > messLast.Offset)
                         {                 
                             Console.WriteLine($"Received message  {result.Message.Value} to {result.TopicPartitionOffset}");
-                            KafkaMessage<T> obj = Json.ConvertJsonToObject<KafkaMessage<T>>(result.Message.Value);
-                            await saveMessage(result,obj);
-                            if (obj != null) {
-                                if (obj.IdOffsetResponse == offset)
+                            try
+                            {
+                                KafkaMessage<T> obj = Json.ConvertJsonToObject<KafkaMessage<T>>(result.Message.Value);
+                                await saveMessage(result, obj);
+                                if (obj != null)
                                 {
-                                    response = obj.Data;
-                                    break;
+                                    if (obj.IdOffsetResponse == offset)
+                                    {
+                                        response = obj.Data;
+                                        break;
+                                    }
                                 }
-                            }                           
+                            }
+                            catch
+                            {
+                                await saveMessageWithErrorInDeserialization(result);
+                            }                                   
                         }
                     }
                 }
@@ -64,21 +72,28 @@ namespace ExposeAPI.Kafka
             return response;
         }
 
-       
-
-
 
         public async Task saveMessage<T>(ConsumeResult<Ignore,string> result,KafkaMessage<T> kf)
         {
             MessageReceivedDTO messag = new MessageReceivedDTO();
-            messag.Timestamp = DateTime.Now;
+            messag.Timestamp = DateTime.UtcNow;
             messag.Message = result.Message.Value;
             messag.Offset = ((int)result.Offset.Value);
             messag.TagMessage = kf.Tag;
             messag.Type = kf.Type;
+            messag.Topic = result.Topic;
             if (kf.Type == MessageType.Response.ToString())
                 messag.IdOffsetResponse = kf.IdOffsetResponse;
-            messag.Topic = topic_response;
+            var newItemID = await messRepo.Create(messag);
+        }
+        public async Task saveMessageWithErrorInDeserialization(ConsumeResult<Ignore, string> result)
+        {
+            MessageReceivedDTO messag = new MessageReceivedDTO();
+            messag.Timestamp = DateTime.UtcNow;
+            messag.Message = result.Message.Value;
+            messag.Offset = ((int)result.Offset.Value);
+            messag.Topic = result.Topic;
+            messag.Code = true;
             var newItemID = await messRepo.Create(messag);
         }
     }

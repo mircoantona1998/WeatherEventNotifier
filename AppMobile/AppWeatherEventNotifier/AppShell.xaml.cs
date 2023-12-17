@@ -1,19 +1,13 @@
 ﻿using AppWeatherEventNotifier.Helper;
-using AppWeatherEventNotifier.Services;
-using AppWeatherEventNotifier.Services.Events;
-using AppWeatherEventNotifier.ViewModels;
-using Microsoft.Maui.Controls;
+
 
 namespace AppWeatherEventNotifier;
 
 public partial class AppShell : Shell
 {
-    private HomeViewModel _model;
     public AppShell()
 	{
 		InitializeComponent();
-        BindingContext = _model = new HomeViewModel();
-        Globals.homeViewModel = _model;
     }
 
     protected override bool OnBackButtonPressed()

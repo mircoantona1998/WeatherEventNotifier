@@ -1,8 +1,5 @@
 ﻿using AppWeatherEventNotifier.Helper;
-using AppWeatherEventNotifier.Helper.Data;
 using AppWeatherEventNotifier.Models;
-using AppWeatherEventNotifier.Services;
-using AppWeatherEventNotifier.Services.RestController;
 using AppWeatherEventNotifier.ViewModels;
 using AppWeatherEventNotifier.Views.Registration;
 using AppWeatherEventNotifier.Views.Splash;

@@ -39,22 +39,7 @@ public partial class App : Application
             return false;
         }
     }
-    public static async Task<bool> TaskMqtt()
-    {
-        try
-        {
-            Globals.lastMqttRequest = DateTime.Now;
-            if (TodoItemDatabase.Instance.IsLoggedIn == true)
-            {
-            await Services.RestController.PingController.mqtt_timer();             
-            }
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+  
     protected override void OnSleep()
     {
         if (Globals.page_current == "MainPage") 
@@ -79,9 +64,7 @@ public partial class App : Application
                 if(res==true)
                     EventRefresh.RunEvents(null, null);
             }
-            differences = DateTime.Now - Globals.lastMqttRequest;
-            if (differences.TotalMinutes> 3)
-                await TaskMqtt();           
+            differences = DateTime.Now - Globals.lastMqttRequest;        
         }
     }
 }

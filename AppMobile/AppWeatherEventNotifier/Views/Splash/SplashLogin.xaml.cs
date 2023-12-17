@@ -25,10 +25,7 @@ public partial class SplashLogin : ContentPage
         timer.Interval = TimeSpan.FromSeconds(0.4);
         timer.Tick += (s, e) => DoSomething();
         timer.Start();
-
-        // await Refresh.refreshInfoUser();
-
-        await PingController.mqtt_timer();
+        await Refresh.refreshInfoUser();
         App.Current.MainPage = new NavigationPage(new AppShell());
 
     }

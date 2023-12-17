@@ -21,11 +21,11 @@ namespace AppWeatherEventNotifier.Helper
         public static bool canHttp = true;
         public static bool first=false;
         public static bool IsConnected = false;
-        public static bool MqttStatus = false;
         public static string server=Constants.SERVER;
         public static string page_current = "";
+        public static Configuration ConfigurationSelected;
 
-        public static HomeViewModel homeViewModel;
+        public static ConfigurationViewModel configurationViewModel=new ConfigurationViewModel();
 
         public static void send_notification(string title, string message)
         {

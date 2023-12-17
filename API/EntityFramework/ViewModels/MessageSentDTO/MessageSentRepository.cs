@@ -55,7 +55,7 @@ namespace Userdata.Models
                 var mapper = mapperConfig.CreateMapper();
                 var newItem = mapper.Map(newItemDTO, new MessageSent
                 {
-                    Timestamp = DateTime.Now,
+                    Timestamp = DateTime.UtcNow,
                 });
                 await context.MessageSents.AddAsync(newItem);
                 isCreated = !IsNullOrZero(await context.SaveChangesAsync()) && !IsNullOrZero(newItem.Id);               

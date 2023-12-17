@@ -29,7 +29,7 @@ namespace ExposeAPI.Kafka
         public async Task saveMessage<T>(DeliveryResult<Null,string> result, KafkaMessage<T> kf)
         {
             MessageSentDTO messag = new MessageSentDTO();
-            messag.Timestamp = DateTime.Now;
+            messag.Timestamp = DateTime.UtcNow;
             messag.Message = result.Message.Value;
             messag.Offset = ((int)result.Offset.Value);
             messag.TagMessage = kf.Tag;

@@ -1,6 +1,4 @@
-
 using AppWeatherEventNotifier.Helper;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 namespace AppWeatherEventNotifier.Views.HomePage;
 public partial class TipsPage : ContentPage

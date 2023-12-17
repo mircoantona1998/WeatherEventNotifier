@@ -13,6 +13,7 @@ namespace Userdata.ViewModels
         public int? IdOffsetResponse { get; set; }
         public string? TagMessage { get; set; }
         public string? Topic { get; set; }
+        public bool? Code { get; set; }
     }
 
     #endregion

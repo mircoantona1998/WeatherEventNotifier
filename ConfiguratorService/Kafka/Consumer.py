@@ -30,16 +30,17 @@ class ConsumerClass:
                                 print(f'Received message: {value}')                             
                                 message_received = Json.convert_json_to_object(value,KafkaMessage)
                                 ConsumerClass.saveMessage(msg,message_received,topic)
-                                tag = message_received.Tag
+                                tag = message_received.Tag                              
                                 handler = EventHandlers.tag_handlers.get(tag, lambda: f"Tag {tag} non gestito")
                                 response = handler( msg.offset(),message_received.Data,tag)
-                                offset=ProducerClass.send_response(response)
+                                offset=ProducerClass.send_response(response)     
                                 ProducerClass.saveMessage(response,message_received,msg.offset(),offset,topic)
                             except Exception as ex:
-                                print(f'Error: {value}')
-                                kf=KafkaMessage(msg.offset(),MessageType.Response.value,tag,False)
+                                print(f'Error: {value}')                              
+                                kf=KafkaMessage(msg.offset(),MessageType.Response.value,tag,str(ex),False)
                                 json_data = json.dumps(kf.__dict__, indent=2)
-                                ProducerClass.send_response(json_data,message_received)
+                                offset=ProducerClass.send_response(json_data)
+                                ProducerClass.saveMessage(json_data,message_received,msg.offset(),offset,topic)
                                 pass
                     if msg is None:
                         continue
@@ -60,7 +61,7 @@ class ConsumerClass:
         new=MessageReceived()
         new.message=msg.value().decode("utf-8")
         new.offset=msg.offset()
-        new.timestamp=datetime.now()
+        new.timestamp=datetime.utcnow()
         new.tagMessage=message_received.Tag
         new.type=message_received.Type
         if(new.type ==  MessageType.Request):

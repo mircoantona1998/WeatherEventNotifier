@@ -51,13 +51,17 @@
 	  <MauiFont Remove="Resources\Fonts\Mona-Sans-Medium.ttf" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Remove="Views\Map\MapPage.xaml" />
+	</ItemGroup>
+
 <ItemGroup>
 	
 <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
 	
 <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
 	
-<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="7.0.92" />
+<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="8.0.3" />
 	
 <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
  <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
@@ -67,6 +71,7 @@
 <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
 	</ItemGroup>
 		<ItemGroup>
+	  <None Remove="Resources\Images\add.png" />
 	  <None Remove="Resources\Images\amministratore.png" />
 	  <None Remove="Resources\Images\assistente.png" />
 	  <None Remove="Resources\Images\background_city.PNG" />
@@ -124,6 +129,11 @@
 	  <None Remove="Resources\Raw\video.MOV" />
 	  <None Remove="Resources\Raw\video.mp4" />
 	</ItemGroup>
+		<ItemGroup>
+		  <EmbeddedResource Include="Views\Map\MapPage.xaml">
+		    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		  </EmbeddedResource>
+		</ItemGroup>
 
 	<ItemGroup>
 			<PackageReference Include="SampleBrowser.Maui.Base" version="21.1.38" />
@@ -143,8 +153,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\Home\AlertConfigurationPage.xaml.cs">
-	    <DependentUpon>AlertConfigurationPage.xaml</DependentUpon>
+	  <Compile Update="Views\Configuration\ConfigurationPage.xaml.cs">
+	    <DependentUpon>ConfigurationPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Configuration\AddConfigurationPage.xaml.cs">
+	    <DependentUpon>AddConfigurationPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Configuration\EditConfiguration.xaml.cs">
+	    <DependentUpon>EditConfiguration.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Home\ManageConfigurationsPage.xaml.cs">
+	    <DependentUpon>ManageConfigurationsPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\Home\TipsPage.xaml.cs">
 	    <DependentUpon>TipsPage.xaml</DependentUpon>
@@ -170,6 +189,12 @@
 	  <MauiXaml Update="Resources\Styles\Labels.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Configuration\AddConfigurationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Configuration\EditConfiguration.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\CustomControls\ActivityIndicatorControl.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -179,7 +204,7 @@
 	  <MauiXaml Update="Views\HeaderProfile\HeaderContentView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\Home\AlertConfigurationPage.xaml">
+	  <MauiXaml Update="Views\Home\ManageConfigurationsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Home\TipsPage.xaml">
@@ -195,6 +220,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Splash\SplashLogin.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Configuration\ConfigurationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

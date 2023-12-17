@@ -1339,9 +1339,9 @@
         public const string ThumbUp = "\uf513";
         public const string ThumbUpOutline = "\uf514";
         public const string ThumbsUpDown = "\uf515";
-        public const string Ticket = "\uf516";
-        public const string TicketAccount = "\uf517";
-        public const string TicketConfirmation = "\uf518";
+        public const string Configuration = "\uf516";
+        public const string ConfigurationAccount = "\uf517";
+        public const string ConfigurationConfirmation = "\uf518";
         public const string Tie = "\uf519";
         public const string Timelapse = "\uf51a";
         public const string Timer = "\uf51b";
@@ -1864,7 +1864,7 @@
         public const string Svg = "\uf720";
         public const string TagPlus = "\uf721";
         public const string TagRemove = "\uf722";
-        public const string TicketPercent = "\uf723";
+        public const string ConfigurationPercent = "\uf723";
         public const string Tilde = "\uf724";
         public const string TreasureChest = "\uf725";
         public const string TruckTrailer = "\uf726";
@@ -2359,7 +2359,7 @@
         public const string TagMinus = "\uf90f";
         public const string TestTubeEmpty = "\uf910";
         public const string TestTubeOff = "\uf911";
-        public const string TicketOutline = "\uf912";
+        public const string ConfigurationOutline = "\uf912";
         public const string TrackLight = "\uf913";
         public const string Transition = "\uf914";
         public const string TransitionMasked = "\uf915";

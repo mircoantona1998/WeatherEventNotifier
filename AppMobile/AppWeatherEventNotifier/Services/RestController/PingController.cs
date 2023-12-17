@@ -52,47 +52,7 @@ namespace AppWeatherEventNotifier.Services.RestController
             }
 
         }
-        public static async Task mqtt_timer()
-        {
-            try
-            {
 
-                    string endPoint = "/MqttStatus";
-                //    MqttStatusResponse res = await Helper.HttpHelper.HttpGetRequest<MqttStatusResponse>(endPoint,true);
-                    //if (res != null && res.MqttOk==true) {
-
-                    //if (Globals.MqttStatus == false)
-                    //{
-                    //    Globals.MqttStatus = true;
-                    //    object o = new object();
-                    //    EventArgs e = new EventArgs();
-
-                    //}
-                    //}
-                    //else
-                    //{
-                    //if (Globals.MqttStatus == true)
-                    //{
-                    //    Globals.MqttStatus = false;
-                    //    object o = new object();
-                    //    EventArgs e = new EventArgs();
-
-                    //}
-                    //}              
-                return;
-            }
-            catch
-            {
-                //if (Globals.MqttStatus == true)
-                //{
-                //    Globals.MqttStatus = false;
-                //    object o = new object();
-                //    EventArgs e = new EventArgs();
-                //    EventStatus.RunEvents(o, e);
-                //}
-            }
-
-        }
         public static async Task ping_timer_server_page()
         {
             try

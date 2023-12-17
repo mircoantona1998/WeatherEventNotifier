@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ExposeAPI.Utils;
 using ExposeAPI.Model;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 
 namespace ExposeAPI.Controllers
 {
@@ -14,14 +15,22 @@ namespace ExposeAPI.Controllers
         [HttpGet]
         [Route("Get")]
         [Authorize]
-        public async Task<ActionResult> Get(int? IdUser)
+        public async Task<ActionResult> Get()
         {
-            var dto = new
+            List<ConfigurationUser> configurations = null;
+            if (User.Identity.IsAuthenticated)
             {
-                IdUser = IdUser 
-            };
-            int offset = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetConfiguration);
-            var configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<ConfigurationUser>>(offset);
+                var idUserClaim = User.FindFirst("Id");
+                if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
+                {
+                    var dto = new
+                    {
+                        IdUser = idUser
+                    };
+                    int offset = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetConfiguration);
+                     configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<ConfigurationUser>>(offset);
+                }
+            }
             return configurations != null ? Ok(configurations) : Problem(null, null, 401);
         }
         #endregion
@@ -32,9 +41,18 @@ namespace ExposeAPI.Controllers
         [Route("Add")]
         public async Task<ActionResult> Create(ConfigurationCreateDTO newItemDTO)
         {
-            int offset=await Kafka.Kafka.producer.ProduceRequest<string>(newItemDTO,MessageType.Request,MessageTag.AddConfiguration);
-            bool res=await Kafka.Kafka.consumer.ConsumeResponse<bool>(offset);
-            return res ? Ok(true) : Problem(null, null, 401);
+            string res=null;
+            if (User.Identity.IsAuthenticated)
+            {
+                var idUserClaim = User.FindFirst("Id");
+                if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
+                {
+                    var kafkaRequest = ConfigurationCreateRequestKafka.ConvertConfigurationCreateToRequestKafka(newItemDTO, idUser);
+                    int offset=await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest,MessageType.Request,MessageTag.AddConfiguration);
+                    res=await Kafka.Kafka.consumer.ConsumeResponse<string>(offset);
+                }
+            }
+            return res != null? Ok(res) : Problem(null, null, 401);
         }
         #endregion
 
@@ -44,9 +62,18 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Patch(ConfigurationPatchDTO newItemDTO)
         {
-            int offset = await Kafka.Kafka.producer.ProduceRequest<string>(newItemDTO, MessageType.Request, MessageTag.PatchConfiguration);
-            bool res = await Kafka.Kafka.consumer.ConsumeResponse<bool>(offset);
-            return res ? Ok(true) : Problem(null, null, 401);
+            string res = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                var idUserClaim = User.FindFirst("Id");
+                if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
+                {
+                    var kafkaRequest = ConfigurationPatchRequestKafka.ConvertConfigurationPatchToRequestKafka(newItemDTO, idUser);
+                    int offset = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchConfiguration);
+                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>(offset);
+                }
+            }
+            return res !=null? Ok(res) : Problem(null, null, 401);
         }
         #endregion
 
@@ -54,16 +81,24 @@ namespace ExposeAPI.Controllers
         [HttpDelete]
         [Route("Delete")]
         [Authorize]
-        public async Task<ActionResult> Delete(int? IdUser, int? IdConfiguration)
+        public async Task<ActionResult> Delete( int? IdConfiguration)
         {
-            var deleteItemDTO = new
+            string res = null;
+            if (User.Identity.IsAuthenticated)
             {
-                IdUser = IdUser,
-                IdConfiguration=IdConfiguration,
-            };
-            int offset = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteConfiguration);
-            bool isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<bool>(offset);
-            return isDeleted ? Ok(isDeleted) : Problem(null, null,  401);
+                var idUserClaim = User.FindFirst("Id");
+                if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
+                {
+                    var deleteItemDTO = new
+                    {
+                        IdUser = idUser,
+                        IdConfiguration = IdConfiguration,
+                    };
+                    int offset = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteConfiguration);
+                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>(offset);
+                }
+            }
+            return res !=null ? Ok(res) : Problem(null, null, 401);
         }
         #endregion
     }

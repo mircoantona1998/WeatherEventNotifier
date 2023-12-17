@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppWeatherEventNotifier.Views.HomePage.ManageConfigurationsPage"
+             Title="Configurazioni"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="add.png"  Clicked="Button_Clicked_Add" />
+        <ToolbarItem IconImageSource="refresh.png"  Clicked="RefreshClicked" />
+        <ToolbarItem IconImageSource="logout.png"  Clicked="logout" />
+    </ContentPage.ToolbarItems >
+    <ContentPage.Background>
+        <LinearGradientBrush >
+            <GradientStop Color="#20509b" Offset="0.1" />
+            <GradientStop Color="#00cd82"   Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+    <ScrollView VerticalOptions="Fill" HorizontalOptions="Fill">
+        <CollectionView x:Name="configurationsCollectionView"  HorizontalOptions="Fill" VerticalOptions="Fill">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="Transparent" VerticalOptions="Fill" HorizontalOptions="Fill">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="Frame_Tapped" />
+                        </Frame.GestureRecognizers>
+                        <Grid HorizontalOptions="Fill" VerticalOptions="Fill" ColumnSpacing="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Text="Longitudine" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Longitude}" />
+                            <Label Grid.Row="1" Grid.Column="0" Text="Latitudine" />
+                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding Latitude}" />
+                            <Label Grid.Row="2" Grid.Column="0" Text="Data creazione" />
+                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding DateTimeCreate}" />
+                            <Label Grid.Row="3" Grid.Column="0" Text="Metrica" />
+                            <Label Grid.Row="3" Grid.Column="1" Text="{Binding IdMetric}" />
+                            <Label Grid.Row="4" Grid.Column="0" Text="Frequenza" />
+                            <Label Grid.Row="4" Grid.Column="1" Text="{Binding IdFrequencyType}" />
+                            <Label Grid.Row="5" Grid.Column="0" Text="Attiva" />
+                            <Label Grid.Row="5" Grid.Column="1" Text="{Binding IsActive}" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </ScrollView>
+</ContentPage>

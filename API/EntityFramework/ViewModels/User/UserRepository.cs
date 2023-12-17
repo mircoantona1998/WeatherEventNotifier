@@ -33,7 +33,7 @@ namespace Userdata.Models
                 var mapper = mapperConfig.CreateMapper();
                 var newItem = mapper.Map(newItemDTO, new User
                 {
-                    DateUpdate = DateTime.Now,
+                    DateUpdate = DateTime.UtcNow,
                     IsActive = true,
                 });
                 var usr = await context.Users
@@ -75,7 +75,7 @@ namespace Userdata.Models
                     };
                     //// login = true;
                     // context.Attach(usr);
-                    // //usr.LastAccess=DateTime.Now;
+                    // //usr.LastAccess=DateTime.UtcNow;
                     // context.Update(usr);
                     // bool res = !IsNullOrZero(await context.SaveChangesAsync());
                     // if (res)

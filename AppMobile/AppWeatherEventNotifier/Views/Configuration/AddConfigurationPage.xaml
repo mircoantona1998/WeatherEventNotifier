@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppWeatherEventNotifier.Views.Configuration.AddConfigurationPage"
+             xmlns:customControls="clr-namespace:AppWeatherEventNotifier.Views.CustomControls"
+             NavigationPage.HasNavigationBar="False"       
+             Shell.TabBarIsVisible="False"
+             x:Name="AddConfiguration" Title="Crea configurazione" BackgroundColor="#f5f6fa">
+    <ContentPage.Background>
+        <LinearGradientBrush >
+            <GradientStop Color="#20509b" Offset="0.1" />
+            <GradientStop Color="#00cd82"   Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Grid>
+        <StackLayout>
+            <Grid VerticalOptions="FillAndExpand" Padding="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <ScrollView Grid.Row="0" Grid.RowSpan="5" Orientation="Vertical">
+                    <Grid RowSpacing="12" ColumnSpacing="12" Padding="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="ID Configuration" Margin="0"  VerticalOptions="Center" Grid.Row="0" Grid.Column="0"></Label>
+                        <Label x:Name="idLabel" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="0" Grid.Column="1"></Label>
+
+                        <Label Text="Titolo" Margin="0"  VerticalOptions="Center" Grid.Row="1" Grid.Column="0"></Label>
+                        <Label x:Name="titoloLabel"  Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="1" Grid.Column="1"></Label>
+
+                        <Label Text="Impianto" Margin="0"  VerticalOptions="Center" Grid.Row="2" Grid.Column="0"></Label>
+                        <Label x:Name="impiantoLabel" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="2" Grid.Column="1"></Label>
+
+                        <Label Text="Data" Margin="0"  VerticalOptions="Center" Grid.Row="3" Grid.Column="0"></Label>
+                        <Label x:Name="data" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="3" Grid.Column="1"></Label>
+
+                        <Label Text="Sorgente" Margin="0"  VerticalOptions="Center" Grid.Row="4" Grid.Column="0"></Label>
+                        <Label x:Name="sorgente" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="4" Grid.Column="1"></Label>
+
+                        <Label Text="Codice allarme" Margin="0"  VerticalOptions="Center" Grid.Row="5" Grid.Column="0"></Label>
+                        <Label x:Name="codice_allarme" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="5" Grid.Column="1"></Label>
+
+                        <Label Text="Stato" Margin="0"  VerticalOptions="Center" Grid.Row="6" Grid.Column="0"></Label>
+                        <Label x:Name="stato"  Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="6" Grid.Column="1"></Label>
+
+                        <Label Text="Priorità" Margin="0"  VerticalOptions="Center" Grid.Row="7" Grid.Column="0"></Label>
+                        <Label x:Name="prioritàLabel" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="7" Grid.Column="1"></Label>
+
+                        <Label Text="Gruppo" Margin="0"  VerticalOptions="Center" Grid.Row="8" Grid.Column="0"></Label>
+                        <Label x:Name="gruppo" Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="8" Grid.Column="1"></Label>
+
+                        <Label Text="Descrizione" Margin="0"  VerticalOptions="Center" Grid.Row="9" Grid.Column="0"></Label>
+                        <Frame  Grid.Row="9" Grid.Column="1" Margin="0"  VerticalOptions="Center"  Padding="0" HorizontalOptions="FillAndExpand" >
+                            <Editor AutoSize="TextChanges"  MaxLength="255" x:Name="descrizioneEntry" Margin="0"   VerticalOptions="FillAndExpand" TextColor="{StaticResource Primary}" HorizontalOptions="FillAndExpand" />
+                        </Frame>
+                        
+
+                    </Grid>
+                </ScrollView>
+                <Grid Grid.Row="5"  VerticalOptions="CenterAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+            <Button x:Name="salva" ImageSource="salva.png" Text="Salva" Grid.Row="1" HorizontalOptions="Center"  Grid.Column="0" Grid.ColumnSpan="2" MinimumWidthRequest="200" Clicked="SaveConfigurationClicked"></Button>
+                </Grid>
+            </Grid>
+        </StackLayout>
+        <customControls:ActivityIndicatorControl x:Name="activityController" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></customControls:ActivityIndicatorControl>
+    </Grid>
+    
+</ContentPage>

@@ -58,7 +58,7 @@ namespace Userdata.Models
 
                 var newItem = mapper.Map(newItemDTO, new MessageReceived
                 {
-                    Timestamp = DateTime.Now,
+                    Timestamp = DateTime.UtcNow,
                 });
               
                 await context.MessageReceiveds.AddAsync(newItem);

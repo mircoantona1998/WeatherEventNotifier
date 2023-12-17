@@ -29,6 +29,8 @@ class EventsConfigurationRepo:
                     element_to_patch.Frequency = patch_data['Frequency']
                 if 'DateTimeUpdate' in patch_data and patch_data['DateTimeUpdate'] is not None:
                     element_to_patch.DateTimeUpdate = patch_data['DateTimeUpdate']
+                if 'DateTimeActivation' in patch_data and patch_data['DateTimeActivation'] is not None:
+                    element_to_patch.DateTimeActivation = patch_data['DateTimeActivation']
                 session.commit()
             
     def delete_element(id_user=None, id_configuration=None):
