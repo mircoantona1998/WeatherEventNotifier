@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppWeatherEventNotifier.Views.HomePage.ManageConfigurationsPage"
              Title="Configurazioni"
+             xmlns:local="clr-namespace:AppWeatherEventNotifier.Helper"
+             xmlns:customControls="clr-namespace:AppWeatherEventNotifier.Views.CustomControls"
              NavigationPage.HasNavigationBar="False">         
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="add.png"  Clicked="Button_Clicked_Add" />
@@ -15,6 +17,12 @@
             <GradientStop Color="#00cd82"   Offset="1.0" />
         </LinearGradientBrush>
     </ContentPage.Background>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:DateTimeToLocalTimeConverter x:Key="DateTimeToLocalTimeConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid>
     <ScrollView VerticalOptions="Fill" HorizontalOptions="Fill">
         <CollectionView x:Name="configurationsCollectionView"  HorizontalOptions="Fill" VerticalOptions="Fill">
             <CollectionView.ItemsLayout>
@@ -35,6 +43,7 @@
                                 <RowDefinition Height="auto"></RowDefinition>
                                 <RowDefinition Height="auto"></RowDefinition>
                                 <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"></ColumnDefinition>
@@ -45,19 +54,21 @@
                             <Label Grid.Row="1" Grid.Column="0" Text="Latitudine" />
                             <Label Grid.Row="1" Grid.Column="1" Text="{Binding Latitude}" />
                             <Label Grid.Row="2" Grid.Column="0" Text="Data creazione" />
-                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding DateTimeCreate}" />
-                            <Label Grid.Row="3" Grid.Column="0" Text="Metrica" />
-                            <Label Grid.Row="3" Grid.Column="1" Text="{Binding Field}" />
-                            <Label Grid.Row="4" Grid.Column="0" Text="Condizione" />
-                            <HorizontalStackLayout Grid.Row="4" Grid.Column="1">
+                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding DateTimeCreate , Converter={StaticResource DateTimeToLocalTimeConverter}}" />
+                            <Label Grid.Row="3" Grid.Column="0" Text="Data attivazione" />
+                            <Label Grid.Row="3" Grid.Column="1" Text="{Binding DateTimeActivation, Converter={StaticResource DateTimeToLocalTimeConverter}}" />
+                            <Label Grid.Row="4" Grid.Column="0" Text="Metrica" />
+                            <Label Grid.Row="4" Grid.Column="1" Text="{Binding Field}" />
+                            <Label Grid.Row="5" Grid.Column="0" Text="Condizione" />
+                            <HorizontalStackLayout Grid.Row="5" Grid.Column="1" Spacing="10">
                                 <Label  Text="{Binding Symbol}" />
                                 <Label  Text="{Binding Value}" />
                                 <Label Text="{Binding ValueUnit}" ></Label>
                             </HorizontalStackLayout>
-                            <Label Grid.Row="5" Grid.Column="0" Text="Frequenza" />
-                            <Label Grid.Row="5" Grid.Column="1" Text="{Binding FrequencyName}" />
-                            <Label Grid.Row="6" Grid.Column="0" VerticalOptions="Center" Text="Attiva" />
-                            <Switch Grid.Row="6" Grid.Column="1"  IsToggled="{Binding IsActive}" HorizontalOptions="Start" VerticalOptions="Start" IsEnabled="False" >
+                            <Label Grid.Row="6" Grid.Column="0" Text="Frequenza" />
+                            <Label Grid.Row="6" Grid.Column="1" Text="{Binding FrequencyName}" />
+                            <Label Grid.Row="7" Grid.Column="0" VerticalOptions="Center" Text="Attiva" />
+                            <Switch Grid.Row="7" Grid.Column="1"  IsToggled="{Binding IsActive}" HorizontalOptions="Start" VerticalOptions="Start" IsEnabled="False" >
                                 <Switch.Resources>
                                     <Style TargetType="Switch">
                                         <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
@@ -71,4 +82,6 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
     </ScrollView>
+        <customControls:ActivityIndicatorControl x:Name="activityController" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></customControls:ActivityIndicatorControl>
+    </Grid>
 </ContentPage>

@@ -23,8 +23,10 @@ public partial class ManageConfigurationsPage : ContentPage
 
     private async void RefreshClicked(object sender, EventArgs e)
     {
+        disableAll();
         await Refresh.refreshInfoUser();
         configurationsCollectionView.ItemsSource = Globals.configurationViewModel.Intentions_configurations;
+        enableAll();
     }
     private async void Frame_Tapped(object sender, EventArgs e)
     {
@@ -40,5 +42,13 @@ public partial class ManageConfigurationsPage : ContentPage
     {
         await Navigation.PushAsync(new AddConfigurationPage());
     }
+    private void disableAll()
+    {
+        activityController.turnOn();
 
+    }
+    private void enableAll()
+    {
+        activityController.turnOff();
+    }
 }

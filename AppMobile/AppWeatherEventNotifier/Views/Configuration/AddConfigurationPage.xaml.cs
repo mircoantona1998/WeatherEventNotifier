@@ -17,6 +17,7 @@ namespace AppWeatherEventNotifier.Views.Configuration;
     {
         InitializeComponent();
         BindingContext = _model = new ConfigurationViewModel();
+        data_attivazione.MinimumDate = DateTime.Today;
     }
 
     protected override async void OnAppearing()
@@ -50,16 +51,15 @@ namespace AppWeatherEventNotifier.Views.Configuration;
         disableAll();
         if(frequencySelected!=null && metricSelected != null && Longitudine.Text!="" && Latitudine.Text!="" && Simbolo.SelectedItem !=null && Valore.Text!="")
         { 
-            Frequency foundFrequency = frequencyList.FirstOrDefault(f => f.FrequencyName == frequencySelected.FrequencyName);
-            int? IdFrequency = foundFrequency.Id;
+            int? IdFrequency = frequencySelected.Id;
             float Longitude = Convert.ToInt64(Longitudine.Text.ToString());
             float Latitude = Convert.ToInt64(Latitudine.Text.ToString());
-            Metric foundMetric = listMetric.FirstOrDefault(f => f.Field==metricSelected.Field);
-            int? IdMetric = foundMetric.Id;
+            int? IdMetric = metricSelected.Id;
             string Symbol = Simbolo.SelectedItem.ToString();
             float Value = Convert.ToInt64(Valore.Text.ToString());
+            DateTime? dateTimeAttivazione = data_attivazione.Date.Add(time_attivazione.Time).ToUniversalTime();
 
-            var resp = await ConfigurationController.add_configuration( Longitude, Latitude, IdMetric, IdFrequency, Symbol, Value);
+            var resp = await ConfigurationController.add_configuration( Longitude, Latitude, IdMetric, IdFrequency, Symbol, Value, dateTimeAttivazione);
             if (resp == true)
             {
                 await DisplayAlert("Successo", "Configurazione creata correttamente", "Ok");
@@ -76,7 +76,7 @@ namespace AppWeatherEventNotifier.Views.Configuration;
             enableAll();
             return;
         }
-        Navigation.RemovePage(this);
+        await Navigation.PopToRootAsync();
         enableAll();
     }
     private void disableAll()

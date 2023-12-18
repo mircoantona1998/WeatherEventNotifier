@@ -44,10 +44,10 @@ class ConfigurationUserRepo:
                     element_to_patch.Longitude = patch_data['Longitude']
                 if 'Latitude' in patch_data and patch_data['Latitude'] is not None:
                     element_to_patch.Latitude = patch_data['Latitude']
-                if 'Metric' in patch_data and patch_data['Metric'] is not None:
-                    element_to_patch.Metric = patch_data['Metric']
-                if 'Frequency' in patch_data and patch_data['Frequency'] is not None:
-                    element_to_patch.Frequency = patch_data['Frequency']
+                if 'IdMetric' in patch_data and patch_data['IdMetric'] is not None:
+                    element_to_patch.IdMetric = patch_data['IdMetric']
+                if 'IdFrequency' in patch_data and patch_data['IdFrequency'] is not None:
+                    element_to_patch.IdFrequency = patch_data['IdFrequency']
                 if 'DateTimeUpdate' in patch_data and patch_data['DateTimeUpdate'] is not None:
                     element_to_patch.DateTimeUpdate = patch_data['DateTimeUpdate']
                 if 'DateTimeActivation' in patch_data and patch_data['DateTimeActivation'] is not None:
@@ -56,6 +56,8 @@ class ConfigurationUserRepo:
                     element_to_patch.Symbol = patch_data['Symbol']
                 if 'Value' in patch_data and patch_data['Value'] is not None:
                     element_to_patch.Value = patch_data['Value']
+                if 'IsActive' in patch_data and patch_data['IsActive'] is not None:
+                    element_to_patch.IsActive = patch_data['IsActive']
                 session.commit()
             
     def delete_element(id_user=None, id_configuration=None):

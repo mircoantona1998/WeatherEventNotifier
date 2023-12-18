@@ -18,6 +18,7 @@ public partial class EditConfiguration : ContentPage
     {
         InitializeComponent();
         BindingContext = _model = new ConfigurationViewModel();
+        data_attivazione.MinimumDate = DateTime.Today;
     }
 
     protected override async void OnAppearing()
@@ -81,33 +82,42 @@ public partial class EditConfiguration : ContentPage
     private async void SaveConfigurationClicked(object sender, EventArgs e)
     {
         disableAll();
-        Frequency foundFrequency = frequencyList.FirstOrDefault(f => f.FrequencyName == frequencySelected.FrequencyName);
-        int? IdFrequency = foundFrequency.Id;
-        float Longitude = Convert.ToInt64(longitudine.Text.ToString());
-        float Latitude = Convert.ToInt64(latitudine.Text.ToString());
-        Metric foundMetric = listMetric.FirstOrDefault(f => f.Field == metricSelected.Field);
-        int? IdMetric = foundMetric.Id;
-        string Symbol = Simbolo.SelectedItem.ToString();
-        float Value = Convert.ToInt64(Valore.Text.ToString());
-        var resp = await ConfigurationController.patch_configuration(Globals.ConfigurationSelected.Id,Longitude, Latitude, IdMetric, IdFrequency, Symbol, Value);
-        if (resp == true)
+        if (frequencySelected != null && metricSelected != null && longitudine.Text != "" && latitudine.Text != "" && Simbolo.SelectedItem != null && Valore.Text != "")
         {
-            await DisplayAlert("Successo", "Configurazione modificata correttamente", "Ok");
-            await Refresh.refreshInfoUser();
+            int? IdFrequency = frequencySelected.Id;
+            float Longitude = Convert.ToInt64(longitudine.Text.ToString());
+            float Latitude = Convert.ToInt64(latitudine.Text.ToString());
+            int? IdMetric = metricSelected.Id;
+            string Symbol = Simbolo.SelectedItem.ToString();
+            float Value = Convert.ToInt64(Valore.Text.ToString());
+            DateTime? dateTimeAttivazione = data_attivazione.Date.Add(time_attivazione.Time).ToUniversalTime();
+            bool? IsActive = isActive.IsToggled;
+
+
+            var resp = await ConfigurationController.patch_configuration(Globals.ConfigurationSelected.Id,Longitude, Latitude, IdMetric, IdFrequency, Symbol, Value, dateTimeAttivazione, IsActive);
+            if (resp == true)
+            {
+                await DisplayAlert("Successo", "Configurazione modificata correttamente", "Ok");
+                await Refresh.refreshInfoUser();
+            }
+            else
+            {
+                await DisplayAlert("Error", "Errore nella modifica della configurazione", "Ok");
+            }
+        await Navigation.PopToRootAsync();
         }
         else
         {
-            await DisplayAlert("Error", "Errore nella modifica della configurazione", "Ok");
+            await DisplayAlert("Attenzione", "Devi compilare tutti i campi", "Ok");
+            enableAll();
+            return;
         }
-        await Navigation.PopAsync();
-        await Navigation.PopAsync();
         enableAll();
     }
     private void disableAll()
     {
         activityController.turnOn();
         salva.IsEnabled = false;
-
     }
     private void enableAll()
     {

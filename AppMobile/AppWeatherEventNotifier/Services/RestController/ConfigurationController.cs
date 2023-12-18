@@ -9,7 +9,7 @@ namespace AppWeatherEventNotifier.Services.RestController
 {
     internal class ConfigurationController
     {
-        public static async Task<bool> add_configuration( float longitude, float latitude, int? idMetric,int? idFrequency,string symbol,float value)
+        public static async Task<bool> add_configuration( float longitude, float latitude, int? idMetric,int? idFrequency,string symbol,float value, DateTime? dateTimeAttivazione)
         {
             string endPoint = "/Configuration/Add";
             var body = new
@@ -19,7 +19,8 @@ namespace AppWeatherEventNotifier.Services.RestController
                 IdMetric = idMetric,
                 IdFrequency = idFrequency,
                 Value=value,
-                Symbol=symbol
+                Symbol=symbol,
+                DateTimeActivation = dateTimeAttivazione
             };
             bool res = await Helper.HttpHelper.HttpPostRequest<bool>(endPoint, body, true);
             if (res == true) { return true; }
@@ -39,7 +40,7 @@ namespace AppWeatherEventNotifier.Services.RestController
             if (res == true) { return true; }
             else return false;
         }
-        public static async Task<bool> patch_configuration(int? idConfiguration, float longitude, float latitude, int? metric, int? frequency,string symbol,float value)
+        public static async Task<bool> patch_configuration(int? idConfiguration, float longitude, float latitude, int? metric, int? frequency,string symbol,float value,DateTime? dateTimeAttivazione,bool? isActive)
         {
             string endPoint = "/Configuration/Patch";
             var body = new
@@ -50,7 +51,9 @@ namespace AppWeatherEventNotifier.Services.RestController
                 IdMetric = metric,
                 IdFrequency = frequency,
                 Symbol=symbol,
-                Value=value
+                Value=value,
+                DateTimeActivation=dateTimeAttivazione,
+                IsActive=isActive
             };
             bool res = await Helper.HttpHelper.HttpPatchRequest<bool>(endPoint, body, true);
             if (res == true) { return true; }

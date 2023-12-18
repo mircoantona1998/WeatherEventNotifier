@@ -12,7 +12,10 @@ class EventHandlers:
     def handle_tag_AddConfiguration(offset, data,tag):
         dtActivation=data["DateTimeActivation"]
         if dtActivation!=None:
-            datetime_obj = datetime.strptime(dtActivation, '%Y-%m-%dT%H:%M:%S.%fZ')
+            try:
+                datetime_obj = datetime.strptime(dtActivation, '%Y-%m-%dT%H:%M:%S.%fZ')
+            except ValueError:
+                datetime_obj = datetime.strptime(dtActivation, '%Y-%m-%dT%H:%M:%SZ')
             formatted_datetime = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
         else: 
             formatted_datetime= datetime.utcnow()
@@ -65,7 +68,10 @@ class EventHandlers:
     def handle_tag_PatchConfiguration(offset, data,tag):
         dtActivation=data["DateTimeActivation"]
         if dtActivation!=None:
-            datetime_obj = datetime.strptime(dtActivation, '%Y-%m-%dT%H:%M:%S.%fZ')
+            try:
+                datetime_obj = datetime.strptime(dtActivation, '%Y-%m-%dT%H:%M:%S.%fZ')
+            except ValueError:
+                datetime_obj = datetime.strptime(dtActivation, '%Y-%m-%dT%H:%M:%SZ')
             formatted_datetime = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
         else: 
             formatted_datetime= datetime.utcnow()
@@ -84,7 +90,7 @@ class EventHandlers:
             'Latitude': data["Latitude"],
             'DateTimeUpdate': datetime.utcnow(),
             'DateTimeActivation': formatted_datetime,  
-            'IsActive': True,
+            'IsActive': data["IsActive"],
             'IdMetric': data["IdMetric"] ,
             'Symbol': data["Symbol"], 
             'Value': data["Value"]

@@ -44,6 +44,7 @@ namespace Userdata.ViewModels
         public string? Symbol { get; set; }
         public float? Value { get; set; }
         public DateTime? DateTimeActivation { get; set; }
+        public bool? IsActive { get; set; }
     }
     public class ConfigurationPatchRequestKafka : ConfigurationPatchDTO
     {
@@ -60,7 +61,8 @@ namespace Userdata.ViewModels
                 DateTimeActivation = dto.DateTimeActivation,
                 Symbol = dto.Symbol,
                 Value = dto.Value,
-                IdUser = idUser
+                IdUser = idUser,
+                IsActive= dto.IsActive
             };
         }
     }

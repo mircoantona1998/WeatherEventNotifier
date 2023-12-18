@@ -1,6 +1,7 @@
 using AppWeatherEventNotifier.Helper;
 using AppWeatherEventNotifier.ViewModels;
 using AppWeatherEventNotifier.Services.RestController;
+using AppWeatherEventNotifier.Services;
 
 namespace AppWeatherEventNotifier.Views.Configuration;
 
@@ -53,7 +54,8 @@ public partial class ConfigurationPage : ContentPage
             {
                 await ConfigurationController.get_configurations();
                 await DisplayAlert("Success", "Configurazione eliminata correttamente", "Chiudi");
-                await Navigation.PopAsync();
+                await Refresh.refreshInfoUser();
+                await Navigation.PopToRootAsync();
             }
             else
             {
