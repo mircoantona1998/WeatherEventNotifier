@@ -51,17 +51,15 @@
 	  <MauiFont Remove="Resources\Fonts\Mona-Sans-Medium.ttf" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <MauiXaml Remove="Views\Map\MapPage.xaml" />
-	</ItemGroup>
-
 <ItemGroup>
 	
 <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
 	
 <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
 	
-<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="8.0.3" />
+<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="7.0.101" />
+	
+<PackageReference Include="SkiaSharp" Version="2.88.6" />
 	
 <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
  <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
@@ -129,11 +127,6 @@
 	  <None Remove="Resources\Raw\video.MOV" />
 	  <None Remove="Resources\Raw\video.mp4" />
 	</ItemGroup>
-		<ItemGroup>
-		  <EmbeddedResource Include="Views\Map\MapPage.xaml">
-		    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		  </EmbeddedResource>
-		</ItemGroup>
 
 	<ItemGroup>
 			<PackageReference Include="SampleBrowser.Maui.Base" version="21.1.38" />
@@ -173,6 +166,9 @@
 	  </Compile>
 	  <Compile Update="Views\Login\LoginPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Map\MapPage.xaml.cs">
+	    <DependentUpon>MapPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\Registration\RegisterPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
@@ -214,6 +210,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Login\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Map\MapPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Registration\RegisterPage.xaml">

@@ -33,6 +33,7 @@ class ConfigurationUserRepo:
             new_element = ConfigurationUser(**new_element_data)
             session.add(new_element)
             session.commit()
+            return new_element.as_dict()
                 
     def patch_element(element_id, patch_data):
         with Session.get_database_session() as session:
@@ -59,17 +60,20 @@ class ConfigurationUserRepo:
                 if 'IsActive' in patch_data and patch_data['IsActive'] is not None:
                     element_to_patch.IsActive = patch_data['IsActive']
                 session.commit()
+                return element_to_patch.as_dict()
             
     def delete_element(id_user=None, id_configuration=None):
         if id_user is None and id_configuration is None:
-            return
-        with Session.get_database_session() as session:
-            query = session.query(ConfigurationUser)
-            if id_user is not None:
-                query = query.filter_by(IdUser=id_user)
-            if id_configuration is not None:
-                query = query.filter_by(Id=id_configuration)
-            elements_to_delete = query.all()
-            for element_to_delete in elements_to_delete:
-                session.delete(element_to_delete)
-            session.commit()
+            return False
+        else:
+            with Session.get_database_session() as session:
+                query = session.query(ConfigurationUser)
+                if id_user is not None:
+                    query = query.filter_by(IdUser=id_user)
+                if id_configuration is not None:
+                    query = query.filter_by(Id=id_configuration)
+                elements_to_delete = query.all()
+                for element_to_delete in elements_to_delete:
+                    session.delete(element_to_delete)
+                session.commit()
+                return True

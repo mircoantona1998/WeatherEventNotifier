@@ -5,7 +5,17 @@ class FrequencyRepo:
         
     def get_all():
         with Session.get_database_session() as session:
-            return session.query(Frequency).all()
+            result_list =session.query(Frequency).all()
+            result_dicts = []
+            for result in result_list:
+                result_dict = {
+                    "Id": result.Id,
+                    "Minutes":result.Minutes,
+                    "FrequencyName": (result.FrequencyName) if result.FrequencyName is not None else None,
+                    "IsActive": bool(result.IsActive) if result.IsActive is not None else None,
+                }
+                result_dicts.append(result_dict)
+            return result_dicts
         
     def get_element(id_Frequency=None):
         if id_Frequency is None:

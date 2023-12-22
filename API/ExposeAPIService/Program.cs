@@ -7,24 +7,27 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-IConfigurationRoot configuration = new ConfigurationBuilder()
+config.configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
     .Build();
 
-config.confdb = configuration.GetConnectionString("Userdata");
-Kafka.producer = new KafkaProducer(configuration["topic_to_configuration"]);
-Kafka.consumer = new KafkaConsumer(configuration["bootstrapServers"], configuration["groupID_response"], configuration["topic_to_userdata"]);
+config.confdb = config.configuration.GetConnectionString("Userdata");
+Kafka.producer = new KafkaProducer();
+Kafka.consumer = new KafkaConsumer( config.configuration["topic_to_userdata"]);
 Kafka.consumerConfig = new ConsumerConfig
 {
-    BootstrapServers = configuration["bootstrapServers"],
-    GroupId = configuration["groupID_response"],
+    BootstrapServers = config.configuration["bootstrapServers"],
+    GroupId = config.configuration["groupID"],
     AutoOffsetReset = AutoOffsetReset.Earliest,
     EnableAutoCommit=true
 };
-Kafka.producerConfig = new ProducerConfig {BootstrapServers= configuration["bootstrapServers"] };
-Kafka.topic_to_configuration = configuration["topic_to_configuration"];
-Kafka.topic_to_userdata = configuration["topic_to_userdata"];
+Kafka.producerConfig = new ProducerConfig {
+    BootstrapServers= config.configuration["bootstrapServers"],
+    ClientId=  config.configuration["groupID"]
+};
+Kafka.topic_to_configuration = config.configuration["topic_to_configuration"];
+Kafka.topic_to_userdata = config.configuration["topic_to_userdata"];
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -41,7 +44,7 @@ builder.Services.AddAuthentication(opt =>
             ValidateAudience = false,
             ValidateLifetime = false,
             ValidateIssuerSigningKey = false,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"])),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.configuration["Jwt:SecretKey"])),
             ClockSkew = TimeSpan.Zero
         };
     }

@@ -5,7 +5,18 @@ class MetricRepo:
         
     def get_all():
         with Session.get_database_session() as session:
-            return session.query(Metric).all()
+            result_list =session.query(Metric).all()
+            result_dicts = []
+            for result in result_list:
+                result_dict = {
+                    "Id": result.Id,
+                    "Field": result.Field if result.Field is not None else None,
+                    "ValueUnit": result.ValueUnit if result.ValueUnit is not None else None,
+                    "Type": result.Type if result.Type is not None else None,
+                    "IsActive": bool(result.IsActive) if result.IsActive is not None else None,
+                }
+                result_dicts.append(result_dict)
+            return result_dicts
         
     def get_element(id_Metric=None):
         if id_Metric is None:

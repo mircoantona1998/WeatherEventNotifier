@@ -32,8 +32,9 @@
     <Compile Include="DB\Session.py" />
     <Compile Include="Handler\event_handlers.py" />
     <Compile Include="Kafka\Consumer.py" />
-    <Compile Include="Kafka\KafkaMessage.py" />
+    <Compile Include="Kafka\KafkaHeader.py" />
     <Compile Include="Kafka\Producer.py" />
+    <Compile Include="Utils\EnumMessageCode.py" />
     <Compile Include="Utils\EnumMessageType.py" />
     <Compile Include="Utils\Json.py" />
   </ItemGroup>
@@ -57,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.json" />
+    <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -44,7 +44,21 @@ namespace ExposeAPI.Utils
         GetFrequency,
 
         [EnumMember(Value = "DeleteFrequency")]
-        DeleteFrequency
+        DeleteFrequency,
+        #endregion
+
+        #region Notifier
+        [EnumMember(Value = "AddNotify")]
+        AddNotify,
+
+        [EnumMember(Value = "PatchNotify")]
+        PatchNotify,
+
+        [EnumMember(Value = "GetNotify")]
+        GetNotify,
+
+        [EnumMember(Value = "DeleteNotify")]
+        DeleteNotify
         #endregion
     }
 

@@ -20,4 +20,10 @@ public partial class MessageSent
     public string? TagMessage { get; set; }
 
     public string? Topic { get; set; }
+
+    public string? Creator { get; set; }
+
+    public string? Code { get; set; }
+
+    public int? Partition { get; set; }
 }

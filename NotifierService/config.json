@@ -1,0 +1,23 @@
+{
+  "notifier_consumer": {
+    "bootstrap.servers": "127.0.0.1:9092",
+    "group.id": "NotifierService-consumer",
+    "auto.offset.reset": "earliest"
+  },
+  "notifier_producer": {
+    "bootstrap.servers": "127.0.0.1:9092",
+    "client.id": "NotifierService-producer"
+  },
+  "topic_to_notifier": "topic_to_notifier",
+  "topic_to_weather": "topic_to_weather",
+  "topic_to_alert": "topic_to_alert",
+  "topic_to_userdata": "topic_to_userdata",
+  "topic_to_configuration": "topic_to_configuration",
+  "database": {
+    "username": "root",
+    "password": "root",
+    "porta": "3307",
+    "ip": "127.0.0.1",
+    "database": "Notifier"
+  }
+}

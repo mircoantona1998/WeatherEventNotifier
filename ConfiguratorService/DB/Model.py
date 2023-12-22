@@ -5,13 +5,8 @@ from sqlalchemy.dialects.mysql import CHAR, LONGTEXT, TINYINT
 from sqlalchemy.orm.dynamic import relationships
 from sqlalchemy.orm.relationships import RelationshipProperty
 
-
-
 Base = declarative_base()
 metadata = Base.metadata
-
-
-
 
 class ConfigurationUser(Base):
     __tablename__ = 'ConfigurationUser'
@@ -32,21 +27,6 @@ class ConfigurationUser(Base):
     Frequency = RelationshipProperty('Frequency')
     Metric = RelationshipProperty('Metric')
 
-    def as_dict(self):
-        return {
-            "Id": self.Id,
-            "IdUser": self.IdUser,
-            "IdFrequency": self.IdFrequency,
-            "Longitude": float(self.Longitude) if self.Longitude is not None else None,
-            "Latitude": float(self.Latitude) if self.Latitude is not None else None,
-            "DateTimeCreate": self.DateTimeCreate.strftime('%Y-%m-%d %H:%M:%S') if self.DateTimeCreate is not None else None,
-            "DateTimeUpdate": self.DateTimeUpdate.strftime('%Y-%m-%d %H:%M:%S') if self.DateTimeUpdate is not None else None,
-            "DateTimeActivation": self.DateTimeActivation.strftime('%Y-%m-%d %H:%M:%S') if self.DateTimeActivation is not None else None,
-            "IsActive": bool(self.IsActive) if self.IsActive is not None else None,
-            "IdMetric": self.IdMetric,
-            "Symbol":self.Symbol,
-            "Value":float(self.Value) if self.Value is not None else None,
-        }
 
 class Frequency(Base):
     __tablename__ = 'Frequency'
@@ -55,14 +35,7 @@ class Frequency(Base):
     FrequencyName = Column(String(100))
     Minutes = Column(Integer)
     IsActive =Column(TINYINT(1))
-    
-    def as_dict(self):
-        return {
-            "Id": self.Id,
-            "Minutes": self.Minutes,
-            "FrequencyName": (self.FrequencyName) if self.FrequencyName is not None else None,
-            "IsActive": bool(self.IsActive) if self.IsActive is not None else None,
-        }
+
 
 class MessageReceived(Base):
     __tablename__ = 'MessageReceived'
@@ -75,7 +48,9 @@ class MessageReceived(Base):
     idOffsetResponse = Column(Integer)
     tagMessage = Column(String(50))
     topic = Column(String(50))
-
+    creator = Column(String(500))
+    code = Column(String(20))
+    partition = Column(Integer)
 
 class MessageSent(Base):
     __tablename__ = 'MessageSent'
@@ -88,7 +63,9 @@ class MessageSent(Base):
     idOffsetResponse = Column(Integer)
     tagMessage = Column(String(50))
     topic = Column(String(50))
-
+    creator = Column(String(500))
+    code = Column(String(20))
+    partition = Column(Integer)
 
 class Metric(Base):
     __tablename__ = 'Metric'
@@ -99,14 +76,7 @@ class Metric(Base):
     Type = Column(String(45))
     IsActive = Column(TINYINT(1))
     
-    def as_dict(self):
-        return {
-            "Id": self.Id,
-            "Field": self.Field if self.Field is not None else None,
-            "ValueUnit": self.ValueUnit if self.ValueUnit is not None else None,
-            "Type": self.Type if self.Type is not None else None,
-            "IsActive": bool(self.IsActive) if self.IsActive is not None else None,
-        }
+
 
 t_View_ConfigurationUser = Table(
     'View_ConfigurationUser', metadata,
@@ -130,20 +100,3 @@ t_View_ConfigurationUser = Table(
     Column('Type', String(45)),
     Column('MetricIsActive', TINYINT(1))
 )
-def as_dict(self):
-        return {
-            "Id": self.Id,
-            "IdUser": self.IdUser,
-            "IdFrequency": self.IdFrequency,
-            "FrequencyName": self.Frequency.FrequencyName,  # Assicurati che la relazione sia definita
-            "Longitude": float(self.Longitude) if self.Longitude is not None else None,
-            "Latitude": float(self.Latitude) if self.Latitude is not None else None,
-            "DateTimeCreate": self.DateTimeCreate.strftime('%Y-%m-%d %H:%M:%S') if self.DateTimeCreate is not None else None,
-            "DateTimeUpdate": self.DateTimeUpdate.strftime('%Y-%m-%d %H:%M:%S') if self.DateTimeUpdate is not None else None,
-            "DateTimeActivation": self.DateTimeActivation.strftime('%Y-%m-%d %H:%M:%S') if self.DateTimeActivation is not None else None,
-            "IsActive": bool(self.IsActive) if self.IsActive is not None else None,
-            "Field": self.Field,
-            "IdMetric": self.IdMetric,
-            "Symbol": self.Symbol,
-            "Value": float(self.Value) if self.Value is not None else None,
-        }

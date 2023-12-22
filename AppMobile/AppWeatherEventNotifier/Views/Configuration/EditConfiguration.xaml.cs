@@ -82,11 +82,29 @@ public partial class EditConfiguration : ContentPage
     private async void SaveConfigurationClicked(object sender, EventArgs e)
     {
         disableAll();
-        if (frequencySelected != null && metricSelected != null && longitudine.Text != "" && latitudine.Text != "" && Simbolo.SelectedItem != null && Valore.Text != "")
+        var res = OnValidateClicked();
+        if (res.Result == false) return;
+        if (frequencySelected != null && metricSelected != null && longitudine.Text.Replace(".", ",") != "" && latitudine.Text.Replace(".", ",") != "" && Simbolo.SelectedItem != null && Valore.Text != "")
         {
             int? IdFrequency = frequencySelected.Id;
-            float Longitude = Convert.ToInt64(longitudine.Text.ToString());
-            float Latitude = Convert.ToInt64(latitudine.Text.ToString());
+            float Longitude;
+            if (float.TryParse(longitudine.Text.Replace(".", ","), out Longitude))
+            {
+            }
+            else
+            {
+                await DisplayAlert("Error", "Longitudine non valida", "Ok");
+                return;
+            }
+            float Latitude;
+            if (float.TryParse(latitudine.Text.Replace(".", ","), out Latitude))
+            {
+            }
+            else
+            {
+                await DisplayAlert("Error", "Longitudine non valida", "Ok");
+                return;
+            }
             int? IdMetric = metricSelected.Id;
             string Symbol = Simbolo.SelectedItem.ToString();
             float Value = Convert.ToInt64(Valore.Text.ToString());
@@ -123,6 +141,79 @@ public partial class EditConfiguration : ContentPage
     {
         activityController.turnOff();
         salva.IsEnabled = true;
+    }
+    private async Task<bool> OnValidateClicked()
+    {
+        if (double.TryParse(latitudine.Text.Replace(".", ","), out double latitude) &&
+            double.TryParse(longitudine.Text.Replace(".", ","), out double longitude))
+        {
+            if (IsLatitudeValid(latitude) && IsLongitudeValid(longitude))
+            {
+                //// Coordinates are valid, show on map
+                //map.Pins.Clear();
+                //map.Pins.Add(new Pin
+                //{
+                //    Label = "Entered Location",
+                //    Position = new Position(latitude, longitude)
+                //});
+
+                //map.MoveToRegion(MapSpan.FromCenterAndRadius(
+                //    new Position(latitude, longitude), Distance.FromKilometers(1)));
+
+                var placemarks = await Geocoding.GetPlacemarksAsync(latitude, longitude);
+                var placemark = placemarks?.FirstOrDefault();
+
+                if (placemark != null)
+                {
+                    string str = "Vuoi configurare per:\n";
+                    if (placemark.CountryName != null)
+                    {
+                        str = str + "\nNazione: " + placemark.CountryName;
+                    }
+                    if (placemark.AdminArea != null)
+                    {
+                        str = str + "\nRegione: " + placemark.AdminArea;
+                    }
+                    if (placemark.Locality != null)
+                    {
+                        str = str + "\nCitta: " + placemark.Locality;
+                    }
+                    if (placemark.Thoroughfare != null)
+                    {
+                        str = str + "\nVicino: " + placemark.Thoroughfare;
+                    }
+                    var res = await App.Current.MainPage.DisplayAlert("Attenzione", str, "Si", "No");
+                    if (res == true)
+                        return true;
+                    else return false;
+                }
+                else
+                {
+                    await DisplayAlert("Attenzione", "Non possiamo determinare la citta", "Riprova");
+                    return false;
+                }
+            }
+            else
+            {
+                await DisplayAlert("Attenzione", "Non possiamo determinare la citta", "Riprova");
+                return false;
+            }
+        }
+        else
+        {
+            await DisplayAlert("Attenzione", "Non possiamo determinare la citta", "Riprova");
+            return false;
+        }
+    }
+
+    private bool IsLatitudeValid(double latitude)
+    {
+        return latitude >= -90 && latitude <= 90;
+    }
+
+    private bool IsLongitudeValid(double longitude)
+    {
+        return longitude >= -180 && longitude <= 180;
     }
 }
 

@@ -16,8 +16,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Get()
         {
-            int offset = await Kafka.Kafka.producer.ProduceRequest<string>("", MessageType.Request, MessageTag.GetMetric);
-            var Metrics = await Kafka.Kafka.consumer.ConsumeResponse<List<Metric>>(offset);
+            var result = await Kafka.Kafka.producer.ProduceRequest<string>("", MessageType.Request, MessageTag.GetMetric, ExposeAPI.DB.config.configuration["topic_to_configuration"]);
+            var Metrics = await Kafka.Kafka.consumer.ConsumeResponse<List<Metric>>((int)result.Offset);
             return Metrics != null ? Ok(Metrics) : Problem(null, null, 401);
         }
         #endregion
@@ -28,8 +28,8 @@ namespace ExposeAPI.Controllers
         [Route("Add")]
         public async Task<ActionResult> Create(MetricCreateDTO newItemDTO)
         {
-            int offset=await Kafka.Kafka.producer.ProduceRequest<string>(newItemDTO,MessageType.Request,MessageTag.AddMetric);
-            string res=await Kafka.Kafka.consumer.ConsumeResponse<string>(offset);
+            var result=await Kafka.Kafka.producer.ProduceRequest<string>(newItemDTO,MessageType.Request,MessageTag.AddMetric, ExposeAPI.DB.config.configuration["topic_to_configuration"]);
+            string res=await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
             return res!=null ? Ok(res) : Problem(null, null, 401);
         }
         #endregion
@@ -40,8 +40,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Patch(MetricPatchDTO newItemDTO)
         {
-            int offset = await Kafka.Kafka.producer.ProduceRequest<string>(newItemDTO, MessageType.Request, MessageTag.PatchMetric);
-            string res = await Kafka.Kafka.consumer.ConsumeResponse<string>(offset);
+            var result = await Kafka.Kafka.producer.ProduceRequest<string>(newItemDTO, MessageType.Request, MessageTag.PatchMetric, ExposeAPI.DB.config.configuration["topic_to_configuration"]);
+            string res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
             return res!=null ? Ok(res) : Problem(null, null, 401);
         }
         #endregion
@@ -56,8 +56,8 @@ namespace ExposeAPI.Controllers
             {
                 IdMetric=IdMetric,
             };
-            int offset = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteMetric);
-            string isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<string>(offset);
+            var result = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteMetric, ExposeAPI.DB.config.configuration["topic_to_configuration"]);
+            string isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
             return isDeleted!=null ? Ok(isDeleted) : Problem(null, null,  401);
         }
         #endregion

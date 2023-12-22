@@ -1,24 +1,27 @@
 ﻿using Confluent.Kafka;
 using ExposeAPI.DB;
 using ExposeAPI.Utils;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Concurrent;
+using System.Dynamic;
+using System.Reflection.PortableExecutable;
+using System.Text;
 using Userdata.Models;
 using Userdata.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ExposeAPI.Kafka
 {
     public class KafkaConsumer
     {
-        private readonly string bootstrapServers;
-        private readonly string groupId;
-        private readonly string topic_response;
+        private readonly string topic;
         private readonly MessageReceivedRepository messRepo;
 
-        public KafkaConsumer(string bootstrapServers, string groupId,string topic_response)
+        public KafkaConsumer(string topic)
         {
             messRepo = new MessageReceivedRepository(config.confdb);
-            this.bootstrapServers = bootstrapServers;
-            this.groupId = groupId;
-            this.topic_response = topic_response;
+            this.topic = topic;
         }
 
         public async Task<T> ConsumeResponse<T>(int offset)
@@ -26,12 +29,12 @@ namespace ExposeAPI.Kafka
             T response = default(T);
             var config = new ConsumerConfig
             {
-                GroupId = groupId,
-                BootstrapServers = bootstrapServers,
+                GroupId = Kafka.consumerConfig.GroupId,
+                BootstrapServers = Kafka.consumerConfig.BootstrapServers,
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
             using var consumer = new ConsumerBuilder<Ignore, string>(config).Build();
-            consumer.Subscribe(topic_response);
+            consumer.Subscribe(topic);
             while (true)
             {
                 try
@@ -39,28 +42,37 @@ namespace ExposeAPI.Kafka
                     var result = consumer.Consume(TimeSpan.FromMilliseconds(100));
                     if (result != null)
                     {
+                        Console.WriteLine($"Received message  {result.Message.Value} on {result.TopicPartitionOffset}");
+                        var headers = result.Message.Headers;
                         var messLast = await messRepo.GetLast();
                         if (messLast == null || ((int)result.Offset.Value) > messLast.Offset)
-                        {                 
-                            Console.WriteLine($"Received message  {result.Message.Value} to {result.TopicPartitionOffset}");
-                            try
+                        {
+                            if (headers != null && headers.Count > 0)
                             {
-                                KafkaMessage<T> obj = Json.ConvertJsonToObject<KafkaMessage<T>>(result.Message.Value);
-                                await saveMessage(result, obj);
-                                if (obj != null)
+                                try
                                 {
-                                    if (obj.IdOffsetResponse == offset)
+                                    var headerKafka = new KafkaHeader(headers, result.TopicPartition.Partition);
+                                    if (headerKafka.IdOffsetResponse == offset)
                                     {
-                                        response = obj.Data;
-                                        break;
+                                        Dictionary<string, T> dictionary = JsonConvert.DeserializeObject<Dictionary<string, T>>(result.Message.Value);
+                                        var obj = dictionary.Values.First();
+                                        await saveMessage(result, headerKafka);
+                                        if (obj != null)
+                                        {
+                                            response = obj;
+                                            break;
+                                        }
                                     }
                                 }
+                                catch
+                                {
+                                    await saveMessageWithError(result);
+                                }             
                             }
-                            catch
-                            {
-                                await saveMessageWithErrorInDeserialization(result);
-                                break;
-                            }                                   
+                        }
+                        else
+                        {
+                            await saveMessageWithError(result);
                         }
                     }
                 }
@@ -74,27 +86,30 @@ namespace ExposeAPI.Kafka
         }
 
 
-        public async Task saveMessage<T>(ConsumeResult<Ignore,string> result,KafkaMessage<T> kf)
+        public async Task saveMessage(ConsumeResult<Ignore,string> result,KafkaHeader headers)
         {
             MessageReceivedDTO messag = new MessageReceivedDTO();
             messag.Timestamp = DateTime.UtcNow;
             messag.Message = result.Message.Value;
             messag.Offset = ((int)result.Offset.Value);
-            messag.TagMessage = kf.Tag;
-            messag.Type = kf.Type;
+            messag.Creator = headers.Creator;
+            messag.IdOffsetResponse = headers.IdOffsetResponse;
+            messag.Type = headers.Type;
+            messag.TagMessage = headers.Tag;
+            messag.Code = headers.Code;
             messag.Topic = result.Topic;
-            if (kf.Type == MessageType.Response.ToString())
-                messag.IdOffsetResponse = kf.IdOffsetResponse;
+            messag.Partition = result.Partition;
             var newItemID = await messRepo.Create(messag);
         }
-        public async Task saveMessageWithErrorInDeserialization(ConsumeResult<Ignore, string> result)
+        public async Task saveMessageWithError(ConsumeResult<Ignore, string> result)
         {
             MessageReceivedDTO messag = new MessageReceivedDTO();
             messag.Timestamp = DateTime.UtcNow;
             messag.Message = result.Message.Value;
             messag.Offset = ((int)result.Offset.Value);
             messag.Topic = result.Topic;
-            messag.Code = true;
+            messag.Code =MessageCode.Error.ToString();
+            messag.Partition = result.Partition;
             var newItemID = await messRepo.Create(messag);
         }
     }

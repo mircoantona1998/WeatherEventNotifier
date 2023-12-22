@@ -4,12 +4,15 @@ from DB.Model import Frequency
 from DB.Repository.ConfigurationUserRepo import ConfigurationUserRepo
 from DB.Repository.MetricRepo import MetricRepo
 from DB.Repository.FrequencyRepo import FrequencyRepo
-from Kafka.KafkaMessage import KafkaMessage
+from Kafka.KafkaHeader import KafkaHeader
+from Kafka.KafkaHeader import KafkaHeader
+from Kafka.Producer import ProducerClass
 from Utils.EnumMessageType import MessageType
+from Utils.Json import Json
 class EventHandlers:
     
     #CONFIGURATION
-    def handle_tag_AddConfiguration(offset, data,tag):
+    def handle_tag_AddConfiguration( data):
         dtActivation=data["DateTimeActivation"]
         if dtActivation!=None:
             try:
@@ -60,12 +63,18 @@ class EventHandlers:
             'Symbol': data["Symbol"], 
             'Value': data["Value"]
         }
-        ConfigurationUserRepo.add_element(new_element_data)
-        kf = KafkaMessage(offset, MessageType.Response.value, tag, True)
-        json_data = json.dumps(kf.__dict__, indent=2)
+        new_element_data=ConfigurationUserRepo.add_element(new_element_data)
+        kf = True
+        json_data = json.dumps(kf)
+        
+        # new_element_data=Json.convert_object_to_json(new_element_data)
+        # kfNotify = KafkaHeader( MessageType.Request.value, tag, new_element_data)
+        # json_dataNotify = json.dumps(kfNotify.__dict__, indent=2)
+        # ProducerClass.send_message(json_dataNotify,Json.leggi_configurazioni("topic_to_notifier"))  
+        
         return json_data
 
-    def handle_tag_PatchConfiguration(offset, data,tag):
+    def handle_tag_PatchConfiguration( data):
         dtActivation=data["DateTimeActivation"]
         if dtActivation!=None:
             try:
@@ -95,34 +104,44 @@ class EventHandlers:
             'Symbol': data["Symbol"], 
             'Value': data["Value"]
         }
-        ConfigurationUserRepo.patch_element(data["IdConfiguration"], new_element_data)
-        kf = KafkaMessage(offset,MessageType.Response.value, tag, True)
-        json_data = json.dumps(kf.__dict__, indent=2)
+        new_element_data=ConfigurationUserRepo.patch_element(data["IdConfiguration"], new_element_data)
+        kf = True
+        json_data = json.dumps(kf)
+        
+
+        #new_element_data=Json.convert_object_to_json(new_element_data)
+        #kfNotify =  new_element_data
+        #json_dataNotify = json.dumps(kfNotify.__dict__, indent=2)
+        #ProducerClass.send_message(json_dataNotify,Json.leggi_configurazioni("topic_to_notifier")) 
+        
         return json_data
 
-    def handle_tag_GetConfiguration(offset, data,tag):
-        events_configurations = ConfigurationUserRepo.get_all_by_user(data["IdUser"])
-        kf = KafkaMessage(offset, MessageType.Response.value, tag, events_configurations)
-        json_data = json.dumps(kf.__dict__, indent=2)
-        return json_data
+    def handle_tag_GetConfiguration( data):
+        return ConfigurationUserRepo.get_all_by_user(data["IdUser"])
 
-    def handle_tag_DeleteConfiguration(offset, data,tag):
+    def handle_tag_DeleteConfiguration( data):
         if data["IdUser"]==None or data["IdUser"]==0:
             raise Exception(str("Il campo IdUser non puo essere vuoto"))
             return
         if data["IdConfiguration"]==None or data["IdConfiguration"]==0:
             raise Exception(str("Il campo IdConfiguration non puo essere vuoto"))
             return
-        ConfigurationUserRepo.delete_element(data["IdUser"], data["IdConfiguration"])
-        kf = KafkaMessage(offset, MessageType.Response.value, tag, True)
-        json_data = json.dumps(kf.__dict__, indent=2)
+        res=ConfigurationUserRepo.delete_element(data["IdUser"], data["IdConfiguration"])
+        kf = True
+        json_data = json.dumps(kf)
+        
+        # data=Json.convert_object_to_json( data)
+        # kfNotify = data
+        # json_dataNotify = json.dumps(kfNotify.__dict__, indent=2)
+        # ProducerClass.send_message(json_dataNotify,Json.leggi_configurazioni("topic_to_notifier")) 
+        
         return json_data
 
     #METRIC
-    def handle_tag_AddMetric(offset, data,tag):
+    def handle_tag_AddMetric( data):
         result =MetricRepo.get_element_by_field(data["Field"])
-        if result is not None:
-            raise Exception(str("La metrica esiste nel database"))
+        if result is None:
+            raise Exception(str("La metrica non esiste nel database"))
             return
         if data["Field"]==None or data["Field"]==0:
             raise Exception(str("Il campo Field non puo essere vuoto"))
@@ -140,14 +159,14 @@ class EventHandlers:
             'IsActive': data["IsActive"]
         }
         MetricRepo.add_element(new_element_data)
-        kf = KafkaMessage(offset, MessageType.Response.value, tag, True)
-        json_data = json.dumps(kf.__dict__, indent=2)
+        kf = True
+        json_data = json.dumps(kf)
         return json_data
 
-    def handle_tag_PatchMetric(offset, data,tag):
+    def handle_tag_PatchMetric( data):
         result =MetricRepo.get_element_by_field(data["Field"])
-        if result is not None:
-            raise Exception(str("La metrica esiste nel database"))
+        if result is None:
+            raise Exception(str("La metrica non esiste nel database"))
             return
         new_element_data = { 
             'Field': data["Field"],
@@ -156,31 +175,27 @@ class EventHandlers:
             'IsActive': data["IsActive"]
         }
         MetricRepo.patch_element(data["IdMetric"], new_element_data)
-        kf = KafkaMessage(offset,MessageType.Response.value, tag, True)
-        json_data = json.dumps(kf.__dict__, indent=2)
+        kf = True
+        json_data = json.dumps(kf)
         return json_data
 
-    def handle_tag_GetMetric(offset, data,tag):
-        events_Metrics = MetricRepo.get_all()
-        serialized_data = [event_config.as_dict() for event_config in events_Metrics]
-        kf = KafkaMessage(offset, MessageType.Response.value, tag, serialized_data)
-        json_data = json.dumps(kf.__dict__, indent=2)
-        return json_data
+    def handle_tag_GetMetric( data):
+        return MetricRepo.get_all()
 
-    def handle_tag_DeleteMetric(offset, data,tag):
+    def handle_tag_DeleteMetric( data):
         if data["IdMetric"]==None or data["IdMetric"]==0:
             raise Exception(str("Il campo IdMetric non puo essere vuoto"))
             return
         MetricRepo.delete_element( data["IdMetric"])
-        kf = KafkaMessage(offset, MessageType.Response.value, tag, True)
-        json_data = json.dumps(kf.__dict__, indent=2)
+        kf = True
+        json_data = json.dumps(kf)
         return json_data
     
     #FREQUENCY
-    def handle_tag_AddFrequency(offset, data,tag):
+    def handle_tag_AddFrequency( data):
         result =FrequencyRepo.get_element_by_frequency_name(data["FrequencyName"])
-        if result is not None:
-            raise Exception(str("La frequenza esiste nel database"))
+        if result is None:
+            raise Exception(str("La frequenza non esiste nel database"))
             return
         if data["FrequencyName"]==None or data["FrequencyName"]==0:
             raise Exception(str("Il campo FrequencyName non puo essere vuoto"))
@@ -194,14 +209,14 @@ class EventHandlers:
             'IsActive': data["IsActive"]
         }
         FrequencyRepo.add_element(new_element_data)
-        kf = KafkaMessage(offset, MessageType.Response.value, tag, True)
-        json_data = json.dumps(kf.__dict__, indent=2)
+        kf = True
+        json_data = json.dumps(kf)
         return json_data
 
-    def handle_tag_PatchFrequency(offset, data,tag):
+    def handle_tag_PatchFrequency( data):
         result =FrequencyRepo.get_element_by_frequency_name(data["FrequencyName"])
-        if result is not None:
-            raise Exception(str("La frequenza esiste nel database"))
+        if result is None:
+            raise Exception(str("La frequenza non esiste nel database"))
             return
         new_element_data = {
             'FrequencyName': data["FrequencyName"], 
@@ -209,24 +224,20 @@ class EventHandlers:
             'IsActive': data["IsActive"]
         }
         FrequencyRepo.patch_element(data["IdFrequency"], new_element_data)
-        kf = KafkaMessage(offset,MessageType.Response.value, tag, True)
-        json_data = json.dumps(kf.__dict__, indent=2)
+        kf = True
+        json_data = json.dumps(kf)
         return json_data
 
-    def handle_tag_GetFrequency(offset, data,tag):
-        events_Frequencys = FrequencyRepo.get_all()
-        serialized_data = [event_config.as_dict() for event_config in events_Frequencys]
-        kf = KafkaMessage(offset, MessageType.Response.value, tag, serialized_data)
-        json_data = json.dumps(kf.__dict__, indent=2)
-        return json_data
+    def handle_tag_GetFrequency( data):
+        return FrequencyRepo.get_all()
 
-    def handle_tag_DeleteFrequency(offset, data,tag):
+    def handle_tag_DeleteFrequency( data):
         if data["IdFrequency"]==None or data["IdFrequency"]==0:
             raise Exception(str("Il campo IdFrequency non puo essere vuoto"))
             return
         FrequencyRepo.delete_element( data["IdFrequency"])
-        kf = KafkaMessage(offset, MessageType.Response.value, tag, True)
-        json_data = json.dumps(kf.__dict__, indent=2)
+        kf = True
+        json_data = json.dumps(kf)
         return json_data  
 
     tag_handlers = {

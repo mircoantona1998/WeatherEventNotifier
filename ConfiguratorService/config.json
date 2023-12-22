@@ -1,13 +1,15 @@
 {
   "configuration_consumer": {
     "bootstrap.servers": "127.0.0.1:9092",
-    "group.id": "ConfiguratorService-consumer",
+    "group.id": "ConfiguratorService",
     "auto.offset.reset": "earliest"
   },
   "configuration_producer": {
     "bootstrap.servers": "127.0.0.1:9092",
-    "client.id": "ConfiguratorService-producer"
+    "client.id": "ConfiguratorService"
   },
+  "group.id": "ConfiguratorService",
+  "topic_to_notifier": "topic_to_notifier",
   "topic_to_configuration": "topic_to_configuration",
   "topic_to_userdata": "topic_to_userdata",
   "database": {
