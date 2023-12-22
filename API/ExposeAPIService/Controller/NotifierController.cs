@@ -26,7 +26,7 @@ namespace ExposeAPI.Controllers
                     {
                         IdUser = idUser
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetNotify, ExposeAPI.DB.config.configuration["topic_to_notifier"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetNotify, ExposeAPI.Configurations.config.configuration["topic_to_notifier"]);
                     configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<Notifier>>((int)result.Offset);
                 }
             }

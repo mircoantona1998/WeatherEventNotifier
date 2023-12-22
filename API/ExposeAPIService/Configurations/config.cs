@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using ExposeAPI.Kafka;
 
-namespace ExposeAPI.DB
+namespace ExposeAPI.Configurations
 {
     public static class config
     {

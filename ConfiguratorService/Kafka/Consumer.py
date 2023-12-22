@@ -3,6 +3,7 @@ from email.header import Header
 import json
 from confluent_kafka import Consumer, KafkaError
 from sqlalchemy.sql import null
+from Configurations.Configurations import Configurations
 from DB.Repository.ConfigurationUserRepo import ConfigurationUserRepo
 from DB.Repository.MessageReceivedRepo import MessageReceivedRepo
 from Kafka.KafkaHeader import KafkaHeader
@@ -17,11 +18,11 @@ from Handler.event_handlers import EventHandlers
 class ConsumerClass:
     
     def run_request(self):
-        configurazione_consumer = Json.leggi_configurazioni("configuration_consumer")
-        configurazione_producer = Json.leggi_configurazioni("configuration_producer")
-        creator=Json.leggi_configurazioni("group.id")
+        configurazione_consumer = Configurations().consumer
+        configurazione_producer = Configurations().producer
+        creator=Configurations().group_id
         consumer = Consumer(configurazione_consumer)
-        topic = Json.leggi_configurazioni("topic_to_configuration")
+        topic = Configurations().topic_to_configuration
         consumer.subscribe([topic])
         try:
             while True:

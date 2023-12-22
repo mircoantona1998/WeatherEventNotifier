@@ -27,7 +27,7 @@ namespace ExposeAPI.Controllers
                     {
                         IdUser = idUser
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetConfiguration, ExposeAPI.DB.config.configuration["topic_to_configuration"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
                      configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<ConfigurationUser>>((int)result.Offset);
                 }
             }
@@ -48,7 +48,7 @@ namespace ExposeAPI.Controllers
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var kafkaRequest = ConfigurationCreateRequestKafka.ConvertConfigurationCreateToRequestKafka(newItemDTO, idUser);
-                    var result =await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest,MessageType.Request,MessageTag.AddConfiguration, ExposeAPI.DB.config.configuration["topic_to_configuration"]);
+                    var result =await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest,MessageType.Request,MessageTag.AddConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
                     res=await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }
@@ -69,7 +69,7 @@ namespace ExposeAPI.Controllers
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var kafkaRequest = ConfigurationPatchRequestKafka.ConvertConfigurationPatchToRequestKafka(newItemDTO, idUser);
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchConfiguration, ExposeAPI.DB.config.configuration["topic_to_configuration"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
                     res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }
@@ -94,7 +94,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser,
                         IdConfiguration = IdConfiguration,
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteConfiguration, ExposeAPI.DB.config.configuration["topic_to_configuration"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
                     res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }

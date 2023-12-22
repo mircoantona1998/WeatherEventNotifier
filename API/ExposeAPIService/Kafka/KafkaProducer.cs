@@ -1,5 +1,5 @@
 ﻿using Confluent.Kafka;
-using ExposeAPI.DB;
+using ExposeAPI.Configurations;
 using ExposeAPI.Utils;
 using System.Text;
 using Userdata.Models;

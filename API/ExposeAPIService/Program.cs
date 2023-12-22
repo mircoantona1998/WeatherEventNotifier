@@ -2,7 +2,7 @@ using Confluent.Kafka;
 using ExposeAPI.Kafka;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using ExposeAPI.DB;
+using ExposeAPI.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
