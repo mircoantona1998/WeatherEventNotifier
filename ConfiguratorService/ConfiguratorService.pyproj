@@ -31,6 +31,7 @@
     <Compile Include="DB\Repository\ConfigurationUserRepo.py" />
     <Compile Include="DB\Model.py" />
     <Compile Include="DB\Session.py" />
+    <Compile Include="Handler\event_destinators.py" />
     <Compile Include="Handler\event_handlers.py" />
     <Compile Include="Kafka\Consumer.py" />
     <Compile Include="Kafka\KafkaHeader.py" />

@@ -1,12 +1,13 @@
 import json
 from datetime import datetime
-from DB.Model import Frequency
+from Configurations.Configurations import Configurations
 from DB.Repository.ConfigurationUserRepo import ConfigurationUserRepo
 from DB.Repository.MetricRepo import MetricRepo
 from DB.Repository.FrequencyRepo import FrequencyRepo
-from Kafka.KafkaHeader import KafkaHeader
+from Handler.event_destinators import GestoreDestinatari
 from Kafka.KafkaHeader import KafkaHeader
 from Kafka.Producer import ProducerClass
+from Utils.EnumMessageCode import MessageCode
 from Utils.EnumMessageType import MessageType
 from Utils.Json import Json
 class EventHandlers:
@@ -67,10 +68,12 @@ class EventHandlers:
         kf = True
         json_data = json.dumps(kf)
         
-        # new_element_data=Json.convert_object_to_json(new_element_data)
-        # kfNotify = KafkaHeader( MessageType.Request.value, tag, new_element_data)
-        # json_dataNotify = json.dumps(kfNotify.__dict__, indent=2)
-        # ProducerClass.send_message(json_dataNotify,Json.leggi_configurazioni("topic_to_notifier"))  
+        #avviso notifier service che e´ stata aggiunta una configurazione
+        headersRequest = KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="AddConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
+        #prendo i minutes di frequenza e li passo al notifier per la schedulazione
+        forNotifier=FrequencyRepo.get_element(data["IdFrequency"])
+        new_element_data['Minutes']=forNotifier.Minutes
+        ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(new_element_data),GestoreDestinatari().determina_destinatario("NotifierService"))        
         
         return json_data
 
@@ -107,12 +110,10 @@ class EventHandlers:
         new_element_data=ConfigurationUserRepo.patch_element(data["IdConfiguration"], new_element_data)
         kf = True
         json_data = json.dumps(kf)
-        
 
-        #new_element_data=Json.convert_object_to_json(new_element_data)
-        #kfNotify =  new_element_data
-        #json_dataNotify = json.dumps(kfNotify.__dict__, indent=2)
-        #ProducerClass.send_message(json_dataNotify,Json.leggi_configurazioni("topic_to_notifier")) 
+        #avviso notifier service che e´ stata modificata una configurazione
+        headersRequest = KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="PatchConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
+        ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(new_element_data),GestoreDestinatari().determina_destinatario("NotifierService"))        
         
         return json_data
 
@@ -130,10 +131,9 @@ class EventHandlers:
         kf = True
         json_data = json.dumps(kf)
         
-        # data=Json.convert_object_to_json( data)
-        # kfNotify = data
-        # json_dataNotify = json.dumps(kfNotify.__dict__, indent=2)
-        # ProducerClass.send_message(json_dataNotify,Json.leggi_configurazioni("topic_to_notifier")) 
+        #avviso notifier service che è stata eliminata una configurazione
+        headersRequest = KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="DeleteConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
+        ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(data["IdConfiguration"]),GestoreDestinatari().determina_destinatario("NotifierService"))        
         
         return json_data
 
@@ -256,3 +256,4 @@ class EventHandlers:
     "GetFrequency": handle_tag_GetFrequency,
     "DeleteFrequency": handle_tag_DeleteFrequency,
     }
+    

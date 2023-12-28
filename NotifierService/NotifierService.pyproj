@@ -22,7 +22,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DB\Repository\ScheduleRepo.py" />
+    <Compile Include="Configurations\Configurations.py" />
+    <Compile Include="Handler\event_destinators.py" />
     <Compile Include="NotifierService.py" />
     <Compile Include="DB\Repository\NotifyRepo.py" />
     <Compile Include="DB\Repository\MessageSentRepo.py" />
@@ -31,7 +32,7 @@
     <Compile Include="DB\Session.py" />
     <Compile Include="Handler\event_handlers.py" />
     <Compile Include="Kafka\Consumer.py" />
-    <Compile Include="Kafka\KafkaMessage.py" />
+    <Compile Include="Kafka\KafkaHeader.py" />
     <Compile Include="Kafka\Producer.py" />
     <Compile Include="Utils\EnumMessageCode.py" />
     <Compile Include="Utils\EnumMessageType.py" />
@@ -42,6 +43,7 @@
     <Folder Include="Kafka\" />
     <Folder Include="DB\" />
     <Folder Include="Handler\" />
+    <Folder Include="Configurations\" />
     <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>

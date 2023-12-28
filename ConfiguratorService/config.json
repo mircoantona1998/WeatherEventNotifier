@@ -1,17 +1,22 @@
 {
-  "configuration_consumer": {
+  "consumer": {
     "bootstrap.servers": "127.0.0.1:9092",
     "group.id": "ConfiguratorService",
     "auto.offset.reset": "earliest"
   },
-  "configuration_producer": {
+  "producer": {
     "bootstrap.servers": "127.0.0.1:9092",
     "client.id": "ConfiguratorService"
   },
   "group.id": "ConfiguratorService",
-  "topic_to_notifier": "topic_to_notifier",
-  "topic_to_configuration": "topic_to_configuration",
   "topic_to_userdata": "topic_to_userdata",
+  "topic_to_configuration": "topic_to_configuration",
+  "topic_to_scheduler": "topic_to_scheduler",
+  "topic_to_notifier": "topic_to_notifier",
+  "topic_to_weather": "topic_to_weather",
+  "topic_to_mail": "topic_to_mail",
+  "topic_to_telegram": "topic_to_telegram",
+  "topic_to_tip": "topic_to_tip",
   "database": {
     "username": "root",
     "password": "root",

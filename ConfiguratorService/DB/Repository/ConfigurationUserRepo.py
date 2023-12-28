@@ -33,7 +33,21 @@ class ConfigurationUserRepo:
             new_element = ConfigurationUser(**new_element_data)
             session.add(new_element)
             session.commit()
-            return new_element.as_dict()
+            result_dict = {
+                    "Id": new_element.Id,
+                    "IdUser": new_element.IdUser,
+                    "IdFrequency": new_element.IdFrequency,
+                    "Longitude": float(new_element.Longitude) if new_element.Longitude is not None else None,
+                    "Latitude": float(new_element.Latitude) if new_element.Latitude is not None else None,
+                    "DateTimeCreate": new_element.DateTimeCreate.strftime('%Y-%m-%d %H:%M:%S') if new_element.DateTimeCreate is not None else None,
+                    "DateTimeUpdate": new_element.DateTimeUpdate.strftime('%Y-%m-%d %H:%M:%S') if new_element.DateTimeUpdate is not None else None,
+                    "DateTimeActivation": new_element.DateTimeActivation.strftime('%Y-%m-%d %H:%M:%S') if new_element.DateTimeActivation is not None else None,
+                    "IsActive": bool(new_element.IsActive) if new_element.IsActive is not None else None,
+                    "IdMetric": new_element.IdMetric,
+                    "Symbol": new_element.Symbol,
+                    "Value": float(new_element.Value) if new_element.Value is not None else None,
+                }
+            return result_dict
                 
     def patch_element(element_id, patch_data):
         with Session.get_database_session() as session:
@@ -60,7 +74,21 @@ class ConfigurationUserRepo:
                 if 'IsActive' in patch_data and patch_data['IsActive'] is not None:
                     element_to_patch.IsActive = patch_data['IsActive']
                 session.commit()
-                return element_to_patch.as_dict()
+                result_dict = {
+                    "Id": element_to_patch.Id,
+                    "IdUser": element_to_patch.IdUser,
+                    "IdFrequency": element_to_patch.IdFrequency,
+                    "Longitude": float(element_to_patch.Longitude) if element_to_patch.Longitude is not None else None,
+                    "Latitude": float(element_to_patch.Latitude) if element_to_patch.Latitude is not None else None,
+                    "DateTimeCreate": element_to_patch.DateTimeCreate.strftime('%Y-%m-%d %H:%M:%S') if element_to_patch.DateTimeCreate is not None else None,
+                    "DateTimeUpdate": element_to_patch.DateTimeUpdate.strftime('%Y-%m-%d %H:%M:%S') if element_to_patch.DateTimeUpdate is not None else None,
+                    "DateTimeActivation": element_to_patch.DateTimeActivation.strftime('%Y-%m-%d %H:%M:%S') if element_to_patch.DateTimeActivation is not None else None,
+                    "IsActive": bool(element_to_patch.IsActive) if element_to_patch.IsActive is not None else None,
+                    "IdMetric": element_to_patch.IdMetric,
+                    "Symbol": element_to_patch.Symbol,
+                    "Value": float(element_to_patch.Value) if element_to_patch.Value is not None else None,
+                }
+                return result_dict
             
     def delete_element(id_user=None, id_configuration=None):
         if id_user is None and id_configuration is None:
