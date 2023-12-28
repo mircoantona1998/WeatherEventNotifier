@@ -21,11 +21,6 @@ class ConsumerClass:
         consumer.subscribe([topic])
         try:
             while True:
-                current_time = datetime.now().time()
-                if current_time.hour == 17 and current_time.minute == 48:
-                    print("c")
-                    #farsi dare tutte le configurazioni con isactive=true e datetimeactivation < della data di oggi, e aggiungere a schedulazioni
-                else:
                     msg = consumer.poll(1.0)
                     if msg is not None:
                         if MessageReceivedRepo.get_latest_message() ==None or msg.offset() > MessageReceivedRepo.get_latest_message().offset:
@@ -49,9 +44,8 @@ class ConsumerClass:
                                             print(f'Error: {value}')
                                             headersResponse= KafkaHeader(IdOffsetResponse= msg.offset(),Type = MessageType.Response.value,Tag=header.Tag, Creator = creator, Code = MessageCode.Error.value)
                                             ProducerClass.send_message(headersResponse.headers_list,{'Data': str(ex)},GestoreDestinatari().determina_destinatario(header.Creator))         
-                                            pass
                                     else:
-                                        pass
+                                        continue
                                 else:
                                     ConsumerClass.saveMessageWithError(msg)   
                             else:

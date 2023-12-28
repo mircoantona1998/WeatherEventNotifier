@@ -3,6 +3,7 @@ import json
 from confluent_kafka import Consumer, KafkaError
 from Configurations.Configurations import Configurations
 from DB.Repository.MessageReceivedRepo import MessageReceivedRepo
+from DB.Repository.ScheduleRequestRepo import ScheduleRequestRepo
 from Handler.event_destinators import GestoreDestinatari
 from Kafka.KafkaHeader import KafkaHeader
 from Kafka.Producer import ProducerClass
@@ -19,12 +20,16 @@ class ConsumerClass:
         consumer = Consumer(configurazione_consumer)
         topic = Configurations().topic_to_scheduler
         consumer.subscribe([topic])
+        lastRequest=ScheduleRequestRepo.get_last_element() #è un date che serve per saltare la richiesta per preparare le schedulazioni qualora è stata fatta
         try:
             while True:
                 current_time = datetime.now().time()
-                if current_time.hour == 17 and current_time.minute == 48:
-                    print("c")
-                    #farsi dare tutte le configurazioni con isactive=true e datetimeactivation < della data di oggi, e aggiungere a schedulazioni
+                if  lastRequest==None or lastRequest!=datetime.now().date() :
+                    #produrre richiesta per avere tutte le configurazioni con isactive=true e datetimeactivation < della data di oggi alle 23:59, e aggiungere a schedulazioni
+                    headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="GetConfigurationForToday", Creator=creator, Code = MessageCode.Ok.value)
+                    ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': ""}, indent=2),GestoreDestinatari().determina_destinatario("ConfiguratorService"))            
+                    ScheduleRequestRepo.add_request_schedule()
+                    lastRequest=datetime.now().date()
                 else:
                     msg = consumer.poll(1.0)
                     if msg is not None:
@@ -49,9 +54,9 @@ class ConsumerClass:
                                             print(f'Error: {value}')
                                             headersResponse= KafkaHeader(IdOffsetResponse= msg.offset(),Type = MessageType.Response.value,Tag=header.Tag, Creator = creator, Code = MessageCode.Error.value)
                                             ProducerClass.send_message(headersResponse.headers_list,{'Data': str(ex)},GestoreDestinatari().determina_destinatario(header.Creator))         
-                                            pass
-                                    else:
-                                        pass
+                                    elif header.Type==MessageType.Response.value:
+                                            handler = EventHandlers.tag_handlers.get(header.Tag, lambda: f"Tag {header.Tag} non gestito")
+                                            handler(json.loads(value))
                                 else:
                                     ConsumerClass.saveMessageWithError(msg)   
                             else:

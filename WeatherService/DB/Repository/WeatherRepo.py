@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from DB.Session import Session
 from DB.Model import Schedule
 
-class ScheduleRepo:
+class WeatherRepo:
         
     def get_all():
         with Session.get_database_session() as session:

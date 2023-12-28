@@ -8,6 +8,8 @@ class GestoreDestinatari:
     def determina_destinatario(self, header_creator):
         if header_creator == "ExposeAPIService":
             return self.configurazioni("topic_to_userdata")
+        elif header_creator == "SchedulerService":
+            return self.configurazioni("topic_to_scheduler")
         elif header_creator == "NotifierService":
             return self.configurazioni("topic_to_notifier")
         elif header_creator == "WeatherService":

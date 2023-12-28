@@ -27,7 +27,7 @@
     <Compile Include="DB\Session.py" />
     <Compile Include="DB\Repository\MessageReceivedRepo.py" />
     <Compile Include="DB\Repository\MessageSentRepo.py" />
-    <Compile Include="DB\Repository\ScheduleRepo.py" />
+    <Compile Include="DB\Repository\WeatherRepo.py" />
     <Compile Include="Handler\event_destinators.py" />
     <Compile Include="Handler\event_handlers.py" />
     <Compile Include="Kafka\Consumer.py" />

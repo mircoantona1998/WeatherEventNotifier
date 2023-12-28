@@ -49,9 +49,9 @@ class ConsumerClass:
                                             print(f'Error: {value}')
                                             headersResponse= KafkaHeader(IdOffsetResponse= msg.offset(),Type = MessageType.Response.value,Tag=header.Tag, Creator = creator, Code = MessageCode.Error.value)
                                             ProducerClass.send_message(headersResponse.headers_list,{'Data': str(ex)},GestoreDestinatari().determina_destinatario(header.Creator))         
-                                            pass
-                                    else:
-                                        pass
+                                    elif header.Type==MessageType.Response.value:
+                                            handler = EventHandlers.tag_handlers.get(header.Tag, lambda: f"Tag {header.Tag} non gestito")
+                                            handler(json.loads(value))
                                 else:
                                     ConsumerClass.saveMessageWithError(msg)   
                             else:

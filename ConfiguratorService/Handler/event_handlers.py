@@ -70,10 +70,10 @@ class EventHandlers:
         
         #avviso notifier service che e´ stata aggiunta una configurazione
         headersRequest = KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="AddConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
-        #prendo i minutes di frequenza e li passo al notifier per la schedulazione
+            #prendo i minutes di frequenza e li passo al notifier per la schedulazione
         forNotifier=FrequencyRepo.get_element(data["IdFrequency"])
         new_element_data['Minutes']=forNotifier.Minutes
-        ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(new_element_data),GestoreDestinatari().determina_destinatario("NotifierService"))        
+        ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(new_element_data),GestoreDestinatari().determina_destinatario("SchedulerService"))        
         
         return json_data
 
@@ -137,6 +137,8 @@ class EventHandlers:
         
         return json_data
 
+    def handle_tag_GetConfigurationForToday( data):
+        return ConfigurationUserRepo.get_all_for_today()
     #METRIC
     def handle_tag_AddMetric( data):
         result =MetricRepo.get_element_by_field(data["Field"])
@@ -245,6 +247,8 @@ class EventHandlers:
     "PatchConfiguration": handle_tag_PatchConfiguration,
     "GetConfiguration": handle_tag_GetConfiguration,
     "DeleteConfiguration": handle_tag_DeleteConfiguration,
+    
+    "GetConfigurationForToday": handle_tag_GetConfigurationForToday,
     
     "AddMetric": handle_tag_AddMetric,
     "PatchMetric": handle_tag_PatchMetric,

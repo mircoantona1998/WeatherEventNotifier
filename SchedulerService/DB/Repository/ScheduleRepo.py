@@ -31,8 +31,8 @@ class ScheduleRepo:
         del new_element_data["Minutes"]
         with Session.get_database_session() as session:
             current_datetime = datetime.now().replace(minute=0, second=0, microsecond=0)
-            new_element_data['DateTimeToSchedule'] = current_datetime + timedelta(minutes=minutes_freq)       
             while current_datetime <= datetime.now().replace(hour=23, minute=59, second=59, microsecond=0):  # Continua fino a mezzanotte
+                new_element_data['DateTimeToSchedule'] = current_datetime + timedelta(minutes=minutes_freq)       
                 new_element = Schedule(**new_element_data)
                 session.add(new_element)
                 session.commit()
@@ -51,3 +51,8 @@ class ScheduleRepo:
                 session.delete(element_to_delete)
             session.commit()
             return True
+
+    def delete_all_schedules():
+        with Session.get_database_session() as session:
+            session.query(Schedule).delete()
+            session.commit()

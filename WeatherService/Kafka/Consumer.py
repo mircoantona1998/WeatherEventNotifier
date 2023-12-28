@@ -49,9 +49,8 @@ class ConsumerClass:
                                             print(f'Error: {value}')
                                             headersResponse= KafkaHeader(IdOffsetResponse= msg.offset(),Type = MessageType.Response.value,Tag=header.Tag, Creator = creator, Code = MessageCode.Error.value)
                                             ProducerClass.send_message(headersResponse.headers_list,{'Data': str(ex)},GestoreDestinatari().determina_destinatario(header.Creator))         
-                                            pass
                                     else:
-                                        pass
+                                        continue
                                 else:
                                     ConsumerClass.saveMessageWithError(msg)   
                             else:
