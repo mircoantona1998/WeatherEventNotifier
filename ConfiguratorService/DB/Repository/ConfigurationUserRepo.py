@@ -24,6 +24,8 @@ class ConfigurationUserRepo:
                     "DateTimeActivation": result.DateTimeActivation.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeActivation is not None else None,
                     "IsActive": bool(result.IsActive) if result.IsActive is not None else None,
                     "Field": result.Field,
+                    "Description": result.Description,
+                    "Parent": result.Parent,
                     "IdMetric": result.IdMetric,
                     "Symbol": result.Symbol,
                     "Value": float(result.Value) if result.Value is not None else None,

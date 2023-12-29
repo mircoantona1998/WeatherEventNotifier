@@ -13,6 +13,8 @@ class MetricRepo:
                     "Field": result.Field if result.Field is not None else None,
                     "ValueUnit": result.ValueUnit if result.ValueUnit is not None else None,
                     "Type": result.Type if result.Type is not None else None,
+                    "Parent": result.Parent if result.Parent is not None else None,
+                    "Description": result.Description if result.Description is not None else None,
                     "IsActive": bool(result.IsActive) if result.IsActive is not None else None,
                 }
                 result_dicts.append(result_dict)
@@ -50,6 +52,10 @@ class MetricRepo:
                     element_to_patch.ValueUnit = patch_data['ValueUnit']
                 if 'Type' in patch_data and patch_data['Type'] is not None:
                     element_to_patch.Type = patch_data['Type']
+                if 'Parent' in patch_data and patch_data['Parent'] is not None:
+                    element_to_patch.Parent = patch_data['Parent']
+                if 'Description' in patch_data and patch_data['Description'] is not None:
+                    element_to_patch.Description = patch_data['Description']
                 if 'Frequency' in patch_data and patch_data['Frequency'] is not None:
                     element_to_patch.Frequency = patch_data['Frequency']
                 if 'IsActive' in patch_data and patch_data['IsActive'] is not None:

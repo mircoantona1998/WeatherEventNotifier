@@ -36,6 +36,7 @@
     <Compile Include="Utils\EnumMessageCode.py" />
     <Compile Include="Utils\EnumMessageType.py" />
     <Compile Include="Utils\Json.py" />
+    <Compile Include="Utils\OpenWeather.py" />
     <Compile Include="WeatherService.py" />
   </ItemGroup>
   <ItemGroup>

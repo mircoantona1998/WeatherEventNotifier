@@ -24,8 +24,8 @@ public partial class ConfigurationPage : ContentPage
             Data_creazione.Text = Globals.ConfigurationSelected.DateTimeCreate.Value.ToLocalTime().ToString();
         if (Globals.ConfigurationSelected.DateTimeActivation != null)
             Data_attivazione.Text = Globals.ConfigurationSelected.DateTimeActivation.Value.ToLocalTime().ToString();
-        if (Globals.ConfigurationSelected.Field != null)
-            Metrica.Text = Globals.ConfigurationSelected.Field.ToString();
+        if (Globals.ConfigurationSelected.Description != null)
+            Metrica.Text = Globals.ConfigurationSelected.Description.ToString();
         if (Globals.ConfigurationSelected.FrequencyName != null)
             Frequenza.Text = Globals.ConfigurationSelected.FrequencyName.ToString();
         if (Globals.ConfigurationSelected.IsActive != null && Globals.ConfigurationSelected.IsActive == true)

@@ -1,11 +1,18 @@
 # coding: utf-8
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.mysql import LONGTEXT, TINYINT
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 metadata = Base.metadata
+
+
+class Key(Base):
+    __tablename__ = 'Key'
+
+    id = Column(Integer, primary_key=True)
+    apiKey = Column(String(500))
 
 
 class MessageReceived(Base):
@@ -40,24 +47,9 @@ class MessageSent(Base):
     partition = Column(Integer)
 
 
-class Schedule(Base):
-    __tablename__ = 'Schedule'
+class Weather(Base):
+    __tablename__ = 'Weather'
 
-    Id = Column(Integer, primary_key=True)
-    IdConfiguration = Column(Integer)
-    DateTimeToSchedule = Column(DateTime)
-    ToWork = Column(TINYINT(1))
-
-
-class Notify(Base):
-    __tablename__ = 'Notify'
-
-    Id = Column(Integer, primary_key=True)
-    IdUser = Column(Integer)
-    IdSchedule = Column(ForeignKey('Schedule.Id', ondelete='CASCADE', onupdate='RESTRICT'), index=True)
-    Message = Column(Text)
-    DateTimeCreate = Column(DateTime)
-    IsActive = Column(TINYINT(1))
-    ToWork = Column(TINYINT(1))
-
-    Schedule = relationship('Schedule')
+    id = Column(Integer, primary_key=True)
+    idSchedule = Column(Integer)
+    value = Column(Float)

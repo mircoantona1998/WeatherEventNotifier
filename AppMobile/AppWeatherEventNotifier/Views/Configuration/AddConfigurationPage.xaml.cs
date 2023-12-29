@@ -36,7 +36,7 @@ namespace AppWeatherEventNotifier.Views.Configuration;
         if (listMetric != null)
         {
             Metrica.ItemsSource = listMetric;
-            Metrica.ItemDisplayBinding = new Binding("Field");
+            Metrica.ItemDisplayBinding = new Binding("Description");
         }
         frequencyList = await FrequencyController.get_frequencys();
         if (frequencyList != null)

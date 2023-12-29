@@ -18,6 +18,8 @@ namespace ExposeAPI.Model
         public DateTime? DateTimeActivation { get; set; }
         public bool? IsActive { get; set; }
         public string? Field { get; set; }
+        public string? Description { get; set; }
+        public string? Parent { get; set; }
         public string? Symbol { get; set; }
         public float? Value { get; set; }
         public string? ValueUnit { get; set; }

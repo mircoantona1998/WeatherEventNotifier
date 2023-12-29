@@ -28,7 +28,7 @@ public partial class EditConfiguration : ContentPage
         if (listMetric != null)
         {
             metrica.ItemsSource = listMetric;
-            metrica.ItemDisplayBinding = new Binding("Field");
+            metrica.ItemDisplayBinding = new Binding("Description");
         }
         frequencyList = await FrequencyController.get_frequencys();
         if (frequencyList != null)

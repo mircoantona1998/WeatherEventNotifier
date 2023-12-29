@@ -58,7 +58,7 @@
                             <Label Grid.Row="3" Grid.Column="0" Text="Data attivazione" />
                             <Label Grid.Row="3" Grid.Column="1" Text="{Binding DateTimeActivation, Converter={StaticResource DateTimeToLocalTimeConverter}}" />
                             <Label Grid.Row="4" Grid.Column="0" Text="Metrica" />
-                            <Label Grid.Row="4" Grid.Column="1" Text="{Binding Field}" />
+                            <Label Grid.Row="4" Grid.Column="1" Text="{Binding Description}" />
                             <Label Grid.Row="5" Grid.Column="0" Text="Condizione" />
                             <HorizontalStackLayout Grid.Row="5" Grid.Column="1" Spacing="10">
                                 <Label  Text="{Binding Symbol}" />

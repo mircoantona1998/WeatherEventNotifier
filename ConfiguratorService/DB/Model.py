@@ -1,32 +1,11 @@
 # coding: utf-8
+from sqlalchemy import CHAR, Column, DateTime, Float, ForeignKey, Integer, String, Table, text
+from sqlalchemy.dialects.mysql import LONGTEXT, TINYINT
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Table, text
-from sqlalchemy.dialects.mysql import CHAR, LONGTEXT, TINYINT
-from sqlalchemy.orm.dynamic import relationships
-from sqlalchemy.orm.relationships import RelationshipProperty
 
 Base = declarative_base()
 metadata = Base.metadata
-
-class ConfigurationUser(Base):
-    __tablename__ = 'ConfigurationUser'
-
-    Id = Column(Integer, primary_key=True)
-    IdUser = Column(Integer)
-    IdFrequency = Column(ForeignKey('Frequency.Id'), index=True)
-    Longitude = Column(Float)
-    Latitude = Column(Float)
-    DateTimeCreate = Column(DateTime)
-    DateTimeUpdate = Column(DateTime)
-    DateTimeActivation = Column(DateTime)
-    IsActive = Column(TINYINT(1))
-    IdMetric = Column(ForeignKey('Metric.Id'), index=True)
-    Symbol = Column(CHAR(2))
-    Value = Column(Float)
-
-    Frequency = RelationshipProperty('Frequency')
-    Metric = RelationshipProperty('Metric')
-
 
 class Frequency(Base):
     __tablename__ = 'Frequency'
@@ -34,7 +13,7 @@ class Frequency(Base):
     Id = Column(Integer, primary_key=True)
     FrequencyName = Column(String(100))
     Minutes = Column(Integer)
-    IsActive =Column(TINYINT(1))
+    IsActive = Column(TINYINT(1))
 
 
 class MessageReceived(Base):
@@ -52,6 +31,7 @@ class MessageReceived(Base):
     code = Column(String(20))
     partition = Column(Integer)
 
+
 class MessageSent(Base):
     __tablename__ = 'MessageSent'
 
@@ -67,6 +47,7 @@ class MessageSent(Base):
     code = Column(String(20))
     partition = Column(Integer)
 
+
 class Metric(Base):
     __tablename__ = 'Metric'
 
@@ -75,14 +56,15 @@ class Metric(Base):
     ValueUnit = Column(String(50))
     Type = Column(String(45))
     IsActive = Column(TINYINT(1))
-    
+    Parent = Column(String(50))
+    Description = Column(String(200))
 
 
 t_View_ConfigurationUser = Table(
     'View_ConfigurationUser', metadata,
     Column('Id', Integer, server_default=text("'0'")),
     Column('IdUser', Integer),
-    Column('Symbol', CHAR(1)),
+    Column('Symbol', CHAR(2)),
     Column('Value', Float),
     Column('IdFrequency', Integer),
     Column('Longitude', Float),
@@ -96,7 +78,29 @@ t_View_ConfigurationUser = Table(
     Column('Minutes', Integer),
     Column('FrequencyIsActive', TINYINT(1)),
     Column('Field', String(50)),
+    Column('Description', String(200)),
+    Column('Parent', String(50)),
     Column('ValueUnit', String(50)),
     Column('Type', String(45)),
     Column('MetricIsActive', TINYINT(1))
 )
+
+
+class ConfigurationUser(Base):
+    __tablename__ = 'ConfigurationUser'
+
+    Id = Column(Integer, primary_key=True)
+    IdUser = Column(Integer)
+    IdFrequency = Column(ForeignKey('Frequency.Id'), index=True)
+    Longitude = Column(Float)
+    Latitude = Column(Float)
+    DateTimeCreate = Column(DateTime)
+    DateTimeUpdate = Column(DateTime)
+    DateTimeActivation = Column(DateTime)
+    IsActive = Column(TINYINT(1))
+    IdMetric = Column(ForeignKey('Metric.Id'), index=True)
+    Symbol = Column(CHAR(2))
+    Value = Column(Float)
+
+    Frequency = relationship('Frequency')
+    Metric = relationship('Metric')

@@ -154,10 +154,18 @@ class EventHandlers:
         if data["ValueUnit"]==None or data["ValueUnit"]==0:
             raise Exception(str("Il campo ValueUnit non puo essere vuoto"))
             return
+        if data["Parent"]==None or data["Parent"]==0:
+            raise Exception(str("Il campo Parent non puo essere vuoto"))
+            return
+        if data["Description"]==None or data["Description"]==0:
+            raise Exception(str("Il campo Description non puo essere vuoto"))
+            return
         new_element_data = {
             'Field': data["Field"], 
             'Type': data["Type"],
             'ValueUnit': data["ValueUnit"],
+            'Parent': data["Parent"],
+            'Description': data["Description"],
             'IsActive': data["IsActive"]
         }
         MetricRepo.add_element(new_element_data)
@@ -174,6 +182,8 @@ class EventHandlers:
             'Field': data["Field"],
             'Type': data["Type"],
             'ValueUnit': data["ValueUnit"],
+            'Parent': data["Parent"],
+            'Description': data["Description"],
             'IsActive': data["IsActive"]
         }
         MetricRepo.patch_element(data["IdMetric"], new_element_data)
