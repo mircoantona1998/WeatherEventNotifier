@@ -8,7 +8,6 @@ from Kafka.KafkaHeader import KafkaHeader
 from Kafka.Producer import ProducerClass
 from Utils.EnumMessageCode import MessageCode
 from Utils.EnumMessageType import MessageType
-from Utils.Json import Json
 from DB.Model import MessageReceived
 from Handler.event_handlers import EventHandlers
 
@@ -19,56 +18,50 @@ class ConsumerClass:
         consumer = Consumer(configurazione_consumer)
         topic = Configurations().topic_to_notifier
         consumer.subscribe([topic])
-        try:
-            while True:
-                current_time = datetime.now().time()
-                if current_time.hour == 17 and current_time.minute == 48:
-                    print("c")
-                    #farsi dare tutte le configurazioni con isactive=true e datetimeactivation < della data di oggi, e aggiungere a schedulazioni
-                else:
-                    msg = consumer.poll(1.0)
-                    if msg is not None:
-                        if MessageReceivedRepo.get_latest_message() ==None or msg.offset() > MessageReceivedRepo.get_latest_message().offset:
-                            print(f'Received message {str(msg.value().decode("utf-8"))} on topic {msg.topic()} [{msg.partition()}] @ offset {msg.offset()}')     
-                            value=msg.value().decode("utf-8")
-                            partition = msg.partition()
-                            headers = msg.headers()
-                            if headers!= None :
-                                headers_dict = {key: value.decode('utf-8') if isinstance(value, bytes) else value for key, value in headers}
-                                if len(headers_dict)>0:
-                                    header= KafkaHeader(header=headers_dict)
-                                    ConsumerClass.saveMessage(msg,header)
-                                    if header.Type==MessageType.Request.value:
-                                        try:
-                                            handler = EventHandlers.tag_handlers.get(header.Tag, lambda: f"Tag {header.Tag} non gestito")
-                                            response = handler(json.loads(value))
-                                            if response!=None:
-                                                headersResponse= KafkaHeader(IdOffsetResponse=msg.offset(),Type=MessageType.Response.value ,Tag=header.Tag, Creator=creator, Code = MessageCode.Ok.value)
-                                                ProducerClass.send_message(headersResponse.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario(header.Creator))                                    
-                                        except Exception as ex:
-                                            print(f'Error: {value}')
-                                            headersResponse= KafkaHeader(IdOffsetResponse= msg.offset(),Type = MessageType.Response.value,Tag=header.Tag, Creator = creator, Code = MessageCode.Error.value)
-                                            ProducerClass.send_message(headersResponse.headers_list,{'Data': str(ex)},GestoreDestinatari().determina_destinatario(header.Creator))         
-                                    elif header.Type==MessageType.Response.value:
-                                            handler = EventHandlers.tag_handlers.get(header.Tag, lambda: f"Tag {header.Tag} non gestito")
-                                            handler(json.loads(value))
-                                else:
-                                    ConsumerClass.saveMessageWithError(msg)   
+        while True:
+             try:
+                msg = consumer.poll(1.0)
+                if msg is not None:
+                    if MessageReceivedRepo.get_latest_message() ==None or msg.offset() > MessageReceivedRepo.get_latest_message().offset:
+                        print(f'Received message {str(msg.value().decode("utf-8"))} on topic {msg.topic()} [{msg.partition()}] @ offset {msg.offset()}')     
+                        value=msg.value().decode("utf-8")
+                        partition = msg.partition()
+                        headers = msg.headers()
+                        if headers!= None :
+                            headers_dict = {key: value.decode('utf-8') if isinstance(value, bytes) else value for key, value in headers}
+                            if len(headers_dict)>0:
+                                header= KafkaHeader(header=headers_dict)
+                                ConsumerClass.saveMessage(msg,header)
+                                if header.Type==MessageType.Request.value:
+                                    try:
+                                        handler = EventHandlers.tag_handlers.get(header.Tag, lambda: f"Tag {header.Tag} non gestito")
+                                        response = handler(json.loads(value))
+                                        if response!=None:
+                                            headersResponse= KafkaHeader(IdOffsetResponse=msg.offset(),Type=MessageType.Response.value ,Tag=header.Tag, Creator=creator, Code = MessageCode.Ok.value)
+                                            ProducerClass.send_message(headersResponse.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario(header.Creator))                                    
+                                    except Exception as ex:
+                                        print(f'Error: {value}')
+                                        headersResponse= KafkaHeader(IdOffsetResponse= msg.offset(),Type = MessageType.Response.value,Tag=header.Tag, Creator = creator, Code = MessageCode.Error.value)
+                                        ProducerClass.send_message(headersResponse.headers_list,{'Data': str(ex)},GestoreDestinatari().determina_destinatario(header.Creator))         
+                                elif header.Type==MessageType.Response.value:
+                                        handler = EventHandlers.tag_handlers.get(header.Tag, lambda: f"Tag {header.Tag} non gestito")
+                                        handler(json.loads(value))
                             else:
                                 ConsumerClass.saveMessageWithError(msg)   
-                        if msg is None:
+                        else:
+                            ConsumerClass.saveMessageWithError(msg)   
+                    if msg is None:
+                        continue
+                    if msg.error():
+                        if msg.error().code() == KafkaError._PARTITION_EOF:
                             continue
-                        if msg.error():
-                            if msg.error().code() == KafkaError._PARTITION_EOF:
-                                continue
-                            else:
-                                print(msg.error())
-                                break
-        except Exception as ex:
-            print(str(ex))
-            pass
-        finally:
-            consumer.close()
+                        else:
+                            print(msg.error())
+                            continue
+             except Exception as ex:
+               print(str(ex))           
+             #finally:
+              # consumer.close()
             
     def saveMessage(msg,header):
         new=MessageReceived()

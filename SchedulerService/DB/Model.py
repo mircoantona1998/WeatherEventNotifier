@@ -1,7 +1,6 @@
 # coding: utf-8
-from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import CHAR, Column, Date, DateTime, Float, Integer, String
 from sqlalchemy.dialects.mysql import LONGTEXT, TINYINT
-from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -39,12 +38,25 @@ class MessageSent(Base):
     partition = Column(Integer)
 
 
+class RequestNotification(Base):
+    __tablename__ = 'RequestNotification'
+
+    idRequestNotification = Column(Integer, primary_key=True)
+    datetime = Column(DateTime)
+
+
 class RequestSchedulation(Base):
     __tablename__ = 'RequestSchedulation'
 
     idRequestSchedulation = Column(Integer, primary_key=True)
     date = Column(Date)
 
+
+class ResponseSchedulation(Base):
+    __tablename__ = 'ResponseSchedulation'
+
+    idResponseSchedulation = Column(Integer, primary_key=True)
+    date = Column(Date)
 
 class Schedule(Base):
     __tablename__ = 'Schedule'
@@ -53,3 +65,10 @@ class Schedule(Base):
     IdConfiguration = Column(Integer)
     DateTimeToSchedule = Column(DateTime)
     ToWork = Column(TINYINT(1))
+    FieldMetric = Column(String(50))
+    Symbol = Column(CHAR(2))
+    Value = Column(Float)
+    IdUser = Column(Integer)
+    Latitude= Column(Float)
+    Longitude = Column(Float)
+    ParentMetric = Column(String(50))

@@ -69,8 +69,8 @@ class EventHandlers:
         json_data = json.dumps(kf)
         
         #avviso notifier service che e´ stata aggiunta una configurazione
+        new_element_data=ConfigurationUserRepo.get_new_configuration_for_today(new_element_data["Id"])
         headersRequest = KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="AddConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
-            #prendo i minutes di frequenza e li passo al notifier per la schedulazione
         forNotifier=FrequencyRepo.get_element(data["IdFrequency"])
         new_element_data['Minutes']=forNotifier.Minutes
         ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(new_element_data),GestoreDestinatari().determina_destinatario("SchedulerService"))        
@@ -112,8 +112,9 @@ class EventHandlers:
         json_data = json.dumps(kf)
 
         #avviso notifier service che e´ stata modificata una configurazione
+        new_element_data=ConfigurationUserRepo.get_new_configuration_for_today(new_element_data["Id"])
         headersRequest = KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="PatchConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
-        ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(new_element_data),GestoreDestinatari().determina_destinatario("NotifierService"))        
+        ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(new_element_data),GestoreDestinatari().determina_destinatario("SchedulerService"))        
         
         return json_data
 
@@ -133,7 +134,7 @@ class EventHandlers:
         
         #avviso notifier service che è stata eliminata una configurazione
         headersRequest = KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="DeleteConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
-        ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(data["IdConfiguration"]),GestoreDestinatari().determina_destinatario("NotifierService"))        
+        ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(data["IdConfiguration"]),GestoreDestinatari().determina_destinatario("SchedulerService"))        
         
         return json_data
 

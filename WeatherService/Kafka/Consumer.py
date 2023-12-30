@@ -8,7 +8,6 @@ from Kafka.KafkaHeader import KafkaHeader
 from Kafka.Producer import ProducerClass
 from Utils.EnumMessageCode import MessageCode
 from Utils.EnumMessageType import MessageType
-from Utils.Json import Json
 from DB.Model import MessageReceived
 from Handler.event_handlers import EventHandlers
 
@@ -38,7 +37,7 @@ class ConsumerClass:
                                         handler = EventHandlers.tag_handlers.get(header.Tag, lambda: f"Tag {header.Tag} non gestito")
                                         response = handler(json.loads(value))
                                         if response!=None:
-                                            headersResponse= KafkaHeader(IdOffsetResponse=msg.offset(),Type=MessageType.Response.value ,Tag=header.Tag, Creator=creator, Code = MessageCode.Ok.value)
+                                            headersResponse= KafkaHeader(IdOffsetResponse=msg.offset(),Type=MessageType.Response.value ,Tag="GenerateNotification", Creator=creator, Code = MessageCode.Ok.value)
                                             ProducerClass.send_message(headersResponse.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario(header.Creator))                                    
                                     except Exception as ex:
                                         print(f'Error: {value}')
@@ -57,7 +56,7 @@ class ConsumerClass:
                             continue
                         else:
                             print(msg.error())
-                            break
+                            continue
         except Exception as ex:
             print(str(ex))
             pass

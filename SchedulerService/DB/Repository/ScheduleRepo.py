@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from DB.Session import Session
 from DB.Model import Schedule
+from sqlalchemy import  func, cast, DateTime
 
 class ScheduleRepo:
         
@@ -56,3 +57,30 @@ class ScheduleRepo:
         with Session.get_database_session() as session:
             session.query(Schedule).delete()
             session.commit()
+            
+    def get_all_current_hour():
+        current_datetime = datetime.now().replace(minute=0, second=0, microsecond=0)
+        with Session.get_database_session() as session:
+            resultList = (
+                    session.query(Schedule)
+                    .filter(cast(Schedule.DateTimeToSchedule, DateTime) == current_datetime)
+                    .all()
+                )
+            result_dicts = []
+            for result in resultList:
+                result_dict = {
+                    "Id": result.Id,
+                    "IdConfiguration": result.IdConfiguration,
+                    "DateTimeToSchedule": result.DateTimeToSchedule.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeToSchedule is not None else None,
+                    "ToWork": bool(result.ToWork) if result.ToWork is not None else None,
+                    "FieldMetric":result.FieldMetric,
+                    "Symbol":result.Symbol,
+                    "Value":result.Value,
+                    "IdUser":result.IdUser,
+                    "Latitude":result.Latitude,
+                    "Longitude":result.Longitude,
+                    "ParentMetric":result.ParentMetric,
+                }
+                result_dicts.append(result_dict)
+            return result_dicts
+        

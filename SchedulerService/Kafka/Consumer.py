@@ -4,6 +4,8 @@ from confluent_kafka import Consumer, KafkaError
 from Configurations.Configurations import Configurations
 from DB.Repository.MessageReceivedRepo import MessageReceivedRepo
 from DB.Repository.ScheduleRequestRepo import ScheduleRequestRepo
+from DB.Repository.RequestNotificationRepo import RequestNotificationRepo
+from DB.Repository.ScheduleResponseRepo import ScheduleResponseRepo
 from Handler.event_destinators import GestoreDestinatari
 from Kafka.KafkaHeader import KafkaHeader
 from Kafka.Producer import ProducerClass
@@ -20,16 +22,21 @@ class ConsumerClass:
         consumer = Consumer(configurazione_consumer)
         topic = Configurations().topic_to_scheduler
         consumer.subscribe([topic])
-        lastRequest=ScheduleRequestRepo.get_last_element() #è un date che serve per saltare la richiesta per preparare le schedulazioni qualora è stata fatta
         try:
             while True:
-                current_time = datetime.now().time()
-                if  lastRequest==None or lastRequest!=datetime.now().date() :
+                if  ScheduleRequestRepo.get_last_element()==None or ScheduleRequestRepo.get_last_element().date!=datetime.now().date() :
                     #produrre richiesta per avere tutte le configurazioni con isactive=true e datetimeactivation < della data di oggi alle 23:59, e aggiungere a schedulazioni
                     headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="GetConfigurationForToday", Creator=creator, Code = MessageCode.Ok.value)
                     ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': ""}, indent=2),GestoreDestinatari().determina_destinatario("ConfiguratorService"))            
                     ScheduleRequestRepo.add_request_schedule()
-                    lastRequest=datetime.now().date()
+                elif ScheduleResponseRepo.get_last_element()!=None and ScheduleResponseRepo.get_last_element().date==datetime.now().date() and ( RequestNotificationRepo.get_last_element()==None or RequestNotificationRepo.get_last_element().datetime!=datetime.now().replace(minute=0, second=0, microsecond=0) ):
+                     #invia a notificatore le schedulazioni dell'ora corrente
+                    handler = EventHandlers.tag_handlers.get("SchedulationCurrentHour", lambda: f"Tag SchedulationCurrentHour non gestito")
+                    responses = handler()
+                    for response in responses:
+                        headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Response.value ,Tag="SchedulationCurrentHour", Creator=creator, Code = MessageCode.Ok.value)
+                        ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario("NotifierService"))            
+                    RequestNotificationRepo.add_request_notification()
                 else:
                     msg = consumer.poll(1.0)
                     if msg is not None:
@@ -68,7 +75,7 @@ class ConsumerClass:
                                 continue
                             else:
                                 print(msg.error())
-                                break
+                                continue
         except Exception as ex:
             print(str(ex))
             pass

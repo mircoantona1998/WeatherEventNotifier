@@ -46,10 +46,3 @@ class MessageSent(Base):
     code = Column(String(20))
     partition = Column(Integer)
 
-
-class Weather(Base):
-    __tablename__ = 'Weather'
-
-    id = Column(Integer, primary_key=True)
-    idSchedule = Column(Integer)
-    value = Column(Float)

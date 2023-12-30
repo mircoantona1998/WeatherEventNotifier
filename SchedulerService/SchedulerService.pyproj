@@ -24,6 +24,8 @@
   <ItemGroup>
     <Compile Include="Configurations\Configurations.py" />
     <Compile Include="DB\Model.py" />
+    <Compile Include="DB\Repository\RequestNotificationRepo.py" />
+    <Compile Include="DB\Repository\ScheduleResponseRepo.py" />
     <Compile Include="DB\Repository\ScheduleRequestRepo.py" />
     <Compile Include="DB\Session.py" />
     <Compile Include="DB\Repository\MessageReceivedRepo.py" />

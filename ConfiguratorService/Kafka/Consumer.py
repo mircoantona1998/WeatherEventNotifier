@@ -57,7 +57,7 @@ class ConsumerClass:
                                 continue
                             else:
                                 print(msg.error())
-                                break
+                                continue
         except Exception as ex:
             print(str(ex))
             pass

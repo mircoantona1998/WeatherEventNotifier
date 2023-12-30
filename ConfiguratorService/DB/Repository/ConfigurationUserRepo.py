@@ -33,6 +33,34 @@ class ConfigurationUserRepo:
                 }
                 result_dicts.append(result_dict)
             return result_dicts
+     
+    def get_new_configuration_for_today(idConfiguration):
+        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        midnight = today + timedelta(days=1)
+        with Session.get_database_session() as session:
+            resultList = session.query(t_View_ConfigurationUser).filter_by(Id=idConfiguration).all()
+            for result in resultList:
+                forNotifier=FrequencyRepo.get_element(result.IdFrequency)
+                result_dict = {
+                    "Id": result.Id,
+                    "IdUser": result.IdUser,
+                    "IdFrequency": result.IdFrequency,
+                    "FrequencyName": result.FrequencyName,
+                    "Longitude": float(result.Longitude) if result.Longitude is not None else None,
+                    "Latitude": float(result.Latitude) if result.Latitude is not None else None,
+                    "DateTimeCreate": result.DateTimeCreate.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeCreate is not None else None,
+                    "DateTimeUpdate": result.DateTimeUpdate.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeUpdate is not None else None,
+                    "DateTimeActivation": result.DateTimeActivation.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeActivation is not None else None,
+                    "IsActive": bool(result.IsActive) if result.IsActive is not None else None,
+                    "Field": result.Field,
+                    "IdMetric": result.IdMetric,
+                    "Symbol": result.Symbol,
+                    "Value": float(result.Value) if result.Value is not None else None,
+                    "ValueUnit": result.ValueUnit,
+                    "Minutes":forNotifier.Minutes,
+                    "Parent":result.Parent,
+                }
+                return result_dict
         
     def get_all_for_today():
         today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -66,6 +94,7 @@ class ConfigurationUserRepo:
                     "Value": float(result.Value) if result.Value is not None else None,
                     "ValueUnit": result.ValueUnit,
                     "Minutes":forNotifier.Minutes,
+                    "Parent":result.Parent,
                 }
                 result_dicts.append(result_dict)
             return result_dicts

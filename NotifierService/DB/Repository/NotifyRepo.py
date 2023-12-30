@@ -14,8 +14,8 @@ class NotifyRepo:
                     "IdSchedule": result.IdSchedule,
                     "Message": result.Message,
                     "DateTimeCreate": result.DateTimeCreate.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeCreate is not None else None,
-                    "IsActive": bool(result.IsActive) if result.IsActive is not None else None,
-                    "ToWork": bool(result.ToWork) if result.ToWork is not None else None,
+                    "IdConfiguration": result.IdConfiguration,
+                    "ValueWeather": float(result.ValueWeather) if result.ValueWeather is not None else None,
                 }
                 result_dicts.append(result_dict)
             return result_dicts
@@ -35,9 +35,24 @@ class NotifyRepo:
                     "IdSchedule": result.IdSchedule,
                     "Message": result.Message,
                     "DateTimeCreate": result.DateTimeCreate.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeCreate is not None else None,
-                    "IsActive": bool(result.IsActive) if result.IsActive is not None else None,
-                    "ToWork": bool(result.ToWork) if result.ToWork is not None else None,
+                    "IdConfiguration": result.IdConfiguration,
+                    "ValueWeather": float(result.ValueWeather) if result.ValueWeather is not None else None,
                 }
                 result_dicts.append(result_dict)
             return result_dicts
         
+    def add_element(new_element_data):
+        with Session.get_database_session() as session:
+            new_element = Notify(**new_element_data)
+            session.add(new_element)
+            session.commit()
+            result_dict = {
+                    "Id": new_element.Id,
+                    "IdUser": new_element.IdUser,
+                    "IdSchedule": new_element.IdSchedule,
+                    "DateTimeCreate": new_element.DateTimeCreate.strftime('%Y-%m-%d %H:%M:%S') if new_element.DateTimeCreate is not None else None,                   
+                    "Message": new_element.Message,
+                    "IdConfiguration": new_element.IdConfiguration,
+                    "ValueWeather": float(new_element.ValueWeather) if new_element.ValueWeather is not None else None,
+                }
+            return result_dict
