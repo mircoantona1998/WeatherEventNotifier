@@ -20,8 +20,6 @@ class GestoreDestinatari:
             return self.configurazioni("topic_to_mail")
         elif header_creator == "TelegramService":
             return self.configurazioni("topic_to_telegram")
-        elif header_creator == "TipService":
-            return self.configurazioni("topic_to_tip")
         else:
             raise Exception("Non esiste mapping con il creator")
 

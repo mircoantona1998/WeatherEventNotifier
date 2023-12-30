@@ -48,7 +48,6 @@ class EventHandlers:
             }
             NotifyRepo.add_element(new_element_data)
             headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="NewTip", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
-            ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("TipService")) 
             ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("MailService")) 
             ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("TelegramService")) 
         return 

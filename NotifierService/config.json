@@ -16,7 +16,6 @@
   "topic_to_weather": "topic_to_weather",
   "topic_to_mail": "topic_to_mail",
   "topic_to_telegram": "topic_to_telegram",
-  "topic_to_tip": "topic_to_tip",
   "database": {
     "username": "root",
     "password": "root",
