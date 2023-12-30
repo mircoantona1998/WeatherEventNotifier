@@ -1,6 +1,0 @@
-{
-  "ConfigurationTelegramTable": "TelegramConfiguration",
-  "ConnectionString": "Data Source=172.17.0.3,1433;Initial Catalog=Userdata;User ID=sa;Password=RootRoot.1; Encrypt=False;",
-  "TelegramTable": "TelegramMessages",
-  "BotToken": "6783949622:AAHVzLeQ_WV_vx5YZAk8jJeNPe6fl64U2Zg"
-}

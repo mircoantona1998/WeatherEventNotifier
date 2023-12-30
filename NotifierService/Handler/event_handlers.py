@@ -42,15 +42,15 @@ class EventHandlers:
                 'IdUser': data["IdUser"],
                 'IdSchedule': data["IdSchedule"], 
                 'Message': "Attenzione per la configurazione. Valore misurato: " +str(data["ValueWeather"]),
-                'DateTimeCreate': datetime.utcnow(),
+                'DateTimeCreate': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
                 'IdConfiguration': data["IdConfiguration"], 
                 'ValueWeather': data["ValueWeather"]
             }
             NotifyRepo.add_element(new_element_data)
             headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="NewTip", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
-            ProducerClass.send_message(headersRequest.headers_list,{'Data': new_element_data},GestoreDestinatari().determina_destinatario("TipService")) 
-            ProducerClass.send_message(headersRequest.headers_list,{'Data': new_element_data},GestoreDestinatari().determina_destinatario("MailService")) 
-            ProducerClass.send_message(headersRequest.headers_list,{'Data': new_element_data},GestoreDestinatari().determina_destinatario("TelegramService")) 
+            ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("TipService")) 
+            ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("MailService")) 
+            ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("TelegramService")) 
         return 
     
     tag_handlers = {
