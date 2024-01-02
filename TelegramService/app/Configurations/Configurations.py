@@ -45,6 +45,6 @@ class Configurations:
             print(str(self.database_porta))
             self.database_ip = os.getenv("DATABASE_IP", "127.0.0.1")
             print(str(self.database_ip))
-            self.database_name = os.getenv("DATABASE_NAME", "ConfigurationAlert")
+            self.database_name = os.getenv("DATABASE_NAME", "Telegram")
             print(str(self.consumer_group_id))
        
