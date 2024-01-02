@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
         public AuthController(IConfiguration configuration)
         {
             this._configuration = configuration;
-            userRepo = new UserRepository(configuration.GetConnectionString("Userdata"));
+            userRepo = new UserRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("Userdata"));
         }
 
         #region POST

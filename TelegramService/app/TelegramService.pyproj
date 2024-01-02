@@ -2,16 +2,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>41c13aba-9e0e-4e64-83d7-35e4b58d4d6d</ProjectGuid>
+    <ProjectGuid>1594f7ff-9d7d-43aa-9572-9946b07c143a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>WeatherService.py</StartupFile>
+    <StartupFile>TelegramService.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>WeatherService</Name>
-    <RootNamespace>WeatherService</RootNamespace>
-    <InterpreterId>MSBuild|Weather|$(MSBuildProjectFullPath)</InterpreterId>
+    <Name>TelegramService</Name>
+    <RootNamespace>TelegramService</RootNamespace>
+    <InterpreterId>MSBuild|Telegram|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,43 +24,41 @@
   <ItemGroup>
     <Compile Include="Configurations\Configurations.py" />
     <Compile Include="DB\Model.py" />
+    <Compile Include="DB\Repository\TelegramUsers.py" />
+    <Compile Include="DB\Repository\TelegramConfiguration.py" />
+    <Compile Include="DB\Repository\TelegramMessages.py" />
     <Compile Include="DB\Session.py" />
     <Compile Include="DB\Repository\MessageReceivedRepo.py" />
     <Compile Include="DB\Repository\MessageSentRepo.py" />
-    <Compile Include="DB\Repository\ApiKeyRepo.py" />
     <Compile Include="Handler\event_destinators.py" />
     <Compile Include="Handler\event_handlers.py" />
     <Compile Include="Kafka\Consumer.py" />
     <Compile Include="Kafka\KafkaHeader.py" />
     <Compile Include="Kafka\Producer.py" />
+    <Compile Include="TelegramService.py" />
+    <Compile Include="Utils\Telegram.py" />
     <Compile Include="Utils\EnumMessageCode.py" />
     <Compile Include="Utils\EnumMessageType.py" />
     <Compile Include="Utils\Json.py" />
-    <Compile Include="Utils\OpenWeather.py" />
-    <Compile Include="WeatherService.py" />
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="Weather\">
-      <Id>Weather</Id>
+    <Folder Include="DB\Repository\" />
+    <Folder Include="Kafka\" />
+    <Folder Include="Handler\" />
+    <Folder Include="DB\" />
+    <Folder Include="Configurations\" />
+    <Folder Include="Utils\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="Telegram\">
+      <Id>Telegram</Id>
       <Version>3.9</Version>
-      <Description>Weather (Python 3.9 (64-bit))</Description>
+      <Description>Telegram (Python 3.9 (64-bit))</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
     </Interpreter>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Configurations\" />
-    <Folder Include="DB\" />
-    <Folder Include="DB\Repository\" />
-    <Folder Include="Handler\" />
-    <Folder Include="Kafka\" />
-    <Folder Include="Utils\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="config.json" />
-    <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -18,7 +18,7 @@ public class Startup
          .AddDefaultTokenProviders();
         services.AddScoped<UserManager<User>>();
         services.AddScoped<SignInManager<User>>();
-        services.AddDbContext<UserdataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Userdata")));
+        services.AddDbContext<UserdataContext>(options => options.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings") ?? Configuration.GetConnectionString("Userdata")));
         services.AddAuthorization();
         services.AddControllers();
     }

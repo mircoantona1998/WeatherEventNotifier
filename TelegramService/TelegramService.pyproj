@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.json" />
+    <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DB\Repository\" />

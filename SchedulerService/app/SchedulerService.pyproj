@@ -2,16 +2,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>41c13aba-9e0e-4e64-83d7-35e4b58d4d6d</ProjectGuid>
+    <ProjectGuid>64618ff8-6a68-4859-ad5e-4e227f607806</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>WeatherService.py</StartupFile>
+    <StartupFile>SchedulerService.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>WeatherService</Name>
-    <RootNamespace>WeatherService</RootNamespace>
-    <InterpreterId>MSBuild|Weather|$(MSBuildProjectFullPath)</InterpreterId>
+    <Name>SchedulerService</Name>
+    <RootNamespace>SchedulerService</RootNamespace>
+    <InterpreterId>MSBuild|Scheduler|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,26 +24,28 @@
   <ItemGroup>
     <Compile Include="Configurations\Configurations.py" />
     <Compile Include="DB\Model.py" />
+    <Compile Include="DB\Repository\RequestNotificationRepo.py" />
+    <Compile Include="DB\Repository\ScheduleResponseRepo.py" />
+    <Compile Include="DB\Repository\ScheduleRequestRepo.py" />
     <Compile Include="DB\Session.py" />
     <Compile Include="DB\Repository\MessageReceivedRepo.py" />
     <Compile Include="DB\Repository\MessageSentRepo.py" />
-    <Compile Include="DB\Repository\ApiKeyRepo.py" />
+    <Compile Include="DB\Repository\ScheduleRepo.py" />
     <Compile Include="Handler\event_destinators.py" />
     <Compile Include="Handler\event_handlers.py" />
     <Compile Include="Kafka\Consumer.py" />
     <Compile Include="Kafka\KafkaHeader.py" />
     <Compile Include="Kafka\Producer.py" />
-    <Compile Include="Utils\EnumMessageCode.py" />
-    <Compile Include="Utils\EnumMessageType.py" />
+    <Compile Include="SchedulerService.py" />
     <Compile Include="Utils\Json.py" />
-    <Compile Include="Utils\OpenWeather.py" />
-    <Compile Include="WeatherService.py" />
+    <Compile Include="Utils\EnumMessageType.py" />
+    <Compile Include="Utils\EnumMessageCode.py" />
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="Weather\">
-      <Id>Weather</Id>
+    <Interpreter Include="Scheduler\">
+      <Id>Scheduler</Id>
       <Version>3.9</Version>
-      <Description>Weather (Python 3.9 (64-bit))</Description>
+      <Description>Scheduler (Python 3.9 (64-bit))</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
@@ -59,7 +61,6 @@
     <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config.json" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

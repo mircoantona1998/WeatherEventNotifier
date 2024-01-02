@@ -1,6 +1,7 @@
 using Userdata.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Userdata.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -13,7 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<UserdataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Userdata"));
+    options.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings") ?? builder.Configuration.GetConnectionString("Userdata"));
 });
 builder.Services.AddCors(options =>
 {

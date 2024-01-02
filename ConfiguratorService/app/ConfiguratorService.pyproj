@@ -2,16 +2,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>41c13aba-9e0e-4e64-83d7-35e4b58d4d6d</ProjectGuid>
+    <ProjectGuid>3c360abc-2648-4dd0-a918-166929027d22</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>WeatherService.py</StartupFile>
+    <StartupFile>ConfiguratorService.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>WeatherService</Name>
-    <RootNamespace>WeatherService</RootNamespace>
-    <InterpreterId>MSBuild|Weather|$(MSBuildProjectFullPath)</InterpreterId>
+    <Name>ConfiguratorService</Name>
+    <RootNamespace>ConfiguratorService</RootNamespace>
+    <InterpreterId>MSBuild|Configurator|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,11 +23,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Configurations\Configurations.py" />
+    <Compile Include="ConfiguratorService.py" />
+    <Compile Include="DB\Repository\MetricRepo.py" />
+    <Compile Include="DB\Repository\FrequencyRepo.py" />
+    <Compile Include="DB\Repository\MessageSentRepo.py" />
+    <Compile Include="DB\Repository\MessageReceivedRepo.py" />
+    <Compile Include="DB\Repository\ConfigurationUserRepo.py" />
     <Compile Include="DB\Model.py" />
     <Compile Include="DB\Session.py" />
-    <Compile Include="DB\Repository\MessageReceivedRepo.py" />
-    <Compile Include="DB\Repository\MessageSentRepo.py" />
-    <Compile Include="DB\Repository\ApiKeyRepo.py" />
     <Compile Include="Handler\event_destinators.py" />
     <Compile Include="Handler\event_handlers.py" />
     <Compile Include="Kafka\Consumer.py" />
@@ -36,14 +39,12 @@
     <Compile Include="Utils\EnumMessageCode.py" />
     <Compile Include="Utils\EnumMessageType.py" />
     <Compile Include="Utils\Json.py" />
-    <Compile Include="Utils\OpenWeather.py" />
-    <Compile Include="WeatherService.py" />
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="Weather\">
-      <Id>Weather</Id>
+    <Interpreter Include="Configurator\">
+      <Id>Configurator</Id>
       <Version>3.9</Version>
-      <Description>Weather (Python 3.9 (64-bit))</Description>
+      <Description>Configurator (Python 3.9 (64-bit))</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
@@ -51,15 +52,14 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Configurations\" />
-    <Folder Include="DB\" />
     <Folder Include="DB\Repository\" />
-    <Folder Include="Handler\" />
     <Folder Include="Kafka\" />
+    <Folder Include="DB\" />
+    <Folder Include="Handler\" />
+    <Folder Include="Configurations\" />
     <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config.json" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

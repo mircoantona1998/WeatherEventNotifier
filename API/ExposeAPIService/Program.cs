@@ -6,28 +6,32 @@ using ExposeAPI.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 config.configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
     .Build();
 
-config.confdb = config.configuration.GetConnectionString("Userdata");
+
+config.confdb = Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:Userdata"];
+
 Kafka.producer = new KafkaProducer();
-Kafka.consumer = new KafkaConsumer( config.configuration["topic_to_userdata"]);
+Kafka.consumer = new KafkaConsumer(Environment.GetEnvironmentVariable("topic_to_userdata") ?? config.configuration["topic_to_userdata"]);
 Kafka.consumerConfig = new ConsumerConfig
 {
-    BootstrapServers = config.configuration["bootstrapServers"],
-    GroupId = config.configuration["groupID"],
+    BootstrapServers = Environment.GetEnvironmentVariable("bootstrapServers") ?? config.configuration["bootstrapServers"] ,
+    GroupId = Environment.GetEnvironmentVariable("groupID") ?? config.configuration["groupID"]  ,
     AutoOffsetReset = AutoOffsetReset.Earliest,
     EnableAutoCommit=true
 };
 Kafka.producerConfig = new ProducerConfig {
-    BootstrapServers= config.configuration["bootstrapServers"],
-    ClientId=  config.configuration["groupID"]
+    BootstrapServers = Environment.GetEnvironmentVariable("bootstrapServers") ?? config.configuration["bootstrapServers"]   ,
+    ClientId= Environment.GetEnvironmentVariable("groupID") ?? config.configuration["groupID"]
 };
-Kafka.topic_to_configuration = config.configuration["topic_to_configuration"];
-Kafka.topic_to_userdata = config.configuration["topic_to_userdata"];
+Kafka.topic_to_configuration = Environment.GetEnvironmentVariable("topic_to_configuration") ?? config.configuration["topic_to_configuration"];
+Kafka.topic_to_userdata = Environment.GetEnvironmentVariable("topic_to_userdata") ?? config.configuration["topic_to_userdata"] ;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -44,7 +48,7 @@ builder.Services.AddAuthentication(opt =>
             ValidateAudience = false,
             ValidateLifetime = false,
             ValidateIssuerSigningKey = false,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.configuration["Jwt:SecretKey"])),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("Jwt") ?? config.configuration["Jwt:SecretKey"] )),
             ClockSkew = TimeSpan.Zero
         };
     }
@@ -98,7 +102,7 @@ var app = builder.Build();
 app.UseCors("CorsPolicy");
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseResponseCaching();
 app.MapControllers();
 app.Run();
