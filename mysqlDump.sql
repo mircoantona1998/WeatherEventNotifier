@@ -616,7 +616,7 @@ CREATE TABLE `MailConfiguration` (
 
 LOCK TABLES `MailConfiguration` WRITE;
 /*!40000 ALTER TABLE `MailConfiguration` DISABLE KEYS */;
-INSERT INTO `MailConfiguration` VALUES (1,'mircoantona1998@gmail.com','mircoantona1998@gmail.com','xiwd dwiu hsgr gzvp');
+INSERT INTO `MailConfiguration` VALUES (1,'weathereventnotifier@gmail.com','weathereventnotifier@gmail.com','wmjc xkok dutx xmkk');
 /*!40000 ALTER TABLE `MailConfiguration` ENABLE KEYS */;
 UNLOCK TABLES;
 
