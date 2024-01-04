@@ -1,10 +1,18 @@
 import json
+from datetime import datetime
 
 class Json:
     @staticmethod
+    def custom_json_serializer(obj):
+        if isinstance(obj, datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        raise TypeError("Type not serializable")
+    
+    @staticmethod
     def convert_object_to_json(obj):
         json_options = {
-            "indent": 2
+            "indent": 2,
+            "default": Json.custom_json_serializer
         }
         json_string = json.dumps(obj, **json_options)
         return json_string
@@ -24,17 +32,6 @@ class Json:
             Data=convert_data(d.get(from_camel_case('Data')))
         ))
 
-    @staticmethod
-    def packaging_message(element, message_type, message_tag, id_message):
-        data = Json.convert_object_to_json(element)
-        json_data = {
-            "IdOffsetResponse": id_message,
-            "Type": message_type,
-            "Tag": message_tag,
-            "Data": data
-        }
-        json_string = json.dumps(json_data, indent=2)
-        return json_string
     
     # @staticmethod
     # def leggi_configurazioni( nome_configurazione):
