@@ -22,7 +22,7 @@ class TelegramUsersRepo:
             return None  
         with Session.get_database_session() as session:
             query = session.query(TelegramUsers)
-            query = query.filter_by(idUser=idUser)
+            query = query.filter_by(idUser=idUser, isActive=True)
             result_list = query.all()  
             result_dicts = []
             for result in result_list:

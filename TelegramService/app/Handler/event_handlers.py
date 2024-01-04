@@ -1,4 +1,5 @@
 import json
+from DB.Repository.TelegramConfigurationRepo import TelegramConfigurationRepo
 from DB.Repository.TelegramMessagesRepo import TelegramMessagesRepo
 from DB.Repository.TelegramUsersRepo import TelegramUsersRepo
 from Utils.Telegram import Telegram
@@ -8,9 +9,31 @@ class EventHandlers:
     
     def handle_tag_NewTip(dat):
         data=dat["Data"]
-        result=Telegram().send_message("1914585178",data["Message"])
-        if result["ok"]==True:
-            print("inviato")
+        user=TelegramUsersRepo.get_user_telegram(data["IdUser"]) #aggiungere condizione se user presente o no
+        config=TelegramConfigurationRepo.get_all() #creare get first   
+        result=Telegram().send_message(user.chat_id,data["Message"],config.token)
+        if result["ok"]==True:    
+            new_element_data = {
+                'IdUser' :  data["Mail"],
+                'IdChat' :  user.chat_id,
+                'Testo' : data["Message"],
+                'Allegati' : False,
+                'DateCreate' : "", #sistemare
+                'WasSent':  True, 
+                'Result' :  "Ok" 
+            }
+            TelegramMessagesRepo.add_message(new_element_data)
+        else:
+            new_element_data = {
+                'IdUser' :  data["Mail"],
+                'IdChat' :  user.chat_id,
+                'Testo' : data["Message"],
+                'Allegati' : False,
+                'DateCreate' : "", #sistemare
+                'WasSent':  False, 
+                'Result' :  "ERRORE" 
+            }
+            TelegramMessagesRepo.add_message(new_element_data)
         return None
     
     def handle_tag_GetTelegramSent(data):
