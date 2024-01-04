@@ -5,17 +5,23 @@ from sqlalchemy import  func, cast, DateTime
 
 class ScheduleRepo:
         
-    def get_all():
+    def get_all_by_user(user_id):
         with Session.get_database_session() as session:
-            resultList = session.query(Schedule).all()
+            resultList = session.query(Schedule).filter_by(IdUser=user_id).all()
             result_dicts = []
             for result in resultList:
                 result_dict = {
                     "Id": result.Id,
                     "IdConfiguration": result.IdConfiguration,
                     "DateTimeToSchedule": result.DateTimeToSchedule.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeToSchedule is not None else None,
-                    "ToWork": bool(result.ToWork) if result.ToWork is not None else None,
-                }
+                    "FieldMetric":result.FieldMetric,
+                    "Symbol":result.Symbol,
+                    "Value":result.Value,
+                    "IdUser":result.IdUser,
+                    "Latitude":result.Latitude,
+                    "Longitude":result.Longitude,
+                    "ParentMetric":result.ParentMetric,
+                   }
                 result_dicts.append(result_dict)
             return result_dicts
         
@@ -72,7 +78,6 @@ class ScheduleRepo:
                     "Id": result.Id,
                     "IdConfiguration": result.IdConfiguration,
                     "DateTimeToSchedule": result.DateTimeToSchedule.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeToSchedule is not None else None,
-                    "ToWork": bool(result.ToWork) if result.ToWork is not None else None,
                     "FieldMetric":result.FieldMetric,
                     "Symbol":result.Symbol,
                     "Value":result.Value,

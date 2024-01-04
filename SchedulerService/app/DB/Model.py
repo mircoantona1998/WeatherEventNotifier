@@ -64,7 +64,6 @@ class Schedule(Base):
     Id = Column(Integer, primary_key=True)
     IdConfiguration = Column(Integer)
     DateTimeToSchedule = Column(DateTime)
-    ToWork = Column(TINYINT(1))
     FieldMetric = Column(String(50))
     Symbol = Column(CHAR(2))
     Value = Column(Float)

@@ -88,6 +88,9 @@ class EventHandlers:
     
     def handle_tag_SchedulationCurrentHour():
         return ScheduleRepo.get_all_current_hour()
+    
+    def handle_tag_GetSchedulation(data):
+        return ScheduleRepo.get_all_by_user(data["IdUser"])
 
     tag_handlers = {    
     "AddConfiguration": handle_tag_AddConfiguration,
@@ -95,4 +98,6 @@ class EventHandlers:
     "DeleteConfiguration": handle_tag_DeleteConfiguration, 
     "GetConfigurationForToday": handle_tag_GetConfigurationForToday,
     "SchedulationCurrentHour": handle_tag_SchedulationCurrentHour,
+    
+     "GetSchedulation": handle_tag_GetSchedulation,
     }

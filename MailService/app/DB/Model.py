@@ -11,16 +11,14 @@ class Mail(Base):
     __tablename__ = 'Mail'
 
     Id = Column(Integer, primary_key=True)
+    IdUser = Column(Integer, nullable=False)
     Mittente = Column(String(100))
     Destinatario = Column(LONGTEXT)
     Oggetto = Column(LONGTEXT)
     Testo = Column(LONGTEXT)
     Allegati = Column(TINYINT(1))
     DateCreate = Column(DateTime)
-    DateUpdate = Column(DateTime)
     WasSent = Column(TINYINT(1))
-    DateSent = Column(DateTime)
-    isActive = Column(TINYINT(1), nullable=False)
     Result = Column(LONGTEXT)
 
 
@@ -33,12 +31,14 @@ class MailConfiguration(Base):
     password = Column(String(100))
 
 
-class MailUser(Base):
+class MailUsers(Base):
     __tablename__ = 'MailUsers'
 
     id = Column(Integer, primary_key=True)
     idUser = Column(Integer, nullable=False)
-    mail = Column(CHAR(10), nullable=False)
+    mail = Column(String(500), nullable=False)
+    isActive = Column(TINYINT(1), nullable=False)
+    
 
 
 class MessageReceived(Base):

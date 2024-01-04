@@ -58,7 +58,56 @@ namespace ExposeAPI.Utils
         GetNotify,
 
         [EnumMember(Value = "DeleteNotify")]
-        DeleteNotify
+        DeleteNotify,
+        #endregion
+
+        #region Scheduler
+
+        [EnumMember(Value = "GetSchedulation")]
+        GetSchedulation,
+
+        #endregion
+
+        #region TelegramSent
+
+        [EnumMember(Value = "GetTelegramSent")]
+        GetTelegramSent,
+
+        #endregion
+
+        #region MailSent
+
+        [EnumMember(Value = "GetMailSent")]
+        GetMailSent,
+
+        #endregion
+
+        #region UserTelegram
+        [EnumMember(Value = "AddUserTelegram")]
+        AddUserTelegram,
+
+        [EnumMember(Value = "PatchUserTelegram")]
+        PatchUserTelegram,
+
+        [EnumMember(Value = "GetUserTelegram")]
+        GetUserTelegram,
+
+        [EnumMember(Value = "DeleteUserTelegram")]
+        DeleteUserTelegram,
+        #endregion
+
+        #region UserMail
+        [EnumMember(Value = "AddUserMail")]
+        AddUserMail,
+
+        [EnumMember(Value = "PatchUserMail")]
+        PatchUserMail,
+
+        [EnumMember(Value = "GetUserMail")]
+        GetUserMail,
+
+        [EnumMember(Value = "DeleteUserMail")]
+        DeleteUserMail,
         #endregion
     }
 

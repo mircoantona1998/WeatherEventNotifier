@@ -47,24 +47,23 @@ class TelegramConfiguration(Base):
     token = Column(String(100))
 
 
-class TelegramMessage(Base):
+class TelegramMessages(Base):
     __tablename__ = 'TelegramMessages'
 
     Id = Column(Integer, primary_key=True)
+    IdUser = Column(Integer, nullable=False)
     IdChat = Column(LONGTEXT)
     Testo = Column(LONGTEXT)
     Allegati = Column(TINYINT(1))
     DateCreate = Column(DateTime)
-    DateUpdate = Column(DateTime)
     WasSent = Column(TINYINT(1))
-    DateSent = Column(DateTime)
-    isActive = Column(TINYINT(1), nullable=False)
     Result = Column(LONGTEXT)
 
 
-class TelegramUser(Base):
+class TelegramUsers(Base):
     __tablename__ = 'TelegramUsers'
 
     id = Column(Integer, primary_key=True)
     idUser = Column(Integer, nullable=False)
     chat_id = Column(CHAR(10), nullable=False)
+    isActive = Column(TINYINT(1), nullable=False)
