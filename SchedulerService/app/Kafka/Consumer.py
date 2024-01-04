@@ -14,7 +14,7 @@ from Utils.EnumMessageType import MessageType
 from Utils.Json import Json
 from DB.Model import MessageReceived
 from Handler.event_handlers import EventHandlers
-
+from confluent_kafka.admin import AdminClient, NewTopic
 class ConsumerClass:
     def run_request(self):
         consumer={}
@@ -24,6 +24,26 @@ class ConsumerClass:
         creator=Configurations().group_id
         consumer = Consumer(consumer)
         topic = Configurations().topic_to_scheduler
+        admin_client_config = {'bootstrap.servers': Configurations().consumer_bootstrap_servers}
+        admin_client = AdminClient(admin_client_config)
+        new_topic = NewTopic(
+            topic=topic,
+            num_partitions=1,
+            replication_factor=1  
+        )
+        topic_created = False
+        while not topic_created:
+            try:
+                admin_client.create_topics([new_topic])
+                topic_created = True
+                print("Topic  creato con successo.")
+            except Exception as e:
+                if "AlreadyExistsError" in str(e):
+                    topic_created = True
+                    print("Il topic  esiste.")
+                else:
+                    print(f"Errore durante la creazione del topic: {e}")
+
         consumer.subscribe([topic])
         try:
             while True:
@@ -43,7 +63,7 @@ class ConsumerClass:
                 else:
                     msg = consumer.poll(1.0)
                     if msg is not None:
-                        if MessageReceivedRepo.get_latest_message() ==None or (msg.offset()!=None and msg.offset() > MessageReceivedRepo.get_latest_message().offset):
+                        if MessageReceivedRepo.get_latest_message() ==None or MessageReceivedRepo.get_latest_message().offset==None or (msg.offset()!=None and msg.offset() > MessageReceivedRepo.get_latest_message().offset):
                             print(f'Received message {str(msg.value().decode("utf-8"))} on topic {msg.topic()} [{msg.partition()}] @ offset {msg.offset()}')     
                             value=msg.value().decode("utf-8")
                             partition = msg.partition()

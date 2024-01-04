@@ -3,7 +3,7 @@
 -- Host: 127.0.0.1    Database: Telegram
 -- ------------------------------------------------------
 -- Server version	8.2.0
-
+use `Telegram`;
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -35,7 +35,7 @@ CREATE TABLE `MessageReceived` (
   `code` varchar(20) DEFAULT NULL,
   `partition` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1469 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1473 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,11 +116,9 @@ CREATE TABLE `TelegramMessages` (
   `Testo` longtext,
   `Allegati` tinyint(1) DEFAULT NULL,
   `DateCreate` datetime DEFAULT NULL,
-  `DateUpdate` datetime DEFAULT NULL,
   `WasSent` tinyint(1) DEFAULT NULL,
-  `DateSent` datetime DEFAULT NULL,
-  `isActive` tinyint(1) NOT NULL,
   `Result` longtext,
+  `IdUser` int NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -145,6 +143,7 @@ CREATE TABLE `TelegramUsers` (
   `id` int NOT NULL AUTO_INCREMENT,
   `idUser` int NOT NULL,
   `chat_id` char(10) NOT NULL,
+  `isActive` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -175,13 +174,444 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-02 21:56:05
+-- Dump completed on 2024-01-04 18:06:14
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+--
+-- Host: 127.0.0.1    Database: Notifier
+-- ------------------------------------------------------
+-- Server version	8.2.0
+use `Notifier`;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `MessageReceived`
+--
+
+DROP TABLE IF EXISTS `MessageReceived`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MessageReceived` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `message` longtext,
+  `offset` int DEFAULT NULL,
+  `timestamp` datetime DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `idOffsetResponse` int DEFAULT NULL,
+  `tagMessage` varchar(50) DEFAULT NULL,
+  `topic` varchar(50) DEFAULT NULL,
+  `creator` varchar(500) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `partition` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2229 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `MessageReceived`
+--
+
+LOCK TABLES `MessageReceived` WRITE;
+/*!40000 ALTER TABLE `MessageReceived` DISABLE KEYS */;
+/*!40000 ALTER TABLE `MessageReceived` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `MessageSent`
+--
+
+DROP TABLE IF EXISTS `MessageSent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MessageSent` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `message` longtext,
+  `offset` int DEFAULT NULL,
+  `timestamp` datetime DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `idOffsetResponse` int DEFAULT NULL,
+  `tagMessage` varchar(50) DEFAULT NULL,
+  `topic` varchar(50) DEFAULT NULL,
+  `creator` varchar(500) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `partition` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2006 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `MessageSent`
+--
+
+LOCK TABLES `MessageSent` WRITE;
+/*!40000 ALTER TABLE `MessageSent` DISABLE KEYS */;
+/*!40000 ALTER TABLE `MessageSent` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Notify`
+--
+
+DROP TABLE IF EXISTS `Notify`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Notify` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `IdUser` int DEFAULT NULL,
+  `IdSchedule` int DEFAULT NULL,
+  `Message` text,
+  `DateTimeCreate` datetime DEFAULT NULL,
+  `IdConfiguration` int DEFAULT NULL,
+  `ValueWeather` float DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3530 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Notify`
+--
+
+LOCK TABLES `Notify` WRITE;
+/*!40000 ALTER TABLE `Notify` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Notify` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping events for database 'Notifier'
+--
+
+--
+-- Dumping routines for database 'Notifier'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2024-01-04 18:06:14
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+--
+-- Host: 127.0.0.1    Database: Weather
+-- ------------------------------------------------------
+-- Server version	8.2.0
+use `Weather`;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `Key`
+--
+
+DROP TABLE IF EXISTS `Key`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Key` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `apiKey` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Key`
+--
+
+LOCK TABLES `Key` WRITE;
+/*!40000 ALTER TABLE `Key` DISABLE KEYS */;
+INSERT INTO `Key` VALUES (1,'7922142ac1c5839b29f90140be5565ec');
+/*!40000 ALTER TABLE `Key` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `MessageReceived`
+--
+
+DROP TABLE IF EXISTS `MessageReceived`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MessageReceived` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `message` longtext,
+  `offset` int DEFAULT NULL,
+  `timestamp` datetime DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `idOffsetResponse` int DEFAULT NULL,
+  `tagMessage` varchar(50) DEFAULT NULL,
+  `topic` varchar(50) DEFAULT NULL,
+  `creator` varchar(500) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `partition` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=479 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `MessageReceived`
+--
+
+LOCK TABLES `MessageReceived` WRITE;
+/*!40000 ALTER TABLE `MessageReceived` DISABLE KEYS */;
+/*!40000 ALTER TABLE `MessageReceived` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `MessageSent`
+--
+
+DROP TABLE IF EXISTS `MessageSent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MessageSent` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `message` longtext,
+  `offset` int DEFAULT NULL,
+  `timestamp` datetime DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `idOffsetResponse` int DEFAULT NULL,
+  `tagMessage` varchar(50) DEFAULT NULL,
+  `topic` varchar(50) DEFAULT NULL,
+  `creator` varchar(500) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `partition` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=400 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `MessageSent`
+--
+
+LOCK TABLES `MessageSent` WRITE;
+/*!40000 ALTER TABLE `MessageSent` DISABLE KEYS */;
+/*!40000 ALTER TABLE `MessageSent` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping events for database 'Weather'
+--
+
+--
+-- Dumping routines for database 'Weather'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2024-01-04 18:06:14
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+--
+-- Host: 127.0.0.1    Database: Mail
+-- ------------------------------------------------------
+-- Server version	8.2.0
+use `Mail`;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `Mail`
+--
+
+DROP TABLE IF EXISTS `Mail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Mail` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `Mittente` varchar(100) DEFAULT NULL,
+  `Destinatario` longtext,
+  `Oggetto` longtext,
+  `Testo` longtext,
+  `Allegati` tinyint(1) DEFAULT NULL,
+  `DateCreate` datetime DEFAULT NULL,
+  `WasSent` tinyint(1) DEFAULT NULL,
+  `Result` longtext,
+  `IdUser` int NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Mail`
+--
+
+LOCK TABLES `Mail` WRITE;
+/*!40000 ALTER TABLE `Mail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Mail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `MailConfiguration`
+--
+
+DROP TABLE IF EXISTS `MailConfiguration`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MailConfiguration` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `mail` varchar(50) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `MailConfiguration`
+--
+
+LOCK TABLES `MailConfiguration` WRITE;
+/*!40000 ALTER TABLE `MailConfiguration` DISABLE KEYS */;
+INSERT INTO `MailConfiguration` VALUES (1,'weathereventnotifier@gmail.com','weathereventnotifier@gmail.com','wmjc xkok dutx xmkk');
+/*!40000 ALTER TABLE `MailConfiguration` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `MailUsers`
+--
+
+DROP TABLE IF EXISTS `MailUsers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MailUsers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `idUser` int NOT NULL,
+  `mail` char(10) NOT NULL,
+  `isActive` tinyint NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `MailUsers`
+--
+
+LOCK TABLES `MailUsers` WRITE;
+/*!40000 ALTER TABLE `MailUsers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `MailUsers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `MessageReceived`
+--
+
+DROP TABLE IF EXISTS `MessageReceived`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MessageReceived` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `message` longtext,
+  `offset` int DEFAULT NULL,
+  `timestamp` datetime DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `idOffsetResponse` int DEFAULT NULL,
+  `tagMessage` varchar(50) DEFAULT NULL,
+  `topic` varchar(50) DEFAULT NULL,
+  `creator` varchar(500) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `partition` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1468 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `MessageReceived`
+--
+
+LOCK TABLES `MessageReceived` WRITE;
+/*!40000 ALTER TABLE `MessageReceived` DISABLE KEYS */;
+/*!40000 ALTER TABLE `MessageReceived` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `MessageSent`
+--
+
+DROP TABLE IF EXISTS `MessageSent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MessageSent` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `message` longtext,
+  `offset` int DEFAULT NULL,
+  `timestamp` datetime DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `idOffsetResponse` int DEFAULT NULL,
+  `tagMessage` varchar(50) DEFAULT NULL,
+  `topic` varchar(50) DEFAULT NULL,
+  `creator` varchar(500) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `partition` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1538 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `MessageSent`
+--
+
+LOCK TABLES `MessageSent` WRITE;
+/*!40000 ALTER TABLE `MessageSent` DISABLE KEYS */;
+/*!40000 ALTER TABLE `MessageSent` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping events for database 'Mail'
+--
+
+--
+-- Dumping routines for database 'Mail'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2024-01-04 18:06:14
 -- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: ConfigurationAlert
 -- ------------------------------------------------------
 -- Server version	8.2.0
-
+use `ConfigurationAlert`;
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -276,7 +706,7 @@ CREATE TABLE `MessageReceived` (
   `code` varchar(20) DEFAULT NULL,
   `partition` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1263 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1264 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -308,7 +738,7 @@ CREATE TABLE `MessageSent` (
   `code` varchar(20) DEFAULT NULL,
   `partition` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1156 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1157 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -416,322 +846,13 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-02 21:56:05
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: Notifier
--- ------------------------------------------------------
--- Server version	8.2.0
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `MessageReceived`
---
-
-DROP TABLE IF EXISTS `MessageReceived`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `MessageReceived` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `message` longtext,
-  `offset` int DEFAULT NULL,
-  `timestamp` datetime DEFAULT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `idOffsetResponse` int DEFAULT NULL,
-  `tagMessage` varchar(50) DEFAULT NULL,
-  `topic` varchar(50) DEFAULT NULL,
-  `creator` varchar(500) DEFAULT NULL,
-  `code` varchar(20) DEFAULT NULL,
-  `partition` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2228 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MessageReceived`
---
-
-LOCK TABLES `MessageReceived` WRITE;
-/*!40000 ALTER TABLE `MessageReceived` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MessageReceived` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `MessageSent`
---
-
-DROP TABLE IF EXISTS `MessageSent`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `MessageSent` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `message` longtext,
-  `offset` int DEFAULT NULL,
-  `timestamp` datetime DEFAULT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `idOffsetResponse` int DEFAULT NULL,
-  `tagMessage` varchar(50) DEFAULT NULL,
-  `topic` varchar(50) DEFAULT NULL,
-  `creator` varchar(500) DEFAULT NULL,
-  `code` varchar(20) DEFAULT NULL,
-  `partition` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2006 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MessageSent`
---
-
-LOCK TABLES `MessageSent` WRITE;
-/*!40000 ALTER TABLE `MessageSent` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MessageSent` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Notify`
---
-
-DROP TABLE IF EXISTS `Notify`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Notify` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `IdUser` int DEFAULT NULL,
-  `IdSchedule` int DEFAULT NULL,
-  `Message` text,
-  `DateTimeCreate` datetime DEFAULT NULL,
-  `IdConfiguration` int DEFAULT NULL,
-  `ValueWeather` float DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3530 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Notify`
---
-
-LOCK TABLES `Notify` WRITE;
-/*!40000 ALTER TABLE `Notify` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Notify` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping events for database 'Notifier'
---
-
---
--- Dumping routines for database 'Notifier'
---
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2024-01-02 21:56:05
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: Mail
--- ------------------------------------------------------
--- Server version	8.2.0
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `Mail`
---
-
-DROP TABLE IF EXISTS `Mail`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Mail` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Mittente` varchar(100) DEFAULT NULL,
-  `Destinatario` longtext,
-  `Oggetto` longtext,
-  `Testo` longtext,
-  `Allegati` tinyint(1) DEFAULT NULL,
-  `DateCreate` datetime DEFAULT NULL,
-  `DateUpdate` datetime DEFAULT NULL,
-  `WasSent` tinyint(1) DEFAULT NULL,
-  `DateSent` datetime DEFAULT NULL,
-  `isActive` tinyint(1) NOT NULL,
-  `Result` longtext,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Mail`
---
-
-LOCK TABLES `Mail` WRITE;
-/*!40000 ALTER TABLE `Mail` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Mail` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `MailConfiguration`
---
-
-DROP TABLE IF EXISTS `MailConfiguration`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `MailConfiguration` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `mail` varchar(50) DEFAULT NULL,
-  `name` varchar(50) DEFAULT NULL,
-  `password` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MailConfiguration`
---
-
-LOCK TABLES `MailConfiguration` WRITE;
-/*!40000 ALTER TABLE `MailConfiguration` DISABLE KEYS */;
-INSERT INTO `MailConfiguration` VALUES (1,'weathereventnotifier@gmail.com','weathereventnotifier@gmail.com','wmjc xkok dutx xmkk');
-/*!40000 ALTER TABLE `MailConfiguration` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `MailUsers`
---
-
-DROP TABLE IF EXISTS `MailUsers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `MailUsers` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `idUser` int NOT NULL,
-  `mail` char(10) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MailUsers`
---
-
-LOCK TABLES `MailUsers` WRITE;
-/*!40000 ALTER TABLE `MailUsers` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MailUsers` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `MessageReceived`
---
-
-DROP TABLE IF EXISTS `MessageReceived`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `MessageReceived` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `message` longtext,
-  `offset` int DEFAULT NULL,
-  `timestamp` datetime DEFAULT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `idOffsetResponse` int DEFAULT NULL,
-  `tagMessage` varchar(50) DEFAULT NULL,
-  `topic` varchar(50) DEFAULT NULL,
-  `creator` varchar(500) DEFAULT NULL,
-  `code` varchar(20) DEFAULT NULL,
-  `partition` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1466 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MessageReceived`
---
-
-LOCK TABLES `MessageReceived` WRITE;
-/*!40000 ALTER TABLE `MessageReceived` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MessageReceived` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `MessageSent`
---
-
-DROP TABLE IF EXISTS `MessageSent`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `MessageSent` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `message` longtext,
-  `offset` int DEFAULT NULL,
-  `timestamp` datetime DEFAULT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `idOffsetResponse` int DEFAULT NULL,
-  `tagMessage` varchar(50) DEFAULT NULL,
-  `topic` varchar(50) DEFAULT NULL,
-  `creator` varchar(500) DEFAULT NULL,
-  `code` varchar(20) DEFAULT NULL,
-  `partition` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1538 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MessageSent`
---
-
-LOCK TABLES `MessageSent` WRITE;
-/*!40000 ALTER TABLE `MessageSent` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MessageSent` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping events for database 'Mail'
---
-
---
--- Dumping routines for database 'Mail'
---
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2024-01-02 21:56:05
+-- Dump completed on 2024-01-04 18:06:14
 -- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: Scheduler
 -- ------------------------------------------------------
 -- Server version	8.2.0
-
+use `Scheduler`;
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -763,7 +884,7 @@ CREATE TABLE `MessageReceived` (
   `code` varchar(20) DEFAULT NULL,
   `partition` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1266 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1267 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -795,7 +916,7 @@ CREATE TABLE `MessageSent` (
   `code` varchar(20) DEFAULT NULL,
   `partition` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1536 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1537 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -818,7 +939,7 @@ CREATE TABLE `RequestNotification` (
   `idRequestNotification` int NOT NULL AUTO_INCREMENT,
   `datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`idRequestNotification`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -841,7 +962,7 @@ CREATE TABLE `RequestSchedulation` (
   `idRequestSchedulation` int NOT NULL AUTO_INCREMENT,
   `date` date DEFAULT NULL,
   PRIMARY KEY (`idRequestSchedulation`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -864,7 +985,7 @@ CREATE TABLE `ResponseSchedulation` (
   `idResponseSchedulation` int NOT NULL AUTO_INCREMENT,
   `date` date DEFAULT NULL,
   PRIMARY KEY (`idResponseSchedulation`)
-) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -887,7 +1008,6 @@ CREATE TABLE `Schedule` (
   `Id` int NOT NULL AUTO_INCREMENT,
   `IdConfiguration` int DEFAULT NULL,
   `DateTimeToSchedule` datetime DEFAULT NULL,
-  `ToWork` tinyint(1) DEFAULT NULL,
   `FieldMetric` varchar(50) DEFAULT NULL,
   `Symbol` char(2) DEFAULT NULL,
   `Value` float DEFAULT NULL,
@@ -925,127 +1045,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-02 21:56:05
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: Weather
--- ------------------------------------------------------
--- Server version	8.2.0
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `Key`
---
-
-DROP TABLE IF EXISTS `Key`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Key` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `apiKey` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Key`
---
-
-LOCK TABLES `Key` WRITE;
-/*!40000 ALTER TABLE `Key` DISABLE KEYS */;
-INSERT INTO `Key` VALUES (1,'7922142ac1c5839b29f90140be5565ec');
-/*!40000 ALTER TABLE `Key` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `MessageReceived`
---
-
-DROP TABLE IF EXISTS `MessageReceived`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `MessageReceived` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `message` longtext,
-  `offset` int DEFAULT NULL,
-  `timestamp` datetime DEFAULT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `idOffsetResponse` int DEFAULT NULL,
-  `tagMessage` varchar(50) DEFAULT NULL,
-  `topic` varchar(50) DEFAULT NULL,
-  `creator` varchar(500) DEFAULT NULL,
-  `code` varchar(20) DEFAULT NULL,
-  `partition` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=477 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MessageReceived`
---
-
-LOCK TABLES `MessageReceived` WRITE;
-/*!40000 ALTER TABLE `MessageReceived` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MessageReceived` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `MessageSent`
---
-
-DROP TABLE IF EXISTS `MessageSent`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `MessageSent` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `message` longtext,
-  `offset` int DEFAULT NULL,
-  `timestamp` datetime DEFAULT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `idOffsetResponse` int DEFAULT NULL,
-  `tagMessage` varchar(50) DEFAULT NULL,
-  `topic` varchar(50) DEFAULT NULL,
-  `creator` varchar(500) DEFAULT NULL,
-  `code` varchar(20) DEFAULT NULL,
-  `partition` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=400 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MessageSent`
---
-
-LOCK TABLES `MessageSent` WRITE;
-/*!40000 ALTER TABLE `MessageSent` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MessageSent` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping events for database 'Weather'
---
-
---
--- Dumping routines for database 'Weather'
---
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2024-01-02 21:56:05
+-- Dump completed on 2024-01-04 18:06:15

@@ -140,6 +140,7 @@ class EventHandlers:
 
     def handle_tag_GetConfigurationForToday( data):
         return ConfigurationUserRepo.get_all_for_today()
+    
     #METRIC
     def handle_tag_AddMetric( data):
         result =MetricRepo.get_element_by_field(data["Field"])

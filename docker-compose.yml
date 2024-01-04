@@ -22,7 +22,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - kafka_data:/var/lib/kafka/data  
+      - kafka_data:/var/lib/kafka/data 
     depends_on:
       - zookeeper
     networks:
@@ -42,6 +42,7 @@ services:
     networks:
       - microservices_network
 
+    
   mysql_db:
     image: mysql:latest
     container_name: weatherdata
@@ -52,9 +53,10 @@ services:
       MYSQL_USER: root
       MYSQL_PASSWORD: root
     volumes:
-        - weather_database:/var/lib/mysql  
+      - weather_database:/var/lib/mysql
     networks:
       - microservices_network
+
       
   expose_api:
     build:
@@ -264,7 +266,7 @@ services:
     depends_on:
       - kafka
       - mysql_db   
-      
+
 volumes:
   userdata_database:
       external: true  

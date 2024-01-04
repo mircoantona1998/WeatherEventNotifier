@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Confluent.Kafka.Admin;
 
 config.configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -33,6 +34,49 @@ Kafka.producerConfig = new ProducerConfig {
 Kafka.topic_to_configuration = Environment.GetEnvironmentVariable("topic_to_configuration") ?? config.configuration["topic_to_configuration"];
 Kafka.topic_to_userdata = Environment.GetEnvironmentVariable("topic_to_userdata") ?? config.configuration["topic_to_userdata"] ;
 
+
+var adminClientConfig = new AdminClientConfig
+{
+    BootstrapServers = Environment.GetEnvironmentVariable("bootstrapServers") ?? config.configuration["bootstrapServers"]
+};
+
+using (var adminClient = new AdminClientBuilder(adminClientConfig).Build())
+{
+    bool topicCreated = false;
+
+    while (!topicCreated)
+    {
+        try
+        {
+            var topicSpecification = new TopicSpecification
+            {
+                Name = Kafka.topic_to_userdata,
+                NumPartitions = 1,
+                ReplicationFactor = 1
+            };
+
+            adminClient.CreateTopicsAsync(new List<TopicSpecification> { topicSpecification }).Wait();
+            Console.WriteLine($"Topic '{Kafka.topic_to_userdata}' creato con successo.");
+            topicCreated = true;
+        }
+        catch (CreateTopicsException e)
+        {
+            foreach (var topicError in e.Results)
+            {
+                if (topicError.Error.Code == ErrorCode.TopicAlreadyExists)
+                {
+                    Console.WriteLine($"Il topic '{Kafka.topic_to_userdata}' esiste già.");
+                    topicCreated = true;
+                }
+                else
+                {
+                    Console.WriteLine($"Errore durante la creazione del topic: {topicError.Error.Reason}");
+                }
+            }
+        }
+
+    }
+}
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddAuthentication(opt =>
