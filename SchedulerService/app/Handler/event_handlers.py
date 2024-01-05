@@ -12,7 +12,7 @@ class EventHandlers:
                 if  datetime_obj <= datetime.utcnow():
                       new_element_data = {
                       'IdConfiguration': data["Id"],
-                      'ConfigurationName': data["ConfigurationName"],
+                      'NameConfiguration': data["NameConfiguration"],
                       'DateTimeToSchedule': data["DateTimeActivation"],
                       'Minutes':data["Minutes"],
                       'FieldMetric':data["Field"],
@@ -22,6 +22,8 @@ class EventHandlers:
                       'Latitude':data["Latitude"],
                       'Longitude':data["Longitude"],
                       'ParentMetric':data["Parent"],
+                      'ValueUnit':data["ValueUnit"],
+                      'Description':data["Description"],
                         }
                       ScheduleRepo.add_schedule(new_element_data)
                       return None
@@ -38,7 +40,7 @@ class EventHandlers:
                     ScheduleRepo.delete_schedule(data["Id"]) 
                     new_element_data = {
                       'IdConfiguration': data["Id"],
-                      'ConfigurationName': data["ConfigurationName"],
+                      'NameConfiguration': data["NameConfiguration"],
                       'DateTimeToSchedule': data["DateTimeActivation"],
                       'Minutes':data["Minutes"],
                       'FieldMetric':data["Field"],
@@ -48,6 +50,8 @@ class EventHandlers:
                       'Latitude':data["Latitude"],
                       'Longitude':data["Longitude"],
                       'ParentMetric':data["Parent"],
+                      'ValueUnit':data["ValueUnit"],
+                      'Description':data["Description"],
                         }
                     ScheduleRepo.add_schedule(new_element_data)
          else:
@@ -67,7 +71,7 @@ class EventHandlers:
                     if  datetime_obj <= datetime.utcnow():
                           new_element_data = {
                             'IdConfiguration': data["Id"],
-                            'ConfigurationName': data["ConfigurationName"],
+                            'NameConfiguration': data["NameConfiguration"],
                             'DateTimeToSchedule': data["DateTimeActivation"],
                             'Minutes':data["Minutes"],
                             'FieldMetric':data["Field"],
@@ -77,6 +81,8 @@ class EventHandlers:
                             'Latitude':data["Latitude"],
                             'Longitude':data["Longitude"],
                             'ParentMetric':data["Parent"],
+                            'ValueUnit':data["ValueUnit"],
+                            'Description':data["Description"],
                              }
                           ScheduleRepo.add_schedule(new_element_data)                         
                     else:

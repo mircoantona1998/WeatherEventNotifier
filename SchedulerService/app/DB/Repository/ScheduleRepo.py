@@ -12,7 +12,7 @@ class ScheduleRepo:
             for result in resultList:
                 result_dict = {
                     "Id": result.Id,
-                    "ConfigurationName": result.ConfigurationName,
+                    "NameConfiguration": result.NameConfiguration,
                     "IdConfiguration": result.IdConfiguration,
                     "DateTimeToSchedule": result.DateTimeToSchedule.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeToSchedule is not None else None,
                     "FieldMetric":result.FieldMetric,
@@ -22,6 +22,8 @@ class ScheduleRepo:
                     "Latitude":result.Latitude,
                     "Longitude":result.Longitude,
                     "ParentMetric":result.ParentMetric,
+                    "ValueUnit":result.ValueUnit,
+                    "Description":result.Description,
                    }
                 result_dicts.append(result_dict)
             return result_dicts
@@ -77,7 +79,7 @@ class ScheduleRepo:
             for result in resultList:
                 result_dict = {
                     "Id": result.Id,
-                    "ConfigurationName": result.ConfigurationName,
+                    "NameConfiguration": result.NameConfiguration,
                     "IdConfiguration": result.IdConfiguration,
                     "DateTimeToSchedule": result.DateTimeToSchedule.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeToSchedule is not None else None,
                     "FieldMetric":result.FieldMetric,
@@ -87,6 +89,8 @@ class ScheduleRepo:
                     "Latitude":result.Latitude,
                     "Longitude":result.Longitude,
                     "ParentMetric":result.ParentMetric,
+                    "ValueUnit":result.ValueUnit,
+                    "Description":result.Description,
                 }
                 result_dicts.append(result_dict)
             return result_dicts

@@ -54,12 +54,24 @@ namespace ExposeAPI.Kafka
                                     var headerKafka = new KafkaHeader(headers, result.TopicPartition.Partition);
                                     if (headerKafka.IdOffsetResponse == offset)
                                     {
-                                        Dictionary<string, T> dictionary = JsonConvert.DeserializeObject<Dictionary<string, T>>(result.Message.Value);
-                                        var obj = dictionary.Values.First();
-                                        await saveMessage(result, headerKafka);
-                                        if (obj != null)
+                                        bool save = false;
+                                        try
                                         {
-                                            response = obj;
+                                            
+                                            Dictionary<string, T> dictionary = JsonConvert.DeserializeObject<Dictionary<string, T>>(result.Message.Value);
+                                            var obj = dictionary.Values.First();
+                                            await saveMessage(result, headerKafka);
+                                            save = true;
+                                            if (obj != null)
+                                            {
+                                                response = obj;
+                                                break;
+                                            }
+                                        }
+                                        catch
+                                        {  
+                                            if(save==false)
+                                                await saveMessageWithError(result);
                                             break;
                                         }
                                     }

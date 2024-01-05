@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+    
+  sql_server_db:
+    image: mcr.microsoft.com/mssql/server
+    container_name: userdata
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: RootRoot.1
+      ACCEPT_EULA: Y
+      MSSQL_PID: Express
+    volumes:
+      - userdata_database:/var/opt/mssql
+
+   
+  mysql_db:
+    image: mysql:latest
+    container_name: weatherdata
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - weather_database:/var/lib/mysql
+
+  initialize_databases:
+    build:
+      context: ./InitializeDatabases/app
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_HOST=mysql_db
+      - MYSQL_PORT=3306
+      - SQL_SERVER_HOST=sql_server_db
+      - SQL_SERVER_PORT=1433
+      - SQL_SERVER_DATABASE=Userdata
+      - SQL_SERVER_USER=sa
+      - SQL_SERVER_PASSWORD=RootRoot.1
+    depends_on:
+      - mysql_db
+      - sql_server_db
+
+volumes:
+  userdata_database:
+    external: true  
+  weather_database:  
+    external: true  
+  kafka_data:  
+    external: true
+networks:
+  microservices_network:
+    external: true

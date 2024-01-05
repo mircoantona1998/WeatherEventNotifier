@@ -23,5 +23,6 @@ namespace ExposeAPI.Model
         public string? Symbol { get; set; }
         public float? Value { get; set; }
         public string? ValueUnit { get; set; }
+        public string? NameConfiguration { get; set; }
     }
 }

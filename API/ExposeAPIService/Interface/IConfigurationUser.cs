@@ -15,5 +15,6 @@
         public bool? IsActive { get; set; }
         public string? Field { get; set; }
         public string? ValueUnit { get; set; }
+        public string? NameConfiguration { get; set; }
     }
 }

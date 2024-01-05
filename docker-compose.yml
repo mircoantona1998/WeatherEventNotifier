@@ -266,10 +266,11 @@ services:
     depends_on:
       - kafka
       - mysql_db   
+      
 
 volumes:
   userdata_database:
-      external: true  
+    external: true  
   weather_database:  
     external: true  
   kafka_data:  

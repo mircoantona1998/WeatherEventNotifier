@@ -37,7 +37,7 @@ class EventHandlers:
         return MailRepo.get_all_by_user(data["IdUser"])
     
     def handle_tag_GetUserMail(data):
-        return MailUsersRepo.get_user_mail(data["IdUser"])
+        return MailUsersRepo.get_user(data["IdUser"])
     
     def handle_tag_AddUserMail(data):
         if data["IdUser"]==None or data["IdUser"]==0:

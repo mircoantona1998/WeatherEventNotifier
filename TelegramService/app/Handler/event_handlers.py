@@ -42,7 +42,7 @@ class EventHandlers:
         return TelegramMessagesRepo.get_all_by_user(data["IdUser"])
     
     def handle_tag_GetUserTelegram(data):
-        return TelegramUsersRepo.get_user_telegram(data["IdUser"])
+        return TelegramUsersRepo.get_user(data["IdUser"])
     
     def handle_tag_AddUserTelegram(data):
         if data["IdUser"]==None or data["IdUser"]==0:

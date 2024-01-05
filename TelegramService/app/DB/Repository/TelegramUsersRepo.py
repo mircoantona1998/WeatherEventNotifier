@@ -17,13 +17,33 @@ class TelegramUsersRepo:
                 result_dicts.append(result_dict)
             return result_dicts
         
-    def get_user_telegram(idUser):
+    def get_user(idUser):
         if idUser is None:
             return None  
         with Session.get_database_session() as session:
             query = session.query(TelegramUsers)
             query = query.filter_by(idUser=idUser, isActive=True)
             result_list = query.all()  
+            result_dicts = []
+            for result in result_list:
+                result_dict = {
+                    "id": result.id,
+                    "ChatId": result.chat_id if result.chat_id is not None else None,
+                    "idUser": result.idUser,
+                    "isActive": bool(result.isActive) if result.isActive is not None else None,
+                }
+                result_dicts.append(result_dict)
+            return result_dicts
+        
+    def get_user_telegram(idUser):
+        if idUser is None:
+            return None  
+        with Session.get_database_session() as session:
+            query = session.query(TelegramUsers)
+            query = query.filter_by(idUser=idUser, isActive=True)
+            result_list = query.all()
+            if len(result_list)==0:
+                return result_list 
             for result in result_list:
                 result_dict = {
                     "id": result.id,
@@ -32,7 +52,7 @@ class TelegramUsersRepo:
                     "isActive": bool(result.isActive) if result.isActive is not None else None,
                 }
                 return result_dict
-        
+            
     def add_user_telegram(new_element_data):
         TelegramUsersRepo.delete_element(new_element_data["idUser"])
         with Session.get_database_session() as session:

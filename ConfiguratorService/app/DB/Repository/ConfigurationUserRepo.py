@@ -14,7 +14,7 @@ class ConfigurationUserRepo:
             for result in resultList:
                 result_dict = {
                     "Id": result.Id,
-                    "ConfigurationName": result.ConfigurationName,
+                    "NameConfiguration": result.NameConfiguration,
                     "IdUser": result.IdUser,
                     "IdFrequency": result.IdFrequency,
                     "FrequencyName": result.FrequencyName,
@@ -35,12 +35,12 @@ class ConfigurationUserRepo:
                 result_dicts.append(result_dict)
             return result_dicts
     
-    def get_element_by_configurationname(configurationName,idUser):   
-        if configurationName is None:
+    def get_element_by_NameConfiguration(NameConfiguration,idUser):   
+        if NameConfiguration is None:
             return None  
         with Session.get_database_session() as session:
             query = session.query(ConfigurationUser)
-            query = query.filter_by(ConfigurationName=configurationName,IdUser=idUser)
+            query = query.filter_by(NameConfiguration=NameConfiguration,IdUser=idUser)
             return query.first()  
      
     def get_new_configuration_for_today(idConfiguration):
@@ -52,7 +52,7 @@ class ConfigurationUserRepo:
                 forNotifier=FrequencyRepo.get_element(result.IdFrequency)
                 result_dict = {
                     "Id": result.Id,
-                    "ConfigurationName": result.ConfigurationName,                  
+                    "NameConfiguration": result.NameConfiguration,                  
                     "IdUser": result.IdUser,
                     "IdFrequency": result.IdFrequency,
                     "FrequencyName": result.FrequencyName,
@@ -69,6 +69,7 @@ class ConfigurationUserRepo:
                     "ValueUnit": result.ValueUnit,
                     "Minutes":forNotifier.Minutes,
                     "Parent":result.Parent,
+                    "Description":result.Description,
                 }
                 return result_dict
         
@@ -89,7 +90,7 @@ class ConfigurationUserRepo:
                 forNotifier=FrequencyRepo.get_element(result.IdFrequency)
                 result_dict = {
                     "Id": result.Id,
-                    "ConfigurationName": result.ConfigurationName,  
+                    "NameConfiguration": result.NameConfiguration,  
                     "IdUser": result.IdUser,
                     "IdFrequency": result.IdFrequency,
                     "FrequencyName": result.FrequencyName,
@@ -106,6 +107,7 @@ class ConfigurationUserRepo:
                     "ValueUnit": result.ValueUnit,
                     "Minutes":forNotifier.Minutes,
                     "Parent":result.Parent,
+                    "Description":result.Description,
                 }
                 result_dicts.append(result_dict)
             return result_dicts
@@ -117,7 +119,7 @@ class ConfigurationUserRepo:
             session.commit()
             result_dict = {
                     "Id": new_element.Id,
-                    "ConfigurationName": new_element.ConfigurationName,  
+                    "NameConfiguration": new_element.NameConfiguration,  
                     "IdUser": new_element.IdUser,
                     "IdFrequency": new_element.IdFrequency,
                     "Longitude": float(new_element.Longitude) if new_element.Longitude is not None else None,
@@ -156,12 +158,12 @@ class ConfigurationUserRepo:
                     element_to_patch.Value = patch_data['Value']
                 if 'IsActive' in patch_data and patch_data['IsActive'] is not None:
                     element_to_patch.IsActive = patch_data['IsActive']
-                if 'ConfigurationName' in patch_data and patch_data['ConfigurationName'] is not None:
-                    element_to_patch.ConfigurationName = patch_data['ConfigurationName']
+                if 'NameConfiguration' in patch_data and patch_data['NameConfiguration'] is not None:
+                    element_to_patch.NameConfiguration = patch_data['NameConfiguration']
                 session.commit()
                 result_dict = {
                     "Id": element_to_patch.Id,
-                    "ConfigurationName": element_to_patch.ConfigurationName,
+                    "NameConfiguration": element_to_patch.NameConfiguration,
                     "IdUser": element_to_patch.IdUser,
                     "IdFrequency": element_to_patch.IdFrequency,
                     "Longitude": float(element_to_patch.Longitude) if element_to_patch.Longitude is not None else None,

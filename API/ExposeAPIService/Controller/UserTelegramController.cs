@@ -80,14 +80,22 @@ namespace ExposeAPI.Controllers
         [HttpDelete]
         [Route("Delete")]
         [Authorize]
-        public async Task<ActionResult> Delete( int? IdUser)
+        public async Task<ActionResult> Delete( )
         {
-            var deleteItemDTO = new
+            string isDeleted = null;
+            if (User.Identity.IsAuthenticated)
             {
-                IdUser = IdUser,
-            };
-            var result = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"]);
-            string isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
+                var idUserClaim = User.FindFirst("Id");
+                if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
+                {
+                    var dto = new
+                    {
+                        IdUser = idUser
+                    };
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.DeleteUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"]);
+                    isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
+                }
+            }
             return isDeleted != null ? Ok(isDeleted) : Problem(null, null,  401);
         }
         #endregion

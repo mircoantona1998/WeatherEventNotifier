@@ -17,6 +17,26 @@ class MailUsersRepo:
                 result_dicts.append(result_dict)
             return result_dicts
         
+    def get_user(idUser):
+        if idUser is None:
+            return None  
+        with Session.get_database_session() as session:
+            query = session.query(MailUsers)
+            query = query.filter_by(idUser=idUser, isActive=True)
+            result_list = query.all() 
+            if len(result_list)==0:
+                return result_list 
+            result_dicts = []
+            for result in result_list:
+                result_dict = {
+                    "id": result.id,
+                    "mail": result.mail if result.mail is not None else None,
+                    "idUser": result.idUser,
+                    "isActive": bool(result.isActive) if result.isActive is not None else None,
+                }
+                result_dicts.append(result_dict)
+                return result_dicts
+            
     def get_user_mail(idUser):
         if idUser is None:
             return None  
@@ -32,7 +52,7 @@ class MailUsersRepo:
                     "isActive": bool(result.isActive) if result.isActive is not None else None,
                 }
                 return result_dict
-        
+            
     def add_user_mail(new_element_data):
         MailUsersRepo.delete_element(new_element_data["idUser"])
         with Session.get_database_session() as session:

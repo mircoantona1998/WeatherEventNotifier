@@ -41,13 +41,13 @@ class EventHandlers:
         if data["Symbol"]==None or data["Symbol"]==0:
             raise Exception(str("Il campo Symbol non puo essere vuoto"))
             return       
-        if data["ConfigurationName"]==None or data["ConfigurationName"]==0:
-            raise Exception(str("Il campo ConfigurationName non puo essere vuoto"))
+        if data["NameConfiguration"]==None or data["NameConfiguration"]==0:
+            raise Exception(str("Il campo NameConfiguration non puo essere vuoto"))
             return
         else:
-            result =ConfigurationUserRepo.get_element_by_configurationname(data["ConfigurationName"],data["IdUser"])
+            result =ConfigurationUserRepo.get_element_by_NameConfiguration(data["NameConfiguration"],data["IdUser"])
             if result is not None:
-                raise Exception(str("La ConfigurationName esiste per utenza"))
+                raise Exception(str("La NameConfiguration esiste per utenza"))
                 return
         if data["Value"]==None:
             data["Value"]==0
@@ -62,7 +62,7 @@ class EventHandlers:
         
         new_element_data = {
             'IdUser': data["IdUser"],
-            'ConfigurationName': data["ConfigurationName"], 
+            'NameConfiguration': data["NameConfiguration"], 
             'IdFrequency': data["IdFrequency"], 
             'Longitude': data["Longitude"],
             'Latitude': data["Latitude"],
@@ -105,17 +105,17 @@ class EventHandlers:
         if result is None:
             raise Exception(str("Non esiste la metrica selezionata"))
             return
-        if data["ConfigurationName"]==None or data["ConfigurationName"]==0:
-            raise Exception(str("Il campo ConfigurationName non puo essere vuoto"))
+        if data["NameConfiguration"]==None or data["NameConfiguration"]==0:
+            raise Exception(str("Il campo NameConfiguration non puo essere vuoto"))
             return
         else:
-            result =ConfigurationUserRepo.get_element_by_configurationname(data["ConfigurationName"],data["IdUser"])
+            result =ConfigurationUserRepo.get_element_by_NameConfiguration(data["NameConfiguration"],data["IdUser"])
             if result is not None:
-                raise Exception(str("La ConfigurationName esiste per utenza"))
+                raise Exception(str("La NameConfiguration esiste per utenza"))
                 return
         new_element_data = {
             'IdUser': data["IdUser"],
-            'ConfigurationName': data["ConfigurationName"],
+            'NameConfiguration': data["NameConfiguration"],
             'IdFrequency': data["IdFrequency"], 
             'Longitude': data["Longitude"],
             'Latitude': data["Latitude"],
