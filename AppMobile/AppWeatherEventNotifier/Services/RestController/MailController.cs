@@ -2,7 +2,7 @@
 
 namespace AppWeatherEventNotifier.Services.RestController
 {
-    internal class MetricController
+    internal class MailController
     {
         public static async Task<List<Models.Metric>> get_metrics()
         {

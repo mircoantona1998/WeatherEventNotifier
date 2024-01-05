@@ -18,26 +18,20 @@
     <ContentPage.Content >
         <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                <Label FontAttributes="Bold" Text="Telegram" HorizontalOptions="Center" VerticalOptions="Center"   FontSize="Medium" ></Label>
-                <Switch  x:Name="TelegramSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="Center"   />
-            </HorizontalStackLayout>
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                <Label FontAttributes="Bold" Text="Mail"   VerticalOptions="Center" HorizontalOptions="Center"  FontSize="Medium" ></Label>
-                <Switch x:Name="MailSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="Center"  />
-            </HorizontalStackLayout>
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                <Label FontAttributes="Bold" Text="Telegram ID:" HorizontalOptions="Center" VerticalOptions="Center"  FontSize="Medium" ></Label>
+                <Label FontAttributes="Bold" Text="Telegram:" HorizontalOptions="Center" VerticalOptions="Center"  FontSize="Medium" ></Label>
                 <Frame VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="10" Padding="0">
-                    <Editor x:Name="TelegramID" Text="11123232232ds"  BackgroundColor="White"   FontSize="Medium" />
+                    <Editor x:Name="Telegram" Text="11123232232ds"  BackgroundColor="White"   FontSize="Medium" />
                 </Frame>
+                <Switch  x:Name="TelegramSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="Center"   />
             </HorizontalStackLayout>
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
                 <Label FontAttributes="Bold" Text="Mail:"    HorizontalOptions="Center" VerticalOptions="Center" FontSize="Medium" ></Label>
                 <Frame VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="10" Padding="0">
                     <Editor x:Name="Mail" Text="mircoantona1998@libero.it"  BackgroundColor="White"    FontSize="Medium" />
                 </Frame>
+                <Switch x:Name="MailSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="Center"  />
             </HorizontalStackLayout>
-            <Button x:Name="modificaButton" Text="Modifica" Clicked="Button_Modifica" HorizontalOptions="End"></Button>
+            <Button x:Name="modificaButton" Text="Modifica" Clicked="Button_Modifica" HorizontalOptions="Center" Margin="10"></Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
