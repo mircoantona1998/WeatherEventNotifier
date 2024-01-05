@@ -7,6 +7,7 @@ namespace Userdata.ViewModels
     #region CONFIGURATION
     public class ConfigurationCreateDTO
     {
+        public string ConfigurationName { get; set; }
         public float Longitude { get; set; }
         public float Latitude { get; set; }
         public int IdMetric { get; set; }
@@ -22,6 +23,7 @@ namespace Userdata.ViewModels
         {
             return new ConfigurationCreateRequestKafka
             {
+                ConfigurationName= dto.ConfigurationName,   
                 Longitude = dto.Longitude,
                 Latitude = dto.Latitude,
                 IdMetric = dto.IdMetric,
@@ -37,6 +39,7 @@ namespace Userdata.ViewModels
     public class ConfigurationPatchDTO
     {
         public int IdConfiguration { get; set; }
+        public string ConfigurationName { get; set; }
         public float? Longitude { get; set; }
         public float? Latitude { get; set; }
         public int? IdMetric { get; set; }
@@ -53,6 +56,7 @@ namespace Userdata.ViewModels
         {
             return new ConfigurationPatchRequestKafka
             {
+                ConfigurationName = dto.ConfigurationName,  
                 IdConfiguration = dto.IdConfiguration,
                 Longitude = dto.Longitude,
                 Latitude = dto.Latitude,

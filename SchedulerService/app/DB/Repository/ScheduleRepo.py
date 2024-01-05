@@ -12,6 +12,7 @@ class ScheduleRepo:
             for result in resultList:
                 result_dict = {
                     "Id": result.Id,
+                    "ConfigurationName": result.ConfigurationName,
                     "IdConfiguration": result.IdConfiguration,
                     "DateTimeToSchedule": result.DateTimeToSchedule.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeToSchedule is not None else None,
                     "FieldMetric":result.FieldMetric,
@@ -37,8 +38,8 @@ class ScheduleRepo:
         minutes_freq=new_element_data["Minutes"]
         del new_element_data["Minutes"]
         with Session.get_database_session() as session:
-            current_datetime = datetime.now().replace(minute=0, second=0, microsecond=0)
-            while current_datetime <= datetime.now().replace(hour=23, minute=59, second=59, microsecond=0):  # Continua fino a mezzanotte
+            current_datetime = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
+            while current_datetime <= datetime.utcnow().replace(hour=23, minute=59, second=59, microsecond=0):  # Continua fino a mezzanotte
                 new_element_data['DateTimeToSchedule'] = current_datetime + timedelta(minutes=minutes_freq)       
                 new_element = Schedule(**new_element_data)
                 session.add(new_element)
@@ -65,7 +66,7 @@ class ScheduleRepo:
             session.commit()
             
     def get_all_current_hour():
-        current_datetime = datetime.now().replace(minute=0, second=0, microsecond=0)
+        current_datetime = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
         with Session.get_database_session() as session:
             resultList = (
                     session.query(Schedule)
@@ -76,6 +77,7 @@ class ScheduleRepo:
             for result in resultList:
                 result_dict = {
                     "Id": result.Id,
+                    "ConfigurationName": result.ConfigurationName,
                     "IdConfiguration": result.IdConfiguration,
                     "DateTimeToSchedule": result.DateTimeToSchedule.strftime('%Y-%m-%d %H:%M:%S') if result.DateTimeToSchedule is not None else None,
                     "FieldMetric":result.FieldMetric,

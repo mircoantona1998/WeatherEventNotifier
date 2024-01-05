@@ -56,25 +56,34 @@ using (var adminClient = new AdminClientBuilder(adminClientConfig).Build())
             };
 
             adminClient.CreateTopicsAsync(new List<TopicSpecification> { topicSpecification }).Wait();
-            Console.WriteLine($"Topic '{Kafka.topic_to_userdata}' creato con successo.");
+            Console.WriteLine($"Topic '{Kafka.topic_to_userdata}' created successfully.");
             topicCreated = true;
         }
-        catch (CreateTopicsException e)
+        catch (AggregateException ae)
         {
-            foreach (var topicError in e.Results)
+            foreach (var innerException in ae.InnerExceptions)
             {
-                if (topicError.Error.Code == ErrorCode.TopicAlreadyExists)
+                if (innerException is CreateTopicsException createTopicsException)
                 {
-                    Console.WriteLine($"Il topic '{Kafka.topic_to_userdata}' esiste già.");
-                    topicCreated = true;
+                    foreach (var topicError in createTopicsException.Results)
+                    {
+                        if (topicError.Error.Code == ErrorCode.TopicAlreadyExists)
+                        {
+                            Console.WriteLine($"The topic '{Kafka.topic_to_userdata}' already exists.");
+                            topicCreated = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Error creating topic: {topicError.Error.Reason}");
+                        }
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"Errore durante la creazione del topic: {topicError.Error.Reason}");
+                    Console.WriteLine($"Unexpected exception: {innerException.Message}");
                 }
             }
         }
-
     }
 }
 var builder = WebApplication.CreateBuilder(args);

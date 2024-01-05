@@ -3,9 +3,18 @@ from DB.Model import MailConfiguration
 
 class MailConfigurationRepo:
     
-    def get_all():
+    def get():
         with Session.get_database_session() as session:
-            return session.query(MailConfiguration).all()
+            query = session.query(MailConfiguration)
+            result_list = query.all() 
+            for result in result_list:
+                result_dict = {
+                    "id": result.Id,
+                    "mail": result.mail if result.mail is not None else None,
+                    "name": result.name if result.name is not None else None,
+                    "password": result.password if result.password is not None else None,
+                }
+                return result_dict
    
     def add_message(data):
         with Session.get_database_session() as session:

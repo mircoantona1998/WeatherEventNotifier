@@ -11,7 +11,7 @@ class ScheduleResponseRepo:
     
     def add_response_schedule():
         with Session.get_database_session() as session:
-            current_date = datetime.now().date()
+            current_date = datetime.utcnow().date()
             new_element = ResponseSchedulation(date=current_date)
             session.add(new_element)
             session.commit()

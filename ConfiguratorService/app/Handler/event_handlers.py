@@ -40,7 +40,15 @@ class EventHandlers:
             return
         if data["Symbol"]==None or data["Symbol"]==0:
             raise Exception(str("Il campo Symbol non puo essere vuoto"))
+            return       
+        if data["ConfigurationName"]==None or data["ConfigurationName"]==0:
+            raise Exception(str("Il campo ConfigurationName non puo essere vuoto"))
             return
+        else:
+            result =ConfigurationUserRepo.get_element_by_configurationname(data["ConfigurationName"],data["IdUser"])
+            if result is not None:
+                raise Exception(str("La ConfigurationName esiste per utenza"))
+                return
         if data["Value"]==None:
             data["Value"]==0
         result =FrequencyRepo.get_element(data["IdFrequency"])
@@ -51,8 +59,10 @@ class EventHandlers:
         if result is None:
             raise Exception(str("Non esiste la metrica selezionata"))
             return
+        
         new_element_data = {
             'IdUser': data["IdUser"],
+            'ConfigurationName': data["ConfigurationName"], 
             'IdFrequency': data["IdFrequency"], 
             'Longitude': data["Longitude"],
             'Latitude': data["Latitude"],
@@ -95,8 +105,17 @@ class EventHandlers:
         if result is None:
             raise Exception(str("Non esiste la metrica selezionata"))
             return
+        if data["ConfigurationName"]==None or data["ConfigurationName"]==0:
+            raise Exception(str("Il campo ConfigurationName non puo essere vuoto"))
+            return
+        else:
+            result =ConfigurationUserRepo.get_element_by_configurationname(data["ConfigurationName"],data["IdUser"])
+            if result is not None:
+                raise Exception(str("La ConfigurationName esiste per utenza"))
+                return
         new_element_data = {
             'IdUser': data["IdUser"],
+            'ConfigurationName': data["ConfigurationName"],
             'IdFrequency': data["IdFrequency"], 
             'Longitude': data["Longitude"],
             'Latitude': data["Latitude"],

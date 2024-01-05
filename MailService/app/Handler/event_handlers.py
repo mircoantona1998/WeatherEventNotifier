@@ -1,5 +1,4 @@
-
-
+from datetime import datetime
 import json
 from DB.Repository.MailConfigurationRepo import MailConfigurationRepo
 from DB.Repository.MailRepo import MailRepo
@@ -11,21 +10,27 @@ class EventHandlers:
     
     def handle_tag_NewTip(dat):
         data=dat["Data"]
-        user=MailUsersRepo.get_user_mail(data["IdUser"]) #aggiungere condizione se user presente o no
-        config=MailConfigurationRepo.get_all() #creare get first
-        EmailService("smtp.gmail.com",587,config.mail,config.password).send_email(user.mail,"Weather Event Notifier",data["Message"])
-        new_element_data = {
-            'IdUser' :  data["Mail"],
-            'Mittente' :  config.mail,
-            'Destinatario' : user.mail,
-            'Oggetto' : "Weather Event Notifier",
-            'Testo' : data["Message"],
-            'Allegati' : False,
-            'DateCreate' : "", #sistemare
-            'WasSent':  True, #sistemare
-            'Result' :  "" #sistemare
-        }
-        MailRepo.add_message(new_element_data)
+        user=MailUsersRepo.get_user_mail(data["IdUser"]) 
+        if user!= None:
+            config=MailConfigurationRepo.get() 
+            result=EmailService("smtp.gmail.com",587,config["mail"],config["password"]).send_email(user["mail"],"Weather Event Notifier",data["Message"])
+            mess=""
+            if result ==True:
+                mess="Ok"
+            else:
+                mess="Error"
+            new_element_data = {
+                'IdUser' :  data["IdUser"],
+                'Mittente' :  config["mail"],
+                'Destinatario' : user["mail"],
+                'Oggetto' : "Weather Event Notifier",
+                'Testo' : data["Message"],
+                'Allegati' : False,
+                'DateCreate' : datetime.utcnow(), 
+                'WasSent':  result, 
+                'Result' :  mess 
+            }
+            MailRepo.add_message(new_element_data)
         return None
     
     def handle_tag_GetMailSent(data):

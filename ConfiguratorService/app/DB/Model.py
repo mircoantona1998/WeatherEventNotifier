@@ -63,6 +63,7 @@ class Metric(Base):
 t_View_ConfigurationUser = Table(
     'View_ConfigurationUser', metadata,
     Column('Id', Integer, server_default=text("'0'")),
+    Column('NameConfiguration', String(100)),
     Column('IdUser', Integer),
     Column('Symbol', CHAR(2)),
     Column('Value', Float),
@@ -90,6 +91,7 @@ class ConfigurationUser(Base):
     __tablename__ = 'ConfigurationUser'
 
     Id = Column(Integer, primary_key=True)
+    NameConfiguration = Column(String(100))
     IdUser = Column(Integer)
     IdFrequency = Column(ForeignKey('Frequency.Id'), index=True)
     Longitude = Column(Float)

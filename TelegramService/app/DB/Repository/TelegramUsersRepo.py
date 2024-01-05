@@ -24,7 +24,6 @@ class TelegramUsersRepo:
             query = session.query(TelegramUsers)
             query = query.filter_by(idUser=idUser, isActive=True)
             result_list = query.all()  
-            result_dicts = []
             for result in result_list:
                 result_dict = {
                     "id": result.id,
@@ -32,8 +31,7 @@ class TelegramUsersRepo:
                     "idUser": result.idUser,
                     "isActive": bool(result.isActive) if result.isActive is not None else None,
                 }
-                result_dicts.append(result_dict)
-            return result_dicts
+                return result_dict
         
     def add_user_telegram(new_element_data):
         TelegramUsersRepo.delete_element(new_element_data["idUser"])

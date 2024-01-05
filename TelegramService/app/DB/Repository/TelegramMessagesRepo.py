@@ -23,9 +23,8 @@ class TelegramMessagesRepo:
 
     def add_message(data):
         with Session.get_database_session() as session:
-            new_message =data
-            session.add(new_message)
+            new_element = TelegramMessages(**data)
+            session.add(new_element)
             session.commit()
-  
 
 

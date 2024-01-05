@@ -11,7 +11,7 @@ class RequestNotificationRepo:
     
     def add_request_notification():
         with Session.get_database_session() as session:
-            current_date = datetime.now().replace(minute=0, second=0, microsecond=0)
+            current_date = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
             new_element = RequestNotification(datetime=current_date)
             session.add(new_element)
             session.commit()

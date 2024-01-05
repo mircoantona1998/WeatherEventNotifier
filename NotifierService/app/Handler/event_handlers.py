@@ -20,6 +20,7 @@ class EventHandlers:
         data = dat["Data"]
         new_element_data = {
         'IdSchedule': data["Id"],
+        'ConfigurationName': data["ConfigurationName"],
         'IdConfiguration': data["IdConfiguration"],
         'DateTimeToSchedule': data["DateTimeToSchedule"],
         'FieldMetric':data["FieldMetric"],
@@ -29,6 +30,7 @@ class EventHandlers:
         'Latitude':data["Latitude"],
         'Longitude':data["Longitude"],
         'ParentMetric':data["ParentMetric"],
+        'ValueUnit':data["ValueUnit"],
             }
         headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="AnalyzeConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
         ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("WeatherService"))               
@@ -41,7 +43,7 @@ class EventHandlers:
             new_element_data = {
                 'IdUser': data["IdUser"],
                 'IdSchedule': data["IdSchedule"], 
-                'Message': "Attenzione per la configurazione. Valore misurato: " +str(data["ValueWeather"]),
+                'Message': "Attenzione per la configurazione: "+str(data["ConfigurationName"])+". Valore misurato: " +str(data["ValueWeather"])+" "+str(data["ValueUnit"]),
                 'DateTimeCreate': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
                 'IdConfiguration': data["IdConfiguration"], 
                 'ValueWeather': data["ValueWeather"]

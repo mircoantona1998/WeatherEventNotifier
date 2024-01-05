@@ -26,9 +26,10 @@ class MailRepo:
         
     def add_message(data):
         with Session.get_database_session() as session:
-            new_message =data
-            session.add(new_message)
+            new_element = Mail(**data)
+            session.add(new_element)
             session.commit()
+
   
     def get_latest_message():
         with Session.get_database_session() as session:

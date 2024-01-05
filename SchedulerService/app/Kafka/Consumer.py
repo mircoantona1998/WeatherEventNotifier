@@ -47,12 +47,12 @@ class ConsumerClass:
         consumer.subscribe([topic])
         try:
             while True:
-                if  ScheduleRequestRepo.get_last_element()==None or ScheduleRequestRepo.get_last_element().date!=datetime.now().date() :
+                if  ScheduleRequestRepo.get_last_element()==None or ScheduleRequestRepo.get_last_element().date!=datetime.utcnow().date() :
                     #produrre richiesta per avere tutte le configurazioni con isactive=true e datetimeactivation < della data di oggi alle 23:59, e aggiungere a schedulazioni
                     headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="GetConfigurationForToday", Creator=creator, Code = MessageCode.Ok.value)
                     ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': ""}, indent=2),GestoreDestinatari().determina_destinatario("ConfiguratorService"))            
                     ScheduleRequestRepo.add_request_schedule()
-                elif ScheduleResponseRepo.get_last_element()!=None and ScheduleResponseRepo.get_last_element().date==datetime.now().date() and ( RequestNotificationRepo.get_last_element()==None or RequestNotificationRepo.get_last_element().datetime!=datetime.now().replace(minute=0, second=0, microsecond=0) ):
+                elif ScheduleResponseRepo.get_last_element()!=None and ScheduleResponseRepo.get_last_element().date==datetime.utcnow().date() and ( RequestNotificationRepo.get_last_element()==None or RequestNotificationRepo.get_last_element().datetime!=datetime.utcnow().replace(minute=0, second=0, microsecond=0) ):
                      #invia a notificatore le schedulazioni dell'ora corrente
                     handler = EventHandlers.tag_handlers.get("SchedulationCurrentHour", lambda: f"Tag SchedulationCurrentHour non gestito")
                     responses = handler()

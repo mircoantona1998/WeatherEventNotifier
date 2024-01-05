@@ -14,6 +14,7 @@ class ConfigurationUserRepo:
             for result in resultList:
                 result_dict = {
                     "Id": result.Id,
+                    "ConfigurationName": result.ConfigurationName,
                     "IdUser": result.IdUser,
                     "IdFrequency": result.IdFrequency,
                     "FrequencyName": result.FrequencyName,
@@ -33,9 +34,17 @@ class ConfigurationUserRepo:
                 }
                 result_dicts.append(result_dict)
             return result_dicts
+    
+    def get_element_by_configurationname(configurationName,idUser):   
+        if configurationName is None:
+            return None  
+        with Session.get_database_session() as session:
+            query = session.query(ConfigurationUser)
+            query = query.filter_by(ConfigurationName=configurationName,IdUser=idUser)
+            return query.first()  
      
     def get_new_configuration_for_today(idConfiguration):
-        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         midnight = today + timedelta(days=1)
         with Session.get_database_session() as session:
             resultList = session.query(t_View_ConfigurationUser).filter_by(Id=idConfiguration).all()
@@ -43,6 +52,7 @@ class ConfigurationUserRepo:
                 forNotifier=FrequencyRepo.get_element(result.IdFrequency)
                 result_dict = {
                     "Id": result.Id,
+                    "ConfigurationName": result.ConfigurationName,                  
                     "IdUser": result.IdUser,
                     "IdFrequency": result.IdFrequency,
                     "FrequencyName": result.FrequencyName,
@@ -63,7 +73,7 @@ class ConfigurationUserRepo:
                 return result_dict
         
     def get_all_for_today():
-        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         midnight = today + timedelta(days=1)
         with Session.get_database_session() as session:
             resultList = (
@@ -79,6 +89,7 @@ class ConfigurationUserRepo:
                 forNotifier=FrequencyRepo.get_element(result.IdFrequency)
                 result_dict = {
                     "Id": result.Id,
+                    "ConfigurationName": result.ConfigurationName,  
                     "IdUser": result.IdUser,
                     "IdFrequency": result.IdFrequency,
                     "FrequencyName": result.FrequencyName,
@@ -106,6 +117,7 @@ class ConfigurationUserRepo:
             session.commit()
             result_dict = {
                     "Id": new_element.Id,
+                    "ConfigurationName": new_element.ConfigurationName,  
                     "IdUser": new_element.IdUser,
                     "IdFrequency": new_element.IdFrequency,
                     "Longitude": float(new_element.Longitude) if new_element.Longitude is not None else None,
@@ -144,9 +156,12 @@ class ConfigurationUserRepo:
                     element_to_patch.Value = patch_data['Value']
                 if 'IsActive' in patch_data and patch_data['IsActive'] is not None:
                     element_to_patch.IsActive = patch_data['IsActive']
+                if 'ConfigurationName' in patch_data and patch_data['ConfigurationName'] is not None:
+                    element_to_patch.ConfigurationName = patch_data['ConfigurationName']
                 session.commit()
                 result_dict = {
                     "Id": element_to_patch.Id,
+                    "ConfigurationName": element_to_patch.ConfigurationName,
                     "IdUser": element_to_patch.IdUser,
                     "IdFrequency": element_to_patch.IdFrequency,
                     "Longitude": float(element_to_patch.Longitude) if element_to_patch.Longitude is not None else None,

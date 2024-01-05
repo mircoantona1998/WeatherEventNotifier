@@ -62,6 +62,7 @@ class Schedule(Base):
     __tablename__ = 'Schedule'
 
     Id = Column(Integer, primary_key=True)
+    ConfigurationName = Column(String(100))
     IdConfiguration = Column(Integer)
     DateTimeToSchedule = Column(DateTime)
     FieldMetric = Column(String(50))
@@ -71,3 +72,4 @@ class Schedule(Base):
     Latitude= Column(Float)
     Longitude = Column(Float)
     ParentMetric = Column(String(50))
+    ValueUnit = Column(String(50))

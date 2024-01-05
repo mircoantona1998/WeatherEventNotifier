@@ -10,13 +10,18 @@ class EmailService:
         self.smtp_password = smtp_password
 
     def send_email(self, to_email, subject, message):
-        msg = MIMEMultipart()
-        msg['From'] = self.smtp_username
-        msg['To'] = to_email
-        msg['Subject'] = subject
-        msg.attach(MIMEText(message, 'plain'))
+        try:
+            msg = MIMEMultipart()
+            msg['From'] = self.smtp_username
+            msg['To'] = to_email
+            msg['Subject'] = subject
+            msg.attach(MIMEText(message, 'plain'))
 
-        with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
-            server.starttls()
-            server.login(self.smtp_username, self.smtp_password)
-            server.sendmail(self.smtp_username, to_email, msg.as_string())
+            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+                server.starttls()
+                server.login(self.smtp_username, self.smtp_password)
+                server.sendmail(self.smtp_username, to_email, msg.as_string())
+
+            return True
+        except Exception as e:
+            return False

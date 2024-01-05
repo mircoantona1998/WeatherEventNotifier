@@ -16,6 +16,7 @@ namespace ExposeAPI.Model
         public float? Latitude { get; set; }
         public float? Longitude { get; set; }
         public string ParentMetric { get; set; }
+        public string ValueUnit { get; set; }
 
     }
 

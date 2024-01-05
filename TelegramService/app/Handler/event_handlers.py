@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from DB.Repository.TelegramConfigurationRepo import TelegramConfigurationRepo
 from DB.Repository.TelegramMessagesRepo import TelegramMessagesRepo
@@ -9,31 +10,32 @@ class EventHandlers:
     
     def handle_tag_NewTip(dat):
         data=dat["Data"]
-        user=TelegramUsersRepo.get_user_telegram(data["IdUser"]) #aggiungere condizione se user presente o no
-        config=TelegramConfigurationRepo.get_all() #creare get first   
-        result=Telegram().send_message(user.chat_id,data["Message"],config.token)
-        if result["ok"]==True:    
-            new_element_data = {
-                'IdUser' :  data["Mail"],
-                'IdChat' :  user.chat_id,
-                'Testo' : data["Message"],
-                'Allegati' : False,
-                'DateCreate' : "", #sistemare
-                'WasSent':  True, 
-                'Result' :  "Ok" 
-            }
-            TelegramMessagesRepo.add_message(new_element_data)
-        else:
-            new_element_data = {
-                'IdUser' :  data["Mail"],
-                'IdChat' :  user.chat_id,
-                'Testo' : data["Message"],
-                'Allegati' : False,
-                'DateCreate' : "", #sistemare
-                'WasSent':  False, 
-                'Result' :  "ERRORE" 
-            }
-            TelegramMessagesRepo.add_message(new_element_data)
+        user=TelegramUsersRepo.get_user_telegram(data["IdUser"]) 
+        if user != None:
+            config=TelegramConfigurationRepo.get() 
+            result=Telegram().send_message(user["ChatId"],data["Message"],config["token"])
+            if result["ok"]==True:    
+                new_element_data = {
+                    'IdUser' :  data["IdUser"],
+                    'IdChat' :  user["ChatId"],
+                    'Testo' : data["Message"],
+                    'Allegati' : False,
+                    'DateCreate' : datetime.utcnow(), 
+                    'WasSent':  True, 
+                    'Result' :  "Ok" 
+                }
+                TelegramMessagesRepo.add_message(new_element_data)
+            else:
+                new_element_data = {
+                    'IdUser' :  data["IdUser"],
+                    'IdChat' :  user["ChatId"],
+                    'Testo' : data["Message"],
+                    'Allegati' : False,
+                    'DateCreate' : datetime.utcnow(), 
+                    'WasSent':  False, 
+                    'Result' :  "ERRORE" 
+                }
+                TelegramMessagesRepo.add_message(new_element_data)
         return None
     
     def handle_tag_GetTelegramSent(data):
