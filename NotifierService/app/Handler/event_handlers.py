@@ -1,5 +1,6 @@
 from email import utils
 import json
+import pytz
 from datetime import datetime
 from Configurations.Configurations import Configurations
 from DB.Repository.NotifyRepo import NotifyRepo
@@ -40,11 +41,13 @@ class EventHandlers:
     #GENERA NOTIFICA    
     def handle_tag_GenerateNotification(dat):     
         data = dat["Data"]
+        fuso_orario_locale = pytz.timezone('Europe/Rome')  
+        data_datetime_locale = datetime.strptime(data["DateTimeToSchedule"], '%Y-%m-%d %H:%M:%S').astimezone(fuso_orario_locale)
         if data["Notify"]==True:
             new_element_data = {
                 'IdUser': data["IdUser"],
                 'IdSchedule': data["IdSchedule"], 
-                'Message': "Attenzione per la configurazione: "+str(data["NameConfiguration"])+". Valore misurato : " +str(data["ValueWeather"])+" "+str(data["ValueUnit"])+" , per la metrica: "+str(data["Description"])+" , del: "+str(data["DateTimeToSchedule"]),
+                'Message': "Attenzione per la configurazione: "+str(data["NameConfiguration"])+". Valore misurato : " +str(data["ValueWeather"])+" "+str(data["ValueUnit"])+" , per la metrica: "+str(data["Description"])+" , del: "+str(data_datetime_locale.strftime("%d-%m-%Y %H:%M")),
                 'DateTimeCreate': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
                 'IdConfiguration': data["IdConfiguration"], 
                 'ValueWeather': data["ValueWeather"]

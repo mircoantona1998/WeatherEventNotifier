@@ -76,7 +76,7 @@ CREATE TABLE `Frequency` (
 
 LOCK TABLES `Frequency` WRITE;
 /*!40000 ALTER TABLE `Frequency` DISABLE KEYS */;
-INSERT INTO `Frequency` VALUES (13,'ogni ora',60,1),(14,'ogni 2 ore',120,1),(15,'ogni 4 ore',240,1),(16,'ogni 8 ore',480,1),(17,'ogni 12 ore',720,1),(18,'ogni giorno',1440,1);
+INSERT INTO `Frequency` VALUES (13,'ogni ora',60,1),(14,'ogni 2 ore',120,1),(15,'ogni 4 ore',240,1),(16,'ogni 6 ore',360,1),(17,'ogni 12 ore',720,1),(18,'ogni giorno',1440,1);
 /*!40000 ALTER TABLE `Frequency` ENABLE KEYS */;
 UNLOCK TABLES;
 

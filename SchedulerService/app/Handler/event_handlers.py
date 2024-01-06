@@ -25,7 +25,7 @@ class EventHandlers:
                       'ValueUnit':data["ValueUnit"],
                       'Description':data["Description"],
                         }
-                      ScheduleRepo.add_schedule(new_element_data)
+                      ScheduleRepo.add_schedule(new_element_data,datetime_obj)
                       return None
                 else:
                     return None
@@ -53,7 +53,7 @@ class EventHandlers:
                       'ValueUnit':data["ValueUnit"],
                       'Description':data["Description"],
                         }
-                    ScheduleRepo.add_schedule(new_element_data)
+                    ScheduleRepo.add_schedule(new_element_data,datetime_obj)
          else:
              ScheduleRepo.delete_schedule(data["Id"]) 
          return None
@@ -64,8 +64,9 @@ class EventHandlers:
 
     def handle_tag_GetConfigurationForToday(dat):
         #controlla se data attivazione della nuova configurazione è di oggi oppure no, se di oggi aggiunge schedulazione, altrimenti no
-        ScheduleRepo.delete_all_schedules()
         for data in dat["Data"]:
+            lastSchedule = ScheduleRepo.get_element_last_datetime_to_schedule(data["Id"])
+            ScheduleRepo.delete_schedule(data["Id"])
             if data["DateTimeActivation"]!=None and data["IsActive"]==True:
                     datetime_obj = datetime.strptime(data["DateTimeActivation"], '%Y-%m-%d %H:%M:%S')
                     if  datetime_obj <= datetime.utcnow():
@@ -84,7 +85,7 @@ class EventHandlers:
                             'ValueUnit':data["ValueUnit"],
                             'Description':data["Description"],
                              }
-                          ScheduleRepo.add_schedule(new_element_data)                         
+                          ScheduleRepo.add_schedule(new_element_data,datetime_obj,lastSchedule)                         
                     else:
                         continue
             else:

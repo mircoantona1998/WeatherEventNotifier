@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from DB.Session import Session
 from DB.Model import Schedule
-from sqlalchemy import  func, cast, DateTime
+from sqlalchemy import  func, cast, DateTime,desc
 
 class ScheduleRepo:
         
@@ -36,17 +36,34 @@ class ScheduleRepo:
             query = query.filter_by(IdUser=id_user)
             return query.first() 
         
-    def add_schedule(new_element_data):
+    def get_element_last_datetime_to_schedule(id_configuration=None):
+        if id_configuration is None:
+            return None  
+        data_ieri = datetime.utcnow() - timedelta(days=1)
+        data_ieri_inizio = datetime(data_ieri.year, data_ieri.month, data_ieri.day, 0, 0, 0)
+        data_ieri_fine = datetime(data_ieri.year, data_ieri.month, data_ieri.day, 23, 59, 59)
+        with Session.get_database_session() as session:
+            query = session.query(Schedule)
+            query = query.filter_by(IdConfiguration=id_configuration)
+            query = query.filter(Schedule.DateTimeToSchedule >= data_ieri_inizio, Schedule.DateTimeToSchedule <= data_ieri_fine)
+            query = query.order_by(desc(Schedule.DateTimeToSchedule))
+            return query.first()
+        
+    def add_schedule(new_element_data, datetimeActivation, lastschedule=None,):
+        if  lastschedule is not None and lastschedule.DateTimeToSchedule is not None:
+            new_element_data['DateTimeToSchedule'] = lastschedule.DateTimeToSchedule.replace(minute=0, second=0, microsecond=0)
+        else:
+            data_ieri = datetime.utcnow() - timedelta(days=1)
+            new_element_data['DateTimeToSchedule'] = datetime(data_ieri.year, data_ieri.month, data_ieri.day, datetimeActivation.hour, 0, 0)
         minutes_freq=new_element_data["Minutes"]
         del new_element_data["Minutes"]
         with Session.get_database_session() as session:
-            current_datetime = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
-            while current_datetime <= datetime.utcnow().replace(hour=23, minute=59, second=59, microsecond=0):  # Continua fino a mezzanotte
-                new_element_data['DateTimeToSchedule'] = current_datetime + timedelta(minutes=minutes_freq)       
-                new_element = Schedule(**new_element_data)
-                session.add(new_element)
-                session.commit()
-                current_datetime += timedelta(minutes=minutes_freq)
+            while new_element_data['DateTimeToSchedule'] <= datetime.utcnow().replace(hour=23, minute=59, second=59, microsecond=0):  # Continua fino a mezzanotte
+                new_element_data['DateTimeToSchedule'] = new_element_data['DateTimeToSchedule'] + timedelta(minutes=minutes_freq) 
+                if new_element_data['DateTimeToSchedule'].day==datetime.utcnow().day and new_element_data['DateTimeToSchedule'] <= datetime.utcnow().replace(hour=23, minute=59, second=59, microsecond=0):
+                    new_element = Schedule(**new_element_data)
+                    session.add(new_element)
+                    session.commit()
             return 
                       
     def delete_schedule(id_configuration):
