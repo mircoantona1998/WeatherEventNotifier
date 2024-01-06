@@ -2,28 +2,7 @@ import os
 import mysql.connector
 import pyodbc
 import time
-
-def is_sql_server_available():
-    try:
-        conn = pyodbc.connect(connection_string_master)
-        conn.close()
-        return True
-    except:
-        return False
-    
-def is_mysql_available():
-    try:
-        conn = mysql.connector.connect(**mysql_config)
-        conn.close()
-        return True
-    except :
-        return False
-mysql_config = {
-    'user': os.getenv('MYSQL_USER', 'root'),
-    'password': os.getenv('MYSQL_PASSWORD', 'root'),
-    'host': os.getenv('MYSQL_HOST', 'localhost'),
-    'port': int(os.getenv('MYSQL_PORT', 3307)),  
-}
+import subprocess
 
 sql_server_host = os.getenv('SQL_SERVER_HOST', 'localhost')
 sql_server_port = os.getenv('SQL_SERVER_PORT', '1433')
@@ -45,6 +24,35 @@ connection_string = (
     f"UID={sql_server_user};"
     f"PWD={sql_server_password};"
 )
+mysql_config = {
+    'user': os.getenv('MYSQL_USER', 'root'),
+    'password': os.getenv('MYSQL_PASSWORD', 'root'),
+    'host': os.getenv('MYSQL_HOST', 'localhost'),
+    'port': int(os.getenv('MYSQL_PORT', 3307)),  
+}
+dump_file_path = 'init-mysql.sql'
+sql_server_script_path = 'init-sqlServer.sql'
+def is_sql_server_available():
+    try:
+        conn = pyodbc.connect(connection_string_master)
+        conn.close()
+        return True
+    except:
+        return False
+
+def is_mysql_available():
+    try:
+        conn = mysql.connector.connect(**mysql_config)
+        conn.close()
+        return True
+    except :
+        return False
+    
+volumes_to_create = ['kafka_data', 'weather_database', 'userdata_database']
+for volume in volumes_to_create:
+    subprocess.run(['docker', 'volume', 'create', volume])
+subprocess.run(['docker', 'network', 'create', 'microservices_network'])
+
 while not is_sql_server_available():
     print("Attendo la disponibilita di SQL Server...")
     time.sleep(5)
@@ -53,7 +61,6 @@ while not is_mysql_available():
     print("Attendo la disponibilita di MySQL...")
     time.sleep(5)
     
-dump_file_path = 'init-mysql.sql'
 def read_dump(file_path):
     with open(file_path, 'r') as file:
         return file.read()
@@ -74,7 +81,6 @@ finally:
     cursor.close()
     connection.close()
     
-sql_server_script_path = 'init-sqlServer.sql'
 with open(sql_server_script_path, 'r', encoding='utf-16-le') as file:
     sql_server_dump = file.read()
 sql_server_dump = sql_server_dump.replace('\ufeff', '')

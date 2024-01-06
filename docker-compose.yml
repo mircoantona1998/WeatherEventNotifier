@@ -3,6 +3,7 @@ version: '3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper:latest
+    container_name: zookeeper
     ports:
       - "2181:2181"
     networks:
@@ -10,6 +11,7 @@ services:
       
   kafka:
     image: wurstmeister/kafka:latest
+    container_name: kafka_service
     ports:
       - "9092:9092"
     expose:
@@ -39,19 +41,17 @@ services:
       MSSQL_PID: Express
     volumes:
       - userdata_database:/var/opt/mssql
-    networks:
-      - microservices_network
 
     
   mysql_db:
-    image: mysql:latest
     container_name: weatherdata
+    build:
+      context: ./Weatherdata
+      dockerfile: Dockerfile
     ports:
       - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
     volumes:
       - weather_database:/var/lib/mysql
     networks:
@@ -59,6 +59,7 @@ services:
 
       
   expose_api:
+    container_name: expose_api
     build:
       context: ./API
       dockerfile: Dockerfile
@@ -68,6 +69,7 @@ services:
       - Logging:LogLevel:Default=Information
       - Logging:LogLevel:Microsoft.AspNetCore=Warning
       - ConnectionStrings=Data Source=sql_server_db,1433;Initial Catalog=Userdata;User ID=sa;Password=RootRoot.1; Encrypt=False;
+      - ConnectionStringsMaster=Data Source=sql_server_db,1433;User ID=sa;Password=RootRoot.1;Encrypt=False;
       - Jwt=c5eKUcbKfkzGq6HfpnFhP7/G2pgS3S++YH33ue/A5uc=
       - AllowedHosts=*
       - groupID=ExposeAPIService
@@ -87,6 +89,7 @@ services:
       - sql_server_db
       
   configurator_service:
+    container_name: configurator_service
     build:
      context: ./ConfiguratorService/app
      dockerfile: Dockerfile
@@ -118,6 +121,7 @@ services:
 
       
   scheduler_service:
+    container_name: scheduler_service
     build:
       context: ./SchedulerService/app
       dockerfile: Dockerfile
@@ -148,6 +152,7 @@ services:
       - mysql_db
       
   weather_service:
+    container_name: weather_service
     build:
       context: ./WeatherService/app
       dockerfile: Dockerfile
@@ -178,6 +183,7 @@ services:
       - mysql_db
       
   notifier_service:
+    container_name: notifier_service  
     build:
       context: ./NotifierService/app
       dockerfile: Dockerfile
@@ -208,6 +214,7 @@ services:
       - mysql_db
       
   telegram_service:
+    container_name: telegram_service  
     build:
       context: ./TelegramService/app
       dockerfile: Dockerfile
@@ -238,6 +245,7 @@ services:
       - mysql_db
       
   mail_service:
+    container_name: mail_service
     build:
       context: ./MailService/app
       dockerfile: Dockerfile
@@ -270,11 +278,11 @@ services:
 
 volumes:
   userdata_database:
-    external: true  
+    name: userdata_database
   weather_database:  
-    external: true  
+    name: weather_database
   kafka_data:  
-    external: true
+    name: kafka_data
 networks:
   microservices_network:
-    external: true
+    name: microservices_network

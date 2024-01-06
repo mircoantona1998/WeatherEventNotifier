@@ -40,6 +40,7 @@
     <Compile Include="Utils\Json.py" />
     <Compile Include="Utils\EnumMessageType.py" />
     <Compile Include="Utils\EmailService.py" />
+    <Compile Include="Utils\Logger.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="Mail\">

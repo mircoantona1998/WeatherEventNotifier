@@ -37,6 +37,7 @@
     <Compile Include="Utils\EnumMessageCode.py" />
     <Compile Include="Utils\EnumMessageType.py" />
     <Compile Include="Utils\Json.py" />
+    <Compile Include="Utils\Logger.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DB\Repository\" />
