@@ -41,7 +41,8 @@ services:
       MSSQL_PID: Express
     volumes:
       - userdata_database:/var/opt/mssql
-
+    networks:
+      - microservices_network
     
   mysql_db:
     container_name: weatherdata

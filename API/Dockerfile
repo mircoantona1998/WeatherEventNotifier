@@ -8,5 +8,6 @@ WORKDIR /app
 COPY --from=build /app/out/api ./api
 COPY --from=build /app/out/ef ./ef
 COPY --from=build /app/ExposeAPIService/appsettings.json /app/appsettings.json
+COPY --from=build /app/ExposeAPIService/init-sqlServer.sql /app/init-sqlServer.sql
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "api/ExposeAPI.dll"]
