@@ -18,7 +18,7 @@ namespace ExposeAPI.Utils
             }
             catch (Exception e)
             {
-                Console.WriteLine("Eccezione :\n" + e.ToString());
+               // Console.WriteLine("Eccezione :\n" + e.ToString());
                 return false;
             }
         }
