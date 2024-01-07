@@ -6,49 +6,42 @@ using ExposeAPI.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.Extensions.Configuration;
 using Confluent.Kafka.Admin;
-using Microsoft.Data.SqlClient;
+using ExposeAPI.Utils;
 
 config.configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
     .AddEnvironmentVariables()
     .Build();
+Logger log= new();
+
 string sqlServerHost = Environment.GetEnvironmentVariable("SQL_SERVER_HOST") ?? "localhost";
 string sqlServerPort = Environment.GetEnvironmentVariable("SQL_SERVER_PORT") ?? "1433";
 string sqlServerDatabase = Environment.GetEnvironmentVariable("SQL_SERVER_DATABASE") ?? "Userdata";
 string sqlServerUser = Environment.GetEnvironmentVariable("SQL_SERVER_USER") ?? "sa";
 string sqlServerPassword = Environment.GetEnvironmentVariable("SQL_SERVER_PASSWORD") ?? "RootRoot.1";
-
 string masterConnectionString = Environment.GetEnvironmentVariable("ConnectionStringsMaster") ?? $"Data Source={sqlServerHost},{sqlServerPort};User ID={sqlServerUser};Password={sqlServerPassword};";
 string connectionString = Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:Userdata"];
-connectionString=connectionString+"TrustServerCertificate = true";
-masterConnectionString = masterConnectionString + "TrustServerCertificate = true";
 string sqlServerScriptPath = "init-sqlServer.sql";
-
-while (!IsSqlServerAvailable(masterConnectionString))
+string sqlServerDump = File.ReadAllText(sqlServerScriptPath);
+connectionString = connectionString+"TrustServerCertificate = true";
+masterConnectionString = masterConnectionString + "TrustServerCertificate = true";
+while (!DB.IsSqlServerAvailable(masterConnectionString))
 {
-    Console.WriteLine("Attendo la disponibilità di SQL Server...");
     Console.WriteLine("Attendo la disponibilità di SQL Server... connection string master="+ masterConnectionString);
+    log.LogAction("Attendo la disponibilità di SQL Server... connection string master=" + masterConnectionString);
     Thread.Sleep(5000);
 }
-
-string sqlServerDump = File.ReadAllText(sqlServerScriptPath);
-foreach (string command in GetSqlCommands(sqlServerDump))
+foreach (string command in DB.GetSqlCommands(sqlServerDump))
 {
     if(command.Contains("CREATE DATABASE")) {
-        bool firtsCompose=ExecuteSqlCommand(masterConnectionString, command);
+        bool firtsCompose= DB.ExecuteSqlCommand(masterConnectionString, command);
         if (firtsCompose == false) break;
     }
-    else ExecuteSqlCommand(connectionString, command);
+    else DB.ExecuteSqlCommand(connectionString, command);
 }
-
-
-
-
 config.confdb = Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:Userdata"];
-
 Kafka.producer = new KafkaProducer();
 Kafka.consumer = new KafkaConsumer(Environment.GetEnvironmentVariable("topic_to_userdata") ?? config.configuration["topic_to_userdata"]);
 Kafka.consumerConfig = new ConsumerConfig
@@ -64,13 +57,10 @@ Kafka.producerConfig = new ProducerConfig {
 };
 Kafka.topic_to_configuration = Environment.GetEnvironmentVariable("topic_to_configuration") ?? config.configuration["topic_to_configuration"];
 Kafka.topic_to_userdata = Environment.GetEnvironmentVariable("topic_to_userdata") ?? config.configuration["topic_to_userdata"] ;
-
-
 var adminClientConfig = new AdminClientConfig
 {
     BootstrapServers = Environment.GetEnvironmentVariable("bootstrapServers") ?? config.configuration["bootstrapServers"]
 };
-
 using (var adminClient = new AdminClientBuilder(adminClientConfig).Build())
 {
     bool topicCreated = false;
@@ -88,6 +78,7 @@ using (var adminClient = new AdminClientBuilder(adminClientConfig).Build())
 
             adminClient.CreateTopicsAsync(new List<TopicSpecification> { topicSpecification }).Wait();
             Console.WriteLine($"Topic '{Kafka.topic_to_userdata}' created successfully.");
+            log.LogAction($"Topic '{Kafka.topic_to_userdata}' created successfully.");
             topicCreated = true;
         }
         catch (AggregateException ae)
@@ -101,17 +92,20 @@ using (var adminClient = new AdminClientBuilder(adminClientConfig).Build())
                         if (topicError.Error.Code == ErrorCode.TopicAlreadyExists)
                         {
                             Console.WriteLine($"The topic '{Kafka.topic_to_userdata}' already exists.");
+                            log.LogAction($"The topic '{Kafka.topic_to_userdata}' already exists.");
                             topicCreated = true;
                         }
                         else
                         {
                             Console.WriteLine($"Error creating topic: {topicError.Error.Reason}");
+                            log.LogAction($"Error creating topic: {topicError.Error.Reason}");
                         }
                     }
                 }
                 else
                 {
                     Console.WriteLine($"Unexpected exception: {innerException.Message}");
+                    log.LogAction($"Unexpected exception: {innerException.Message}");
                 }
             }
         }
@@ -191,46 +185,4 @@ app.UseResponseCaching();
 app.MapControllers();
 app.Run();
 
-static bool IsSqlServerAvailable(string connectionString)
-{
-    try
-    {
-        SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectionString);
-        builder.TrustServerCertificate = true; 
-        using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-        {
-            connection.Open();
-        }
-        return true;
-    }
-    catch( Exception e)
-    {
-        Console.WriteLine("Eccezione :\n" + e.ToString());
-        return false;
-    }
-}
 
-static bool ExecuteSqlCommand(string connectionString, string commandText)
-{
-    try
-    {
-        using (SqlConnection connection = new SqlConnection(connectionString))
-        using (SqlCommand command = new SqlCommand(commandText, connection))
-        {
-            connection.Open();
-            command.ExecuteNonQuery();
-            Console.WriteLine($"Comando eseguito con successo:\n{commandText}");
-        }
-    }
-    catch (Exception e)
-    {
-        Console.WriteLine($"Errore nell'esecuzione del comando:\n{commandText}\nErrore: {e.Message}");
-        return false;
-    }
-    return true;
-}
-
-static string[] GetSqlCommands(string sqlScript)
-{
-    return sqlScript.Split(new[] { "GO" }, StringSplitOptions.RemoveEmptyEntries);
-}

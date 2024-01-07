@@ -1,3 +1,5 @@
+from Utils.Logger import Logger
+import inspect
 from datetime import datetime
 import json
 from DB.Repository.TelegramConfigurationRepo import TelegramConfigurationRepo
@@ -5,10 +7,10 @@ from DB.Repository.TelegramMessagesRepo import TelegramMessagesRepo
 from DB.Repository.TelegramUsersRepo import TelegramUsersRepo
 from Utils.Telegram import Telegram
 
-
 class EventHandlers:  
     
     def handle_tag_NewTip(dat):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_NewTip - {inspect.currentframe().f_globals['__file__']}")
         data=dat["Data"]
         user=TelegramUsersRepo.get_user_telegram(data["IdUser"]) 
         if user != None:
@@ -39,12 +41,15 @@ class EventHandlers:
         return None
     
     def handle_tag_GetTelegramSent(data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetTelegramSent - {inspect.currentframe().f_globals['__file__']}")
         return TelegramMessagesRepo.get_all_by_user(data["IdUser"])
     
     def handle_tag_GetUserTelegram(data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetUserTelegram - {inspect.currentframe().f_globals['__file__']}")
         return TelegramUsersRepo.get_user(data["IdUser"])
     
     def handle_tag_AddUserTelegram(data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_AddUserTelegram - {inspect.currentframe().f_globals['__file__']}")
         if data["IdUser"]==None or data["IdUser"]==0:
             raise Exception(str("Il campo idUser non puo essere vuoto"))
             return
@@ -62,6 +67,7 @@ class EventHandlers:
         return json_data 
     
     def handle_tag_PatchUserTelegram(data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_PatchUserTelegram - {inspect.currentframe().f_globals['__file__']}")
         if data["IdUser"]==None or data["IdUser"]==0:
             raise Exception(str("Il campo idUser non puo essere vuoto"))
             return
@@ -78,6 +84,7 @@ class EventHandlers:
         return json_data 
     
     def handle_tag_DeleteUserTelegram(data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_DeleteUserTelegram - {inspect.currentframe().f_globals['__file__']}")
         if data["IdUser"]==None or data["IdUser"]==0:
             raise Exception(str("Il campo IdUser non puo essere vuoto"))
             return

@@ -16,6 +16,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Get()
         {
+            Logger log = new();
+            log.LogAction("UserMailController  Get");
             List<UserMail> usermail = null;
             if (User.Identity.IsAuthenticated)
             {
@@ -40,6 +42,8 @@ namespace ExposeAPI.Controllers
         [Route("Add")]
         public async Task<ActionResult> Create(UserMailCreateDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("UserMailController  Create");
             string res = null;
             if (User.Identity.IsAuthenticated)
             {
@@ -61,6 +65,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Patch(UserMailPatchDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("UserMailController  Patch");
             string res = null;
             if (User.Identity.IsAuthenticated)
             {
@@ -82,6 +88,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Delete( )
         {
+            Logger log = new();
+            log.LogAction("UserMailController  Delete");
             string isDeleted = null;
             if (User.Identity.IsAuthenticated)
             {

@@ -31,6 +31,8 @@ public class AuthController : ControllerBase
         [Route("Registration")]
         public async Task<ActionResult> Create(UserCreateDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("AuthController  Create");
             var newItemID = await userRepo.Create(newItemDTO);
             return (bool)newItemID ? Ok(newItemID) : Problem(null, null, 401);
         }
@@ -39,6 +41,8 @@ public class AuthController : ControllerBase
         [Route("Login")]
         public async Task<ActionResult> Login(LoginDTO loginDTO)
         {
+            Logger log = new();
+            log.LogAction("AuthController  Login");
             AuthenticationResponse authResponse = null;
             var res = await userRepo.Login(loginDTO);
             if (res !=null)
@@ -52,6 +56,8 @@ public class AuthController : ControllerBase
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken(TokenCustom jwtToken)
         {
+            Logger log = new();
+            log.LogAction("AuthController  RefreshToken");
             AuthenticationResponse? authResponse = null;
             if (string.IsNullOrWhiteSpace(jwtToken.access_token) || string.IsNullOrWhiteSpace(jwtToken.refresh_token))
             {

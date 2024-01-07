@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Userdata.Models;
 
 public class Startup
 {
     public IConfiguration Configuration { get; }
-
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
@@ -52,4 +52,5 @@ public class Startup
             endpoints.MapControllers();
         });
     }
+
 }

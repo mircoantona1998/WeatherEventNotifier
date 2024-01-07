@@ -41,7 +41,10 @@ namespace ExposeAPI.Kafka
                 this.Code = Encoding.UTF8.GetString(CodB);
             }
         }
-
+        public override string ToString()
+        {
+            return $"Creator: {Creator}, IdOffsetResponse: {IdOffsetResponse}, Type: {Type}, Tag: {Tag}, Code: {Code}";
+        }
     }
 
 }

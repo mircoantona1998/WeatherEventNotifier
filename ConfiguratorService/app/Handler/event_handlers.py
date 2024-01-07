@@ -10,10 +10,14 @@ from Kafka.Producer import ProducerClass
 from Utils.EnumMessageCode import MessageCode
 from Utils.EnumMessageType import MessageType
 from Utils.Json import Json
+from Utils.Logger import Logger
+import inspect
+
 class EventHandlers:
     
     #CONFIGURATION
     def handle_tag_AddConfiguration( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_AddConfiguration  - {inspect.currentframe().f_globals['__file__']}")
         dtActivation=data["DateTimeActivation"]
         if dtActivation!=None:
             try:
@@ -84,10 +88,12 @@ class EventHandlers:
         forNotifier=FrequencyRepo.get_element(data["IdFrequency"])
         new_element_data['Minutes']=forNotifier.Minutes
         ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(new_element_data),GestoreDestinatari().determina_destinatario("SchedulerService"))        
-        
+        print(f'{str(headersRequest.to_string())}')
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersRequest.to_string())} - {inspect.currentframe().f_globals['__file__']}")
         return json_data
 
     def handle_tag_PatchConfiguration( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_PatchConfiguration  - {inspect.currentframe().f_globals['__file__']}")
         dtActivation=data["DateTimeActivation"]
         if dtActivation!=None:
             try:
@@ -134,13 +140,16 @@ class EventHandlers:
         new_element_data=ConfigurationUserRepo.get_new_configuration_for_today(new_element_data["Id"])
         headersRequest = KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="PatchConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
         ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(new_element_data),GestoreDestinatari().determina_destinatario("SchedulerService"))        
-        
+        print(f'{str(headersRequest.to_string())}')
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersRequest.to_string())} - {inspect.currentframe().f_globals['__file__']}")        
         return json_data
 
     def handle_tag_GetConfiguration( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetConfiguration  - {inspect.currentframe().f_globals['__file__']}")
         return ConfigurationUserRepo.get_all_by_user(data["IdUser"])
 
     def handle_tag_DeleteConfiguration( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_DeleteConfiguration  - {inspect.currentframe().f_globals['__file__']}")
         if data["IdUser"]==None or data["IdUser"]==0:
             raise Exception(str("Il campo IdUser non puo essere vuoto"))
             return
@@ -154,14 +163,17 @@ class EventHandlers:
         #avviso notifier service che è stata eliminata una configurazione
         headersRequest = KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="DeleteConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
         ProducerClass.send_message(headersRequest.headers_list,Json.convert_object_to_json(data["IdConfiguration"]),GestoreDestinatari().determina_destinatario("SchedulerService"))        
-        
+        print(f'{str(headersRequest.to_string())}')
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersRequest.to_string())} - {inspect.currentframe().f_globals['__file__']}")
         return json_data
 
     def handle_tag_GetConfigurationForToday( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetConfigurationForToday  - {inspect.currentframe().f_globals['__file__']}")
         return ConfigurationUserRepo.get_all_for_today()
     
     #METRIC
     def handle_tag_AddMetric( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_AddMetric  - {inspect.currentframe().f_globals['__file__']}")
         result =MetricRepo.get_element_by_field(data["Field"])
         if result is None:
             raise Exception(str("La metrica non esiste nel database"))
@@ -195,6 +207,7 @@ class EventHandlers:
         return json_data
 
     def handle_tag_PatchMetric( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_PatchMetric  - {inspect.currentframe().f_globals['__file__']}")
         result =MetricRepo.get_element_by_field(data["Field"])
         if result is None:
             raise Exception(str("La metrica non esiste nel database"))
@@ -213,9 +226,11 @@ class EventHandlers:
         return json_data
 
     def handle_tag_GetMetric( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetMetric  - {inspect.currentframe().f_globals['__file__']}")
         return MetricRepo.get_all()
 
     def handle_tag_DeleteMetric( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_DeleteMetric  - {inspect.currentframe().f_globals['__file__']}")
         if data["IdMetric"]==None or data["IdMetric"]==0:
             raise Exception(str("Il campo IdMetric non puo essere vuoto"))
             return
@@ -226,6 +241,7 @@ class EventHandlers:
     
     #FREQUENCY
     def handle_tag_AddFrequency( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_AddFrequency  - {inspect.currentframe().f_globals['__file__']}")
         result =FrequencyRepo.get_element_by_frequency_name(data["FrequencyName"])
         if result is None:
             raise Exception(str("La frequenza non esiste nel database"))
@@ -247,6 +263,7 @@ class EventHandlers:
         return json_data
 
     def handle_tag_PatchFrequency( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_PatchFrequency  - {inspect.currentframe().f_globals['__file__']}")
         result =FrequencyRepo.get_element_by_frequency_name(data["FrequencyName"])
         if result is None:
             raise Exception(str("La frequenza non esiste nel database"))
@@ -262,9 +279,11 @@ class EventHandlers:
         return json_data
 
     def handle_tag_GetFrequency( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetFrequency  - {inspect.currentframe().f_globals['__file__']}")
         return FrequencyRepo.get_all()
 
     def handle_tag_DeleteFrequency( data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_DeleteFrequency  - {inspect.currentframe().f_globals['__file__']}")
         if data["IdFrequency"]==None or data["IdFrequency"]==0:
             raise Exception(str("Il campo IdFrequency non puo essere vuoto"))
             return

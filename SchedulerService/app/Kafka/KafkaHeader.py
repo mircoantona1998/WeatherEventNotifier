@@ -15,3 +15,6 @@ class KafkaHeader:
                 ("Code",  str(Code)),
                 ("Creator",  str(Creator)),
             ]
+    def to_string(self):
+        result_string = "\n".join([f"{chiave}: {valore}" for chiave, valore in self.__dict__.items()])
+        return result_string

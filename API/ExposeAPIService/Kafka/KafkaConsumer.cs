@@ -17,9 +17,11 @@ namespace ExposeAPI.Kafka
     {
         private readonly string topic;
         private readonly MessageReceivedRepository messRepo;
+        Logger log = new();
 
         public KafkaConsumer(string topic)
         {
+            log.LogAction("Kafka consumer");
             messRepo = new MessageReceivedRepository(config.confdb);
             this.topic = topic;
         }
@@ -43,6 +45,7 @@ namespace ExposeAPI.Kafka
                     if (result != null)
                     {
                         Console.WriteLine($"Received message  {result.Message.Value} on {result.TopicPartitionOffset}");
+                        log.LogAction($"Received message  {result.Message.Value} on {result.TopicPartitionOffset}");
                         var headers = result.Message.Headers;
                         var messLast = await messRepo.GetLast();
                         if (messLast == null || ((int)result.Offset.Value) > messLast.Offset)
@@ -52,6 +55,7 @@ namespace ExposeAPI.Kafka
                                 try
                                 {
                                     var headerKafka = new KafkaHeader(headers, result.TopicPartition.Partition);
+                                    log.LogAction(headerKafka.ToString());
                                     if (headerKafka.IdOffsetResponse == offset)
                                     {
                                         bool save = false;
@@ -91,6 +95,7 @@ namespace ExposeAPI.Kafka
                 catch (ConsumeException e)
                 {
                     Console.WriteLine($"Error while consuming message: {e.Error.Reason}");
+                    log.LogAction($"Error while consuming message: {e.Error.Reason}");
                 }
             }
             consumer.Close();
@@ -100,6 +105,7 @@ namespace ExposeAPI.Kafka
 
         public async Task saveMessage(ConsumeResult<Ignore,string> result,KafkaHeader headers)
         {
+            log.LogAction("Save message");
             MessageReceivedDTO messag = new MessageReceivedDTO();
             messag.Timestamp = DateTime.UtcNow;
             messag.Message = result.Message.Value;
@@ -115,6 +121,7 @@ namespace ExposeAPI.Kafka
         }
         public async Task saveMessageWithError(ConsumeResult<Ignore, string> result)
         {
+            log.LogAction("Save MessageWithError");
             MessageReceivedDTO messag = new MessageReceivedDTO();
             messag.Timestamp = DateTime.UtcNow;
             messag.Message = result.Message.Value;

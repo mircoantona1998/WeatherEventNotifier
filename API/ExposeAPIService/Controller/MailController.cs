@@ -16,6 +16,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Get()
         {
+            Logger log = new();
+            log.LogAction("MailController  Get");
             List<MailSent> messages = null;
             if (User.Identity.IsAuthenticated)
             {

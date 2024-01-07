@@ -5,7 +5,7 @@ using ExposeAPI.Model;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ExposeAPI.Controllers
-{
+{    
     [Route("[controller]")]
     [ApiController]
     public class UserTelegramController : ControllerBase
@@ -16,6 +16,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Get()
         {
+            Logger log = new();
+            log.LogAction("UserTelegramController  Get");
             List<UserTelegram> usertel = null;
             if (User.Identity.IsAuthenticated)
             {
@@ -40,6 +42,8 @@ namespace ExposeAPI.Controllers
         [Route("Add")]
         public async Task<ActionResult> Create(UserTelegramCreateDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("UserTelegramController  Create");
             string res = null;
             if (User.Identity.IsAuthenticated)
             {
@@ -61,6 +65,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Patch(UserTelegramPatchDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("UserTelegramController  Patch");
             string res = null;
             if (User.Identity.IsAuthenticated)
             {
@@ -82,6 +88,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Delete( )
         {
+            Logger log = new();
+            log.LogAction("UserTelegramController  Delete");
             string isDeleted = null;
             if (User.Identity.IsAuthenticated)
             {

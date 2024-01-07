@@ -17,6 +17,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Get()
         {
+            Logger log = new();
+            log.LogAction("ConfigurationController  Get");
             List<ConfigurationUser> configurations = null;
             if (User.Identity.IsAuthenticated)
             {
@@ -41,6 +43,8 @@ namespace ExposeAPI.Controllers
         [Route("Add")]
         public async Task<ActionResult> Create(ConfigurationCreateDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("ConfigurationController  Create");
             string res=null;
             if (User.Identity.IsAuthenticated)
             {
@@ -65,6 +69,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Patch(ConfigurationPatchDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("ConfigurationController  Patch");
             string res = null;
             if (User.Identity.IsAuthenticated)
             {
@@ -90,6 +96,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Delete( int? IdConfiguration)
         {
+            Logger log = new();
+            log.LogAction("ConfigurationController  Delete");
             string res = null;
             if (User.Identity.IsAuthenticated)
             {

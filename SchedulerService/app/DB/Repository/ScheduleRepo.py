@@ -2,10 +2,12 @@ from datetime import datetime, timedelta
 from DB.Session import Session
 from DB.Model import Schedule
 from sqlalchemy import  func, cast, DateTime,desc
-
+from Utils.Logger import Logger
+import inspect
 class ScheduleRepo:
         
     def get_all_by_user(user_id):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all_by_user - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             resultList = session.query(Schedule).filter_by(IdUser=user_id).all()
             result_dicts = []
@@ -29,6 +31,7 @@ class ScheduleRepo:
             return result_dicts
         
     def get_element(id_user=None):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_element - {inspect.currentframe().f_globals['__file__']}")
         if id_user is None:
             return None  
         with Session.get_database_session() as session:
@@ -37,6 +40,7 @@ class ScheduleRepo:
             return query.first() 
         
     def get_element_last_datetime_to_schedule(id_configuration=None):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_element_last_datetime_to_schedule - {inspect.currentframe().f_globals['__file__']}")
         if id_configuration is None:
             return None  
         data_ieri = datetime.utcnow() - timedelta(days=1)
@@ -50,6 +54,7 @@ class ScheduleRepo:
             return query.first()
         
     def add_schedule(new_element_data, datetimeActivation, lastschedule=None,):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - add_schedule - {inspect.currentframe().f_globals['__file__']}")
         if  lastschedule is not None and lastschedule.DateTimeToSchedule is not None:
             new_element_data['DateTimeToSchedule'] = lastschedule.DateTimeToSchedule.replace(minute=0, second=0, microsecond=0)
         else:
@@ -67,6 +72,7 @@ class ScheduleRepo:
             return 
                       
     def delete_schedule(id_configuration):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - delete_schedule - {inspect.currentframe().f_globals['__file__']}")
         if id_configuration is None:
             return False
         with Session.get_database_session() as session:
@@ -80,11 +86,13 @@ class ScheduleRepo:
             return True
 
     def delete_all_schedules():
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - delete_all_schedules - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             session.query(Schedule).delete()
             session.commit()
             
     def get_all_current_hour():
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all_current_hour - {inspect.currentframe().f_globals['__file__']}")
         current_datetime = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
         with Session.get_database_session() as session:
             resultList = (

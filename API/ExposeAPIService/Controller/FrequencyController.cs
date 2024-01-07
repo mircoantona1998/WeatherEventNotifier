@@ -16,6 +16,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Get()
         {
+            Logger log = new();
+            log.LogAction("FrequencyController  Get");
             var result = await Kafka.Kafka.producer.ProduceRequest<string>("", MessageType.Request, MessageTag.GetFrequency, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
             var Frequencys = await Kafka.Kafka.consumer.ConsumeResponse<List<Frequency>>((int)result.Offset);
             return Frequencys != null ? Ok(Frequencys) : Problem(null, null, 401);
@@ -28,6 +30,8 @@ namespace ExposeAPI.Controllers
         [Route("Add")]
         public async Task<ActionResult> Create(FrequencyCreateDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("FrequencyController  Create");
             var result=await Kafka.Kafka.producer.ProduceRequest<string>(newItemDTO,MessageType.Request,MessageTag.AddFrequency, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
             string res=await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
             return res!=null ? Ok(res) : Problem(null, null, 401);
@@ -40,6 +44,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Patch(FrequencyPatchDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("FrequencyController  Patch");
             var result = await Kafka.Kafka.producer.ProduceRequest<string>(newItemDTO, MessageType.Request, MessageTag.PatchFrequency, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
             string res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
             return res != null? Ok(res) : Problem(null, null, 401);
@@ -52,6 +58,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Delete( int? IdFrequency)
         {
+            Logger log = new();
+            log.LogAction("FrequencyController  Delete");
             var deleteItemDTO = new
             {
                 IdFrequency=IdFrequency,

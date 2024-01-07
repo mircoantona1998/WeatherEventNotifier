@@ -1,9 +1,12 @@
 from DB.Session import Session
 from DB.Model import TelegramMessages
-
+from Utils.Logger import Logger
+import inspect
+from datetime import datetime
 class TelegramMessagesRepo:
     
     def get_all_by_user(user_id):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all_by_user - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             resultList = session.query(TelegramMessages).filter_by(IdUser=user_id).all()
             result_dicts = []
@@ -22,6 +25,7 @@ class TelegramMessagesRepo:
             return result_dicts
 
     def add_message(data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - add_message - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             new_element = TelegramMessages(**data)
             session.add(new_element)

@@ -1,9 +1,12 @@
 from DB.Session import Session
 from DB.Model import MailUsers
-
+from Utils.Logger import Logger
+import inspect
+from datetime import datetime
 class MailUsersRepo:
     
     def get_all():
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             result_list =session.query(MailUsers).all()
             result_dicts = []
@@ -18,6 +21,7 @@ class MailUsersRepo:
             return result_dicts
         
     def get_user(idUser):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_user - {inspect.currentframe().f_globals['__file__']}")
         if idUser is None:
             return None  
         with Session.get_database_session() as session:
@@ -38,6 +42,7 @@ class MailUsersRepo:
                 return result_dicts
             
     def get_user_mail(idUser):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_user_mail - {inspect.currentframe().f_globals['__file__']}")
         if idUser is None:
             return None  
         with Session.get_database_session() as session:
@@ -54,6 +59,7 @@ class MailUsersRepo:
                 return result_dict
             
     def add_user_mail(new_element_data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - add_user_mail - {inspect.currentframe().f_globals['__file__']}")
         MailUsersRepo.delete_element(new_element_data["idUser"])
         with Session.get_database_session() as session:
             new_element = MailUsers(**new_element_data)
@@ -61,6 +67,7 @@ class MailUsersRepo:
             session.commit()
                 
     def patch_user_mail(element_id, patch_data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - patch_user_mail - {inspect.currentframe().f_globals['__file__']}")
         MailUsersRepo.delete_element(element_id)
         with Session.get_database_session() as session:
             element_to_patch = session.merge(MailUsers(idUser=element_id))
@@ -73,6 +80,7 @@ class MailUsersRepo:
  
 
     def delete_element( id_user=None):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - delete_element - {inspect.currentframe().f_globals['__file__']}")
         if id_user is None:
             return
         with Session.get_database_session() as session:

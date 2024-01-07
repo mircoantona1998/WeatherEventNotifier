@@ -16,6 +16,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Get()
         {
+            Logger log = new();
+            log.LogAction("MetricController  Get");
             var result = await Kafka.Kafka.producer.ProduceRequest<string>("", MessageType.Request, MessageTag.GetMetric, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
             var Metrics = await Kafka.Kafka.consumer.ConsumeResponse<List<Metric>>((int)result.Offset);
             return Metrics != null ? Ok(Metrics) : Problem(null, null, 401);
@@ -28,6 +30,8 @@ namespace ExposeAPI.Controllers
         [Route("Add")]
         public async Task<ActionResult> Create(MetricCreateDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("MetricController  Create");
             var result=await Kafka.Kafka.producer.ProduceRequest<string>(newItemDTO,MessageType.Request,MessageTag.AddMetric, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
             string res=await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
             return res!=null ? Ok(res) : Problem(null, null, 401);
@@ -40,6 +44,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Patch(MetricPatchDTO newItemDTO)
         {
+            Logger log = new();
+            log.LogAction("MetricController  Patch");
             var result = await Kafka.Kafka.producer.ProduceRequest<string>(newItemDTO, MessageType.Request, MessageTag.PatchMetric, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
             string res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
             return res!=null ? Ok(res) : Problem(null, null, 401);
@@ -52,6 +58,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Delete( int? IdMetric)
         {
+            Logger log = new();
+            log.LogAction("MetricController  Delete");
             var deleteItemDTO = new
             {
                 IdMetric=IdMetric,

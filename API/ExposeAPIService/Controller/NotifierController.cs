@@ -16,6 +16,8 @@ namespace ExposeAPI.Controllers
         [Authorize]
         public async Task<ActionResult> Get()
         {
+            Logger log = new();
+            log.LogAction("NotifierController  Get");
             List<Notifier> configurations = null;
             if (User.Identity.IsAuthenticated)
             {

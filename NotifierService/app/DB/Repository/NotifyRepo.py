@@ -1,9 +1,12 @@
 from DB.Session import Session
 from DB.Model import Notify
-
+from Utils.Logger import Logger
+import inspect
+from datetime import datetime
 class NotifyRepo:
         
     def get_all():
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             resultList = session.query(Notify).all()
             result_dicts = []
@@ -21,6 +24,7 @@ class NotifyRepo:
             return result_dicts
         
     def get_all_by_user(id_user=None):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all_by_user - {inspect.currentframe().f_globals['__file__']}")
         if id_user is None:
             return None  
         with Session.get_database_session() as session:
@@ -42,6 +46,7 @@ class NotifyRepo:
             return result_dicts
         
     def add_element(new_element_data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - add_element - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             new_element = Notify(**new_element_data)
             session.add(new_element)

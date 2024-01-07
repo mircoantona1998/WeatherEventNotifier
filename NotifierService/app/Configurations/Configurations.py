@@ -1,5 +1,7 @@
 import os
-
+from Utils.Logger import Logger
+import inspect
+from datetime import datetime
 class Configurations:
     _instance = None
 
@@ -10,6 +12,7 @@ class Configurations:
         return cls._instance
 
     def _load_configurations(self):
+            Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - load_configurations - {inspect.currentframe().f_globals['__file__']}")
         # Usa le variabili d'ambiente, altrimenti carica default
             self.consumer_bootstrap_servers = os.getenv("CONSUMER_BOOTSTRAP_SERVERS", "127.0.0.1:9092")
             print(f'{str(self.consumer_bootstrap_servers)}')

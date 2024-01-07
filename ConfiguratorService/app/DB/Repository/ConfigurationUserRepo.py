@@ -4,10 +4,13 @@ from DB.Session import Session
 from DB.Model import ConfigurationUser
 from DB.Model import t_View_ConfigurationUser
 from sqlalchemy import text
-
+from Utils.Logger import Logger
+import inspect
+from datetime import datetime 
 class ConfigurationUserRepo:
         
     def get_all_by_user(user_id):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all_by_user  - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             resultList = session.query(t_View_ConfigurationUser).filter_by(IdUser=user_id).all()
             result_dicts = []
@@ -36,6 +39,7 @@ class ConfigurationUserRepo:
             return result_dicts
     
     def get_element_by_NameConfiguration(NameConfiguration,idUser):   
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_element_by_NameConfiguration  - {inspect.currentframe().f_globals['__file__']}")
         if NameConfiguration is None:
             return None  
         with Session.get_database_session() as session:
@@ -44,6 +48,7 @@ class ConfigurationUserRepo:
             return query.first()  
      
     def get_new_configuration_for_today(idConfiguration):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_new_configuration_for_today  - {inspect.currentframe().f_globals['__file__']}")
         today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         midnight = today + timedelta(days=1)
         with Session.get_database_session() as session:
@@ -74,6 +79,7 @@ class ConfigurationUserRepo:
                 return result_dict
         
     def get_all_for_today():
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all_for_today  - {inspect.currentframe().f_globals['__file__']}")
         today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         midnight = today + timedelta(days=1)
         with Session.get_database_session() as session:
@@ -113,6 +119,7 @@ class ConfigurationUserRepo:
             return result_dicts
         
     def add_element(new_element_data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - add_element  - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             new_element = ConfigurationUser(**new_element_data)
             session.add(new_element)
@@ -135,6 +142,7 @@ class ConfigurationUserRepo:
             return result_dict
                 
     def patch_element(element_id, patch_data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - patch_element  - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             element_to_patch = session.merge(ConfigurationUser(Id=element_id))
             if element_to_patch:
@@ -179,6 +187,7 @@ class ConfigurationUserRepo:
                 return result_dict
             
     def delete_element(id_user=None, id_configuration=None):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - delete_element  - {inspect.currentframe().f_globals['__file__']}")
         if id_user is None and id_configuration is None:
             return False
         else:

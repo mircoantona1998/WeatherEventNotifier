@@ -11,7 +11,9 @@ from Utils.EnumMessageType import MessageType
 from DB.Model import MessageReceived
 from Handler.event_handlers import EventHandlers
 from confluent_kafka.admin import AdminClient, NewTopic
-
+from Utils.Logger import Logger
+import inspect
+from datetime import datetime
 class ConsumerClass:
     def run_request(self):
         consumer={}
@@ -34,13 +36,15 @@ class ConsumerClass:
                 admin_client.create_topics([new_topic])
                 topic_created = True
                 print("Topic  creato con successo.")
+                Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Topic  creato con successo. - {inspect.currentframe().f_globals['__file__']}")
             except Exception as e:
                 if "AlreadyExistsError" in str(e):
                     topic_created = True
                     print("Il topic  esiste.")
+                    Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Il topic  esiste. - {inspect.currentframe().f_globals['__file__']}")
                 else:
                     print(f"Errore durante la creazione del topic: {e}")
-
+                    Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Errore durante la creazione del topic: {e} - {inspect.currentframe().f_globals['__file__']}")
 
         consumer.subscribe([topic])
         try:
@@ -49,6 +53,7 @@ class ConsumerClass:
                 if msg is not None:
                     if MessageReceivedRepo.get_latest_message() ==None or MessageReceivedRepo.get_latest_message().offset==None or (msg.offset()!=None and msg.offset() > MessageReceivedRepo.get_latest_message().offset):
                         print(f'Received message {str(msg.value().decode("utf-8"))} on topic {msg.topic()} [{msg.partition()}] @ offset {msg.offset()}')     
+                        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Received message {str(msg.value().decode('utf-8'))} on topic {msg.topic()} [{msg.partition()}] @ offset {msg.offset()} - {inspect.currentframe().f_globals['__file__']}")
                         value=msg.value().decode("utf-8")
                         partition = msg.partition()
                         headers = msg.headers()
@@ -56,6 +61,8 @@ class ConsumerClass:
                             headers_dict = {key: value.decode('utf-8') if isinstance(value, bytes) else value for key, value in headers}
                             if len(headers_dict)>0:
                                 header= KafkaHeader(header=headers_dict)
+                                print(f'{str(header.to_string())}')
+                                Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(header.to_string())} - {inspect.currentframe().f_globals['__file__']}")
                                 ConsumerClass.saveMessage(msg,header)
                                 if header.Type==MessageType.Request.value:
                                     try:
@@ -63,11 +70,18 @@ class ConsumerClass:
                                         response = handler(json.loads(value))
                                         if response!=None:
                                             headersResponse= KafkaHeader(IdOffsetResponse=msg.offset(),Type=MessageType.Response.value ,Tag="GenerateNotification", Creator=creator, Code = MessageCode.Ok.value)
-                                            ProducerClass.send_message(headersResponse.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario(header.Creator))                                    
+                                            ProducerClass.send_message(headersResponse.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario(header.Creator))             
+                                            print(f'{str(headersResponse.to_string())}')
+                                            Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersResponse.to_string())} - {inspect.currentframe().f_globals['__file__']}")
+ 
                                     except Exception as ex:
                                         print(f'Error: {value}')
+                                        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Error: {value} - {inspect.currentframe().f_globals['__file__']}")
                                         headersResponse= KafkaHeader(IdOffsetResponse= msg.offset(),Type = MessageType.Response.value,Tag=header.Tag, Creator = creator, Code = MessageCode.Error.value)
                                         ProducerClass.send_message(headersResponse.headers_list,{'Data': str(ex)},GestoreDestinatari().determina_destinatario(header.Creator))         
+                                        print(f'{str(headersResponse.to_string())}')
+                                        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersResponse.to_string())} - {inspect.currentframe().f_globals['__file__']}")
+ 
                                 else:
                                     continue
                             else:
@@ -89,6 +103,7 @@ class ConsumerClass:
             consumer.close()
             
     def saveMessage(msg,header):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - saveMessage - {inspect.currentframe().f_globals['__file__']}")
         new=MessageReceived()
         new.message=msg.value().decode("utf-8")
         new.offset=msg.offset()
@@ -103,6 +118,7 @@ class ConsumerClass:
         MessageReceivedRepo.add_message(new)
               
     def saveMessageWithError(msg):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - saveMessageWithError - {inspect.currentframe().f_globals['__file__']}")
         new=MessageReceived()
         new.message=msg.value().decode("utf-8")
         new.offset=msg.offset()

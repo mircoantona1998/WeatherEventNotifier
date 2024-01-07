@@ -1,3 +1,5 @@
+from Utils.Logger import Logger
+import inspect
 from datetime import datetime
 from DB.Repository.ScheduleRepo import ScheduleRepo
 from DB.Repository.ScheduleResponseRepo import ScheduleResponseRepo
@@ -6,6 +8,7 @@ class EventHandlers:
     
     #CONFIGURATION CHANGE
     def handle_tag_AddConfiguration(data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_AddConfiguration - {inspect.currentframe().f_globals['__file__']}")
         #controlla se data attivazione della nuova configurazione è di oggi oppure no, se di oggi aggiunge schedulazione, altrimenti no
         if data["DateTimeActivation"]!=None and data["IsActive"]==True:
                 datetime_obj = datetime.strptime(data["DateTimeActivation"], '%Y-%m-%d %H:%M:%S')
@@ -33,6 +36,7 @@ class EventHandlers:
             return None
    
     def handle_tag_PatchConfiguration(data):
+         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_PatchConfiguration - {inspect.currentframe().f_globals['__file__']}")
         #ci interessa solo sapere se è modificata la data di attivazione o se è stata disattivata,altrimenti la cancelliamo dalle schedulazioni
          if data["DateTimeActivation"]!=None and data["IsActive"]==True:
                 datetime_obj = datetime.strptime(data["DateTimeActivation"], '%Y-%m-%d %H:%M:%S')
@@ -59,10 +63,12 @@ class EventHandlers:
          return None
     
     def handle_tag_DeleteConfiguration(data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_DeleteConfiguration - {inspect.currentframe().f_globals['__file__']}")
         ScheduleRepo.delete_schedule(data)
         return None
 
     def handle_tag_GetConfigurationForToday(dat):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetConfigurationForToday - {inspect.currentframe().f_globals['__file__']}")
         #controlla se data attivazione della nuova configurazione è di oggi oppure no, se di oggi aggiunge schedulazione, altrimenti no
         for data in dat["Data"]:
             lastSchedule = ScheduleRepo.get_element_last_datetime_to_schedule(data["Id"])
@@ -94,9 +100,11 @@ class EventHandlers:
         return None
     
     def handle_tag_SchedulationCurrentHour():
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_SchedulationCurrentHour - {inspect.currentframe().f_globals['__file__']}")
         return ScheduleRepo.get_all_current_hour()
     
     def handle_tag_GetSchedulation(data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetSchedulation - {inspect.currentframe().f_globals['__file__']}")
         return ScheduleRepo.get_all_by_user(data["IdUser"])
 
     tag_handlers = {    

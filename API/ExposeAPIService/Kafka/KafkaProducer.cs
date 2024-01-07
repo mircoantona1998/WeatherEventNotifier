@@ -10,6 +10,7 @@ namespace ExposeAPI.Kafka
     public class KafkaProducer
     {
         private readonly MessageSentRepository messSentRepo;
+        private Logger log=new();
         public KafkaProducer()
         {
             messSentRepo = new MessageSentRepository(config.confdb);
@@ -28,6 +29,11 @@ namespace ExposeAPI.Kafka
             var result = producer.ProduceAsync(topic, new Message<Null, string> { Value = mess, Headers = headers }).Result;
             await saveMessage(result,headers);
             Console.WriteLine($"Produced message {result.Message.Value} on {result.TopicPartitionOffset}");
+            log.LogAction($"Produced message {result.Message.Value} on {result.TopicPartitionOffset}");
+            foreach (var header in headers)
+            {
+                log.LogAction($"Header Key: {header.Key}, Value: {Encoding.UTF8.GetString(header.GetValueBytes())}");
+            }
             return result;
         }
         public async Task saveMessage(DeliveryResult<Null,string> result,Headers? headers)

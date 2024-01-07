@@ -3,7 +3,7 @@
 namespace ExposeAPI.Utils
 {
 
-    public class Logger
+    public  class Logger
     {
         private readonly Microsoft.Extensions.Logging.ILogger logger;
 

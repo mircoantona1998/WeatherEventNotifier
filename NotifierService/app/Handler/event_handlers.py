@@ -1,6 +1,8 @@
 from email import utils
 import json
 import pytz
+from Utils.Logger import Logger
+import inspect
 from datetime import datetime
 from Configurations.Configurations import Configurations
 from DB.Repository.NotifyRepo import NotifyRepo
@@ -13,10 +15,12 @@ from Utils.EnumMessageType import MessageType
 class EventHandlers:    
     #NOTIFY
     def handle_tag_GetNotify(data):
+           Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetNotify - {inspect.currentframe().f_globals['__file__']}")
            return NotifyRepo.get_all_by_user(data["IdUser"])
     
     #SCHEDULER
     def handle_tag_SchedulationCurrentHour(dat):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_SchedulationCurrentHour - {inspect.currentframe().f_globals['__file__']}")
         #passare richiesta al weather service per far valutare
         data = dat["Data"]
         new_element_data = {
@@ -35,11 +39,14 @@ class EventHandlers:
         'Description':data["Description"],
             }
         headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="AnalyzeConfiguration", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
-        ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("WeatherService"))               
+        ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("WeatherService"))
+        print(f'{str(headersRequest.to_string())}')
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersRequest.to_string())} - {inspect.currentframe().f_globals['__file__']}")
         return 
     
     #GENERA NOTIFICA    
-    def handle_tag_GenerateNotification(dat):     
+    def handle_tag_GenerateNotification(dat):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GenerateNotification - {inspect.currentframe().f_globals['__file__']}")
         data = dat["Data"]
         fuso_orario_locale = pytz.timezone('Europe/Rome')  
         data_datetime_locale = datetime.strptime(data["DateTimeToSchedule"], '%Y-%m-%d %H:%M:%S').astimezone(fuso_orario_locale)
@@ -55,7 +62,11 @@ class EventHandlers:
             NotifyRepo.add_element(new_element_data)
             headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="NewTip", Creator=Configurations().group_id, Code = MessageCode.Ok.value)
             ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("MailService")) 
+            print(f'{str(headersRequest.to_string())}')
+            Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersRequest.to_string())} - {inspect.currentframe().f_globals['__file__']}")
             ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': new_element_data}, indent=2),GestoreDestinatari().determina_destinatario("TelegramService")) 
+            print(f'{str(headersRequest.to_string())}')
+            Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersRequest.to_string())} - {inspect.currentframe().f_globals['__file__']}")
         return 
     
     tag_handlers = {

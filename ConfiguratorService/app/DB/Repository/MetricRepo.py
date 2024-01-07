@@ -1,9 +1,12 @@
 from DB.Session import Session
 from DB.Model import Metric
-
+from Utils.Logger import Logger
+import inspect
+from datetime import datetime 
 class MetricRepo:
         
     def get_all():
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all  - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             result_list =session.query(Metric).all()
             result_dicts = []
@@ -21,6 +24,7 @@ class MetricRepo:
             return result_dicts
         
     def get_element(id_Metric=None):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_element  - {inspect.currentframe().f_globals['__file__']}")
         if id_Metric is None:
             return None  
         with Session.get_database_session() as session:
@@ -29,6 +33,7 @@ class MetricRepo:
             return query.first()        
         
     def get_element_by_field(field_Metric=None):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_element_by_field  - {inspect.currentframe().f_globals['__file__']}")
         if field_Metric is None:
             return None  
         with Session.get_database_session() as session:
@@ -37,12 +42,14 @@ class MetricRepo:
             return query.first()         
         
     def add_element(new_element_data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - add_element  - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             new_element = Metric(**new_element_data)
             session.add(new_element)
             session.commit()
                 
     def patch_element(element_id, patch_data):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - patch_element  - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             element_to_patch = session.merge(Metric(Id=element_id))
             if element_to_patch:
@@ -63,6 +70,7 @@ class MetricRepo:
                 session.commit()
                 
     def delete_element( id_Metric=None):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - delete_element  - {inspect.currentframe().f_globals['__file__']}")
         if id_Metric is None:
             return
         with Session.get_database_session() as session:
