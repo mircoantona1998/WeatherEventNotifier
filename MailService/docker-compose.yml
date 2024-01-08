@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+ 
+  mail_db:
+    container_name: mail_db
+    build:
+      context: ./Maildata
+      dockerfile: Dockerfile
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mail_database:/var/lib/mysql
+    networks:
+      - microservices_network
+      
+  mail_service:
+    container_name: mail_service
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    environment:
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=root
+     - DATABASE_PASSWORD=root
+     - DATABASE_PORTA=3306
+     - DATABASE_IP=mail_db
+     - DATABASE_NAME=Mail 
+    networks:
+      - microservices_network 
+    depends_on:
+      - mail_db   
+      
+
+volumes:
+  mail_database:  
+    name: mail_database
+networks:
+  microservices_network:
+    name: microservices_network

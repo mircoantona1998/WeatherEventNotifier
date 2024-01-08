@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+    
+  expose_api_db:
+    image: mcr.microsoft.com/mssql/server
+    container_name: expose_api_db
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: RootRoot.1
+      ACCEPT_EULA: Y
+      MSSQL_PID: Express
+    volumes:
+      - userdata_database:/var/opt/mssql
+    networks:
+      - microservices_network
+      
+  expose_api:
+    container_name: expose_api
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - Logging:LogLevel:Default=Information
+      - Logging:LogLevel:Microsoft.AspNetCore=Warning
+      - ConnectionStrings=Data Source=expose_api_db,1433;Initial Catalog=Userdata;User ID=sa;Password=RootRoot.1; Encrypt=False;
+      - ConnectionStringsMaster=Data Source=expose_api_db,1433;User ID=sa;Password=RootRoot.1;Encrypt=False;
+      - Jwt=c5eKUcbKfkzGq6HfpnFhP7/G2pgS3S++YH33ue/A5uc=
+      - AllowedHosts=*
+    depends_on:
+      - expose_api_db
+        
+volumes:
+  userdata_database:
+    name: userdata_database
+networks:
+  microservices_network:
+    name: microservices_network

@@ -29,50 +29,12 @@ services:
       - zookeeper
     networks:
       - microservices_network
-    
-  sql_server_db:
-    image: mcr.microsoft.com/mssql/server
-    container_name: userdata
-    ports:
-      - "1433:1433"
-    environment:
-      SA_PASSWORD: RootRoot.1
-      ACCEPT_EULA: Y
-      MSSQL_PID: Express
-    volumes:
-      - userdata_database:/var/opt/mssql
-    networks:
-      - microservices_network
-    
-  mysql_db:
-    container_name: weatherdata
-    build:
-      context: ./Weatherdata
-      dockerfile: Dockerfile
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - weather_database:/var/lib/mysql
-    networks:
-      - microservices_network
-
-      
+   
   expose_api:
-    container_name: expose_api
-    build:
-      context: ./API
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+    extends:
+      file: API/docker-compose.yml
+      service: expose_api
     environment:
-      - Logging:LogLevel:Default=Information
-      - Logging:LogLevel:Microsoft.AspNetCore=Warning
-      - ConnectionStrings=Data Source=sql_server_db,1433;Initial Catalog=Userdata;User ID=sa;Password=RootRoot.1; Encrypt=False;
-      - ConnectionStringsMaster=Data Source=sql_server_db,1433;User ID=sa;Password=RootRoot.1;Encrypt=False;
-      - Jwt=c5eKUcbKfkzGq6HfpnFhP7/G2pgS3S++YH33ue/A5uc=
-      - AllowedHosts=*
       - groupID=ExposeAPIService
       - bootstrapServers=kafka:9093
       - topic_to_userdata=topic_to_userdata
@@ -84,18 +46,21 @@ services:
       - topic_to_telegram=topic_to_telegram
       - partition=partition
     networks:
-      - microservices_network
+      - microservices_network  
     depends_on:
       - kafka
-      - sql_server_db
       
+  expose_api_db:
+    extends:
+      file: API/docker-compose.yml
+      service: expose_api_db
+      
+  
   configurator_service:
-    container_name: configurator_service
-    build:
-     context: ./ConfiguratorService/app
-     dockerfile: Dockerfile
+    extends:
+      file: ConfiguratorService/docker-compose.yml
+      service: configurator_service
     environment:
-     - DOCKER_ENVIRONMENT=True
      - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
      - CONSUMER_GROUP_ID=ConfiguratorService
      - CONSUMER_AUTO_OFFSET_RESET=earliest
@@ -109,149 +74,22 @@ services:
      - TOPIC_TO_NOTIFIER=topic_to_notifier
      - TOPIC_TO_CONFIGURATION=topic_to_configuration
      - TOPIC_TO_USERDATA=topic_to_userdata
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=mysql_db
-     - DATABASE_NAME=ConfigurationAlert 
     networks:
-      - microservices_network 
+      - microservices_network  
     depends_on:
       - kafka
-      - mysql_db
-
       
-  scheduler_service:
-    container_name: scheduler_service
-    build:
-      context: ./SchedulerService/app
-      dockerfile: Dockerfile
-    environment:
-     - DOCKER_ENVIRONMENT=True
-     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     - CONSUMER_GROUP_ID=SchedulerService
-     - CONSUMER_AUTO_OFFSET_RESET=earliest
-     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     - PRODUCER_CLIENT_ID=SchedulerService
-     - GROUP_ID=SchedulerService
-     - TOPIC_TO_SCHEDULER=topic_to_scheduler
-     - TOPIC_TO_WEATHER=topic_to_weather
-     - TOPIC_TO_MAIL=topic_to_mail
-     - TOPIC_TO_TELEGRAM=topic_to_telegram
-     - TOPIC_TO_NOTIFIER=topic_to_notifier
-     - TOPIC_TO_CONFIGURATION=topic_to_configuration
-     - TOPIC_TO_USERDATA=topic_to_userdata
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=mysql_db
-     - DATABASE_NAME=Scheduler
-    networks:
-      - microservices_network 
-    depends_on:
-      - kafka
-      - mysql_db
-      
-  weather_service:
-    container_name: weather_service
-    build:
-      context: ./WeatherService/app
-      dockerfile: Dockerfile
-    environment:
-     - DOCKER_ENVIRONMENT=True
-     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     - CONSUMER_GROUP_ID=WeatherService
-     - CONSUMER_AUTO_OFFSET_RESET=earliest
-     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     - PRODUCER_CLIENT_ID=WeatherService
-     - GROUP_ID=WeatherService
-     - TOPIC_TO_SCHEDULER=topic_to_scheduler
-     - TOPIC_TO_WEATHER=topic_to_weather
-     - TOPIC_TO_MAIL=topic_to_mail
-     - TOPIC_TO_TELEGRAM=topic_to_telegram
-     - TOPIC_TO_NOTIFIER=topic_to_notifier
-     - TOPIC_TO_CONFIGURATION=topic_to_configuration
-     - TOPIC_TO_USERDATA=topic_to_userdata
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=mysql_db
-     - DATABASE_NAME=Weather
-    networks:
-      - microservices_network 
-    depends_on:
-      - kafka
-      - mysql_db
-      
-  notifier_service:
-    container_name: notifier_service  
-    build:
-      context: ./NotifierService/app
-      dockerfile: Dockerfile
-    environment:
-     - DOCKER_ENVIRONMENT=True
-     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     - CONSUMER_GROUP_ID=NotifierService
-     - CONSUMER_AUTO_OFFSET_RESET=earliest
-     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     - PRODUCER_CLIENT_ID=NotifierService
-     - GROUP_ID=NotifierService
-     - TOPIC_TO_SCHEDULER=topic_to_scheduler
-     - TOPIC_TO_WEATHER=topic_to_weather
-     - TOPIC_TO_MAIL=topic_to_mail
-     - TOPIC_TO_TELEGRAM=topic_to_telegram
-     - TOPIC_TO_NOTIFIER=topic_to_notifier
-     - TOPIC_TO_CONFIGURATION=topic_to_configuration
-     - TOPIC_TO_USERDATA=topic_to_userdata
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=mysql_db
-     - DATABASE_NAME=Notifier
-    networks:
-      - microservices_network 
-    depends_on:
-      - kafka
-      - mysql_db
-      
-  telegram_service:
-    container_name: telegram_service  
-    build:
-      context: ./TelegramService/app
-      dockerfile: Dockerfile
-    environment:
-     - DOCKER_ENVIRONMENT=True
-     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     - CONSUMER_GROUP_ID=TelegramService
-     - CONSUMER_AUTO_OFFSET_RESET=earliest
-     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     - PRODUCER_CLIENT_ID=TelegramService
-     - GROUP_ID=TelegramService
-     - TOPIC_TO_SCHEDULER=topic_to_scheduler
-     - TOPIC_TO_WEATHER=topic_to_weather
-     - TOPIC_TO_MAIL=topic_to_mail
-     - TOPIC_TO_TELEGRAM=topic_to_telegram
-     - TOPIC_TO_NOTIFIER=topic_to_notifier
-     - TOPIC_TO_CONFIGURATION=topic_to_configuration
-     - TOPIC_TO_USERDATA=topic_to_userdata
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=mysql_db
-     - DATABASE_NAME=Telegram
-    networks:
-      - microservices_network 
-    depends_on:
-      - kafka
-      - mysql_db
-      
+  configurator_db:
+    extends:
+      file: ConfiguratorService/docker-compose.yml
+      service: configurator_db
+   
+   
   mail_service:
-    container_name: mail_service
-    build:
-      context: ./MailService/app
-      dockerfile: Dockerfile
+    extends:
+      file: MailService/docker-compose.yml
+      service: mail_service
     environment:
-     - DOCKER_ENVIRONMENT=True
      - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
      - CONSUMER_GROUP_ID=MailService
      - CONSUMER_AUTO_OFFSET_RESET=earliest
@@ -265,25 +103,149 @@ services:
      - TOPIC_TO_NOTIFIER=topic_to_notifier
      - TOPIC_TO_CONFIGURATION=topic_to_configuration
      - TOPIC_TO_USERDATA=topic_to_userdata
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=mysql_db
-     - DATABASE_NAME=Mail 
     networks:
-      - microservices_network 
+      - microservices_network  
     depends_on:
       - kafka
-      - mysql_db   
       
-
+  mail_db:
+    extends:
+      file: MailService/docker-compose.yml
+      service: mail_db
+  
+      
+  notifier_service:
+    extends:
+      file: NotifierService/docker-compose.yml
+      service: notifier_service
+    environment:
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     - CONSUMER_GROUP_ID=NotifierService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     - PRODUCER_CLIENT_ID=NotifierService
+     - GROUP_ID=NotifierService
+     - TOPIC_TO_SCHEDULER=topic_to_scheduler
+     - TOPIC_TO_WEATHER=topic_to_weather
+     - TOPIC_TO_MAIL=topic_to_mail
+     - TOPIC_TO_TELEGRAM=topic_to_telegram
+     - TOPIC_TO_NOTIFIER=topic_to_notifier
+     - TOPIC_TO_CONFIGURATION=topic_to_configuration
+     - TOPIC_TO_USERDATA=topic_to_userdata
+    networks:
+      - microservices_network  
+    depends_on:
+      - kafka
+      
+  notifier_db:
+    extends:
+      file: NotifierService/docker-compose.yml
+      service: notifier_db
+      
+  scheduler_service:
+    extends:
+      file: SchedulerService/docker-compose.yml
+      service: scheduler_service
+    environment:
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     - CONSUMER_GROUP_ID=SchedulerService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     - PRODUCER_CLIENT_ID=SchedulerService
+     - GROUP_ID=SchedulerService
+     - TOPIC_TO_SCHEDULER=topic_to_scheduler
+     - TOPIC_TO_WEATHER=topic_to_weather
+     - TOPIC_TO_MAIL=topic_to_mail
+     - TOPIC_TO_TELEGRAM=topic_to_telegram
+     - TOPIC_TO_NOTIFIER=topic_to_notifier
+     - TOPIC_TO_CONFIGURATION=topic_to_configuration
+     - TOPIC_TO_USERDATA=topic_to_userdata
+    networks:
+      - microservices_network  
+    depends_on:
+      - kafka
+      
+  scheduler_db:
+    extends:
+      file: SchedulerService/docker-compose.yml
+      service: scheduler_db
+      
+  telegram_service:
+    extends:
+      file: TelegramService/docker-compose.yml
+      service: telegram_service
+    environment:
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     - CONSUMER_GROUP_ID=TelegramService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     - PRODUCER_CLIENT_ID=TelegramService
+     - GROUP_ID=TelegramService
+     - TOPIC_TO_SCHEDULER=topic_to_scheduler
+     - TOPIC_TO_WEATHER=topic_to_weather
+     - TOPIC_TO_MAIL=topic_to_mail
+     - TOPIC_TO_TELEGRAM=topic_to_telegram
+     - TOPIC_TO_NOTIFIER=topic_to_notifier
+     - TOPIC_TO_CONFIGURATION=topic_to_configuration
+     - TOPIC_TO_USERDATA=topic_to_userdata
+    networks:
+      - microservices_network  
+    depends_on:
+      - kafka
+      
+  telegram_db:
+    extends:
+      file: TelegramService/docker-compose.yml
+      service: telegram_db
+      
+  weather_service:
+    extends:
+      file: WeatherService/docker-compose.yml
+      service: weather_service
+    environment:
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     - CONSUMER_GROUP_ID=WeatherService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     - PRODUCER_CLIENT_ID=WeatherService
+     - GROUP_ID=WeatherService
+     - TOPIC_TO_SCHEDULER=topic_to_scheduler
+     - TOPIC_TO_WEATHER=topic_to_weather
+     - TOPIC_TO_MAIL=topic_to_mail
+     - TOPIC_TO_TELEGRAM=topic_to_telegram
+     - TOPIC_TO_NOTIFIER=topic_to_notifier
+     - TOPIC_TO_CONFIGURATION=topic_to_configuration
+     - TOPIC_TO_USERDATA=topic_to_userdata
+    networks:
+      - microservices_network  
+    depends_on:
+      - kafka
+      
+  weather_db:
+    extends:
+      file: WeatherService/docker-compose.yml
+      service: weather_db
+      
+      
 volumes:
   userdata_database:
     name: userdata_database
+  configurator_database:  
+    name: configurator_database
+  mail_database:  
+    name: mail_database
+  telegram_database:  
+    name: telegram_database
+  notifier_database:
+    name: notifier_database
   weather_database:  
     name: weather_database
+  scheduler_database:  
+    name: scheduler_database
   kafka_data:  
     name: kafka_data
 networks:
   microservices_network:
     name: microservices_network
+
+

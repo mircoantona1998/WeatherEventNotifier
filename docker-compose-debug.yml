@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - microservices_network
+      
+  kafka:
+    image: wurstmeister/kafka:latest
+    container_name: kafka_service
+    ports:
+      - "9092:9092"
+    expose:
+      - "9093"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - kafka_data:/var/lib/kafka/data 
+    depends_on:
+      - zookeeper
+    networks:
+      - microservices_network
+    
+  sql_server_db:
+    image: mcr.microsoft.com/mssql/server
+    container_name: userdata
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: RootRoot.1
+      ACCEPT_EULA: Y
+      MSSQL_PID: Express
+    volumes:
+      - userdata_database:/var/opt/mssql
+    networks:
+      - microservices_network
+    
+  mysql_db:
+    container_name: weatherdata
+    build:
+      context: ./Weatherdata
+      dockerfile: Dockerfile
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - weather_database:/var/lib/mysql
+    networks:
+      - microservices_network   
+
+volumes:
+  userdata_database:
+    name: userdata_database
+  weather_database:  
+    name: weather_database
+  kafka_data:  
+    name: kafka_data
+networks:
+  microservices_network:
+    name: microservices_network

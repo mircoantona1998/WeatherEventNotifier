@@ -63,6 +63,7 @@ class ConsumerClass:
                                 print(f'{str(header.to_string())}')
                                 Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(header.to_string())} - {inspect.currentframe().f_globals['__file__']}")
                                 ConsumerClass.saveMessage(msg,header)
+                                consumer.commit(message=msg)
                                 if header.Type==MessageType.Request.value:
                                     try:
                                         handler = EventHandlers.tag_handlers.get(header.Tag, lambda: f"Tag {header.Tag} non gestito")
@@ -83,8 +84,10 @@ class ConsumerClass:
                                     continue
                             else:
                                 ConsumerClass.saveMessageWithError(msg)   
+                                consumer.commit(message=msg)
                         else:
                             ConsumerClass.saveMessageWithError(msg)   
+                            consumer.commit(message=msg)
                     if msg is None:
                         continue
                     if msg.error():

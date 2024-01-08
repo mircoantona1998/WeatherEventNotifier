@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  scheduler_db:
+    container_name: scheduler_db
+    build:
+      context: ./Schedulerdata
+      dockerfile: Dockerfile
+    ports:
+      - "3310:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - scheduler_database:/var/lib/mysql
+    networks:
+      - microservices_network
+
+      
+  scheduler_service:
+    container_name: scheduler_service
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    environment:
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=root
+     - DATABASE_PASSWORD=root
+     - DATABASE_PORTA=3306
+     - DATABASE_IP=scheduler_db
+     - DATABASE_NAME=Scheduler
+    networks:
+      - microservices_network 
+    depends_on:
+      - scheduler_db
+  
+volumes:
+  scheduler_database:  
+    name: scheduler_database
+networks:
+  microservices_network:
+    name: microservices_network
