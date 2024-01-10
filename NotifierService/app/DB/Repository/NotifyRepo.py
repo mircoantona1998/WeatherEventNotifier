@@ -30,7 +30,8 @@ class NotifyRepo:
         with Session.get_database_session() as session:
             query = session.query(Notify)
             query = query.filter_by(IdUser=id_user)
-            resultList = query.all() 
+            query = query.order_by(Notify.DateTimeCreate.desc()) 
+            resultList = query.all()
             result_dicts = []
             for result in resultList:
                 result_dict = {

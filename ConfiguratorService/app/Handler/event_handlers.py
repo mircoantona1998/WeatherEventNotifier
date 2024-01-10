@@ -117,8 +117,9 @@ class EventHandlers:
         else:
             result =ConfigurationUserRepo.get_element_by_NameConfiguration(data["NameConfiguration"],data["IdUser"])
             if result is not None:
-                raise Exception(str("La NameConfiguration esiste per utenza"))
-                return
+                if result.Id !=data["IdConfiguration"]:
+                    raise Exception(str("Il nome della configurazione gia presente per utenza"))
+                    return
         new_element_data = {
             'IdUser': data["IdUser"],
             'NameConfiguration': data["NameConfiguration"],

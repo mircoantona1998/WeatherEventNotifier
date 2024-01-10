@@ -39,7 +39,7 @@ namespace Userdata.ViewModels
     public class ConfigurationPatchDTO
     {
         public int IdConfiguration { get; set; }
-        public string NameConfiguration { get; set; }
+        public string? NameConfiguration { get; set; }
         public float? Longitude { get; set; }
         public float? Latitude { get; set; }
         public int? IdMetric { get; set; }

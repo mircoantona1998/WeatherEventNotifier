@@ -52,6 +52,8 @@ public partial class EditConfiguration : ContentPage
                 frequenza.SelectedItem = frequencySelected;
             }
         }
+        if (Globals.ConfigurationSelected.NameConfiguration != null)
+            NameConfiguration.Text = Globals.ConfigurationSelected.NameConfiguration.ToString();
         if (Globals.ConfigurationSelected.Longitude != null)
             longitudine.Text = Globals.ConfigurationSelected.Longitude.ToString();
         if (Globals.ConfigurationSelected.Latitude != null)
@@ -82,8 +84,8 @@ public partial class EditConfiguration : ContentPage
     private async void SaveConfigurationClicked(object sender, EventArgs e)
     {
         disableAll();
-        var res = OnValidateClicked();
-        if (res.Result == false) return;
+        var res = await OnValidateClicked();
+        if (res == false) return;
         if (NameConfiguration.Text!="" && frequencySelected != null && metricSelected != null && longitudine.Text.Replace(".", ",") != "" && latitudine.Text.Replace(".", ",") != "" && Simbolo.SelectedItem != null && Valore.Text != "")
         {
             int? IdFrequency = frequencySelected.Id;
