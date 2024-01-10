@@ -46,7 +46,7 @@ class EventHandlers:
     
     def handle_tag_GetUserTelegram(data):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetUserTelegram - {inspect.currentframe().f_globals['__file__']}")
-        return TelegramUsersRepo.get_user(data["IdUser"])
+        return TelegramUsersRepo.get_user(data["IdUser"],data["All"])
     
     def handle_tag_AddUserTelegram(data):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_AddUserTelegram - {inspect.currentframe().f_globals['__file__']}")

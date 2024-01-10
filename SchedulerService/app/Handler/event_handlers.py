@@ -37,7 +37,7 @@ class EventHandlers:
    
     def handle_tag_PatchConfiguration(data):
          Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_PatchConfiguration - {inspect.currentframe().f_globals['__file__']}")
-        #ci interessa solo sapere se è modificata la data di attivazione o se è stata disattivata,altrimenti la cancelliamo dalle schedulazioni
+        #ci interessa solo sapere se è modificata la data di attivazione o se è stata disattivata,cosi la cancelliamo dalle schedulazioni e la facciamo ricreare
          if data["DateTimeActivation"]!=None and data["IsActive"]==True:
                 datetime_obj = datetime.strptime(data["DateTimeActivation"], '%Y-%m-%d %H:%M:%S')
                 if  datetime_obj <= datetime.utcnow():
@@ -99,9 +99,9 @@ class EventHandlers:
         ScheduleResponseRepo.add_response_schedule()
         return None
     
-    def handle_tag_SchedulationCurrentHour():
-        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_SchedulationCurrentHour - {inspect.currentframe().f_globals['__file__']}")
-        return ScheduleRepo.get_all_current_hour()
+    def handle_tag_SchedulationCurrent():
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_SchedulationCurrent- {inspect.currentframe().f_globals['__file__']}")
+        return ScheduleRepo.get_all_current()
     
     def handle_tag_GetSchedulation(data):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetSchedulation - {inspect.currentframe().f_globals['__file__']}")
@@ -112,7 +112,7 @@ class EventHandlers:
     "PatchConfiguration": handle_tag_PatchConfiguration,
     "DeleteConfiguration": handle_tag_DeleteConfiguration, 
     "GetConfigurationForToday": handle_tag_GetConfigurationForToday,
-    "SchedulationCurrentHour": handle_tag_SchedulationCurrentHour,
+    "SchedulationCurrent": handle_tag_SchedulationCurrent,
     
      "GetSchedulation": handle_tag_GetSchedulation,
     }

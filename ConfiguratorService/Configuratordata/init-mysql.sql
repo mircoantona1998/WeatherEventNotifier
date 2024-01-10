@@ -42,7 +42,7 @@ CREATE TABLE `ConfigurationUser` (
   KEY `idFrequency_fk_idx` (`IdFrequency`),
   CONSTRAINT `idFrequency_fk` FOREIGN KEY (`IdFrequency`) REFERENCES `Frequency` (`Id`),
   CONSTRAINT `idMetric_fk` FOREIGN KEY (`IdMetric`) REFERENCES `Metric` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3438 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `Frequency` (
   `Minutes` int DEFAULT NULL,
   `IsActive` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +76,7 @@ CREATE TABLE `Frequency` (
 
 LOCK TABLES `Frequency` WRITE;
 /*!40000 ALTER TABLE `Frequency` DISABLE KEYS */;
-INSERT INTO `Frequency` VALUES (13,'ogni ora',60,1),(14,'ogni 2 ore',120,1),(15,'ogni 4 ore',240,1),(16,'ogni 6 ore',360,1),(17,'ogni 12 ore',720,1),(18,'ogni giorno',1440,1);
+INSERT INTO `Frequency` VALUES (1,'ogni 5 minuti',5,1),(2,'ogni 10 minuti',10,1),(3,'ogni 15 minuti',15,1),(4,'ogni 30 minuti',30,1),(5,'ogni 45 minuti',45,1), (6,'ogni ora',60,1),(7,'ogni 2 ore',120,1),(8,'ogni 4 ore',240,1),(9,'ogni 6 ore',360,1),(10,'ogni 12 ore',720,1),(11,'ogni giorno',1440,1);
 /*!40000 ALTER TABLE `Frequency` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +100,7 @@ CREATE TABLE `MessageReceived` (
   `code` varchar(20) DEFAULT NULL,
   `partition` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1275 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,7 +132,7 @@ CREATE TABLE `MessageSent` (
   `code` varchar(20) DEFAULT NULL,
   `partition` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1171 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +160,7 @@ CREATE TABLE `Metric` (
   `Parent` varchar(50) DEFAULT NULL,
   `Description` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

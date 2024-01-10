@@ -38,25 +38,28 @@
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
+                        <Label Text="Nome" Margin="0"  VerticalOptions="Center" Grid.Row="0" Grid.Column="0"></Label>
+                        <Editor x:Name="NameConfiguration" BackgroundColor="White" Keyboard="Text"   Text="{Binding Logitude}"  Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="0" Grid.Column="1"></Editor>
 
-                        <Label Text="Longitudine" Margin="0"  VerticalOptions="Center" Grid.Row="0" Grid.Column="0"></Label>
-                        <Editor x:Name="longitudine" BackgroundColor="White" Keyboard="Numeric"  Text="{Binding Logitude}"  Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="0" Grid.Column="1"></Editor>
+                        <Label Text="Longitudine" Margin="0"  VerticalOptions="Center" Grid.Row="1" Grid.Column="0"></Label>
+                        <Editor x:Name="longitudine" BackgroundColor="White" Keyboard="Numeric"  Text="{Binding Logitude}"  Margin="0"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="1" Grid.Column="1"></Editor>
 
-                        <Label Text="Latitudine" Margin="0"  VerticalOptions="Center" Grid.Row="1" Grid.Column="0"></Label>
-                        <Editor x:Name="latitudine"   BackgroundColor="White" Keyboard="Numeric" Margin="0"  Text="{Binding Latitude}"   VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="1" Grid.Column="1"></Editor>
+                        <Label Text="Latitudine" Margin="0"  VerticalOptions="Center" Grid.Row="2" Grid.Column="0"></Label>
+                        <Editor x:Name="latitudine"   BackgroundColor="White" Keyboard="Numeric" Margin="0"  Text="{Binding Latitude}"   VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="2" Grid.Column="1"></Editor>
 
-                        <Label Text="Data attivazione" Margin="0"  VerticalOptions="Center" Grid.Row="2" Grid.Column="0" ></Label>
-                        <HorizontalStackLayout Grid.Row="2" Grid.Column="1" HorizontalOptions="Fill" Spacing="20">
+                        <Label Text="Data attivazione" Margin="0"  VerticalOptions="Center" Grid.Row="3" Grid.Column="0" ></Label>
+                        <HorizontalStackLayout Grid.Row="3" Grid.Column="1" HorizontalOptions="Fill" Spacing="20">
                             <DatePicker x:Name="data_attivazione"  BackgroundColor="White" Margin="0"    VerticalOptions="Center" TextColor="{StaticResource Primary}" ></DatePicker>
                             <TimePicker x:Name="time_attivazione"  BackgroundColor="White" Margin="0"    VerticalOptions="Center" TextColor="{StaticResource Primary}" ></TimePicker>
                         </HorizontalStackLayout>
-                        <Label Text="Metrica" Margin="0"  VerticalOptions="Center" Grid.Row="3" Grid.Column="0"></Label>
-                        <Picker x:Name="metrica" SelectedIndexChanged="OnPickerSelectedIndexChangedMetric" Margin="0"   BackgroundColor="White"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="3" Grid.Column="1">
+                        <Label Text="Metrica" Margin="0"  VerticalOptions="Center" Grid.Row="4" Grid.Column="0"></Label>
+                        <Picker x:Name="metrica" SelectedIndexChanged="OnPickerSelectedIndexChangedMetric" Margin="0"   BackgroundColor="White"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="4" Grid.Column="1">
                             <Picker.ItemsSource>
                             <x:Array Type="{x:Type x:String}">
                                 <x:String>1</x:String>
@@ -67,8 +70,8 @@
                             </x:Array>
                         </Picker.ItemsSource>
                         </Picker>
-                        <Label Text="Condizione"  Grid.Row="4" Grid.Column="0"  VerticalOptions="Center" HorizontalOptions="Start" ></Label>
-                        <HorizontalStackLayout  Grid.Row="4" Grid.Column="1" Margin="0" HorizontalOptions="FillAndExpand" Spacing="10">
+                        <Label Text="Condizione"  Grid.Row="5" Grid.Column="0"  VerticalOptions="Center" HorizontalOptions="Start" ></Label>
+                        <HorizontalStackLayout  Grid.Row="5" Grid.Column="1" Margin="0" HorizontalOptions="FillAndExpand" Spacing="10">
                             <Picker x:Name="Simbolo" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Start" TextColor="{StaticResource Primary}">
                                 <Picker.ItemsSource>
                                     <x:Array Type="{x:Type x:String}">
@@ -83,8 +86,8 @@
                             <Editor  x:Name="Valore" Margin="0"  Keyboard="Numeric"  HorizontalOptions="FillAndExpand" VerticalOptions="Center" TextColor="{StaticResource Primary}" BackgroundColor="White" ></Editor>
                             <Label x:Name="ValueUnit"  Margin="0"  HorizontalOptions="EndAndExpand" VerticalOptions="Center" ></Label>
                         </HorizontalStackLayout>
-                        <Label Text="Frequenza" Margin="0"  VerticalOptions="Center" Grid.Row="5" Grid.Column="0"></Label>
-                        <Picker x:Name="frequenza" SelectedIndexChanged="OnPickerSelectedIndexChangedFrequency" Margin="0"   BackgroundColor="White"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="5" Grid.Column="1">
+                        <Label Text="Frequenza" Margin="0"  VerticalOptions="Center" Grid.Row="6" Grid.Column="0"></Label>
+                        <Picker x:Name="frequenza" SelectedIndexChanged="OnPickerSelectedIndexChangedFrequency" Margin="0"   BackgroundColor="White"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="6" Grid.Column="1">
                             <Picker.ItemsSource>
                             <x:Array Type="{x:Type x:String}">
                                 <x:String>1</x:String>
@@ -96,8 +99,8 @@
                         </Picker.ItemsSource>
                         </Picker>
 
-                        <Label Text="Attiva" Margin="0"  VerticalOptions="Center" Grid.Row="6" Grid.Column="0"></Label>
-                        <Switch x:Name="isActive" Grid.Row="6" Grid.Column="1" IsToggled="true" VerticalOptions="Center" HorizontalOptions="Center"  />
+                        <Label Text="Attiva" Margin="0"  VerticalOptions="Center" Grid.Row="7" Grid.Column="0"></Label>
+                        <Switch x:Name="isActive" Grid.Row="7" Grid.Column="1" IsToggled="true" VerticalOptions="Center" HorizontalOptions="Center"  />
 
 
                     </Grid>

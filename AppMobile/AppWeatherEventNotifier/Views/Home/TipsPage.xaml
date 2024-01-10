@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppWeatherEventNotifier.Views.HomePage.TipsPage"
+             xmlns:local="clr-namespace:AppWeatherEventNotifier.Helper"
              xmlns:customControls="clr-namespace:AppWeatherEventNotifier.Views.CustomControls"
              Title="Notifiche"
              NavigationPage.HasNavigationBar="False">
@@ -15,177 +16,28 @@
             <GradientStop Color="#00cd82"   Offset="1.0" />
         </LinearGradientBrush>
     </ContentPage.Background>
-    <ContentPage.Content >
-
-        <RefreshView x:Name="refreshView" >
-            <ScrollView HorizontalOptions="Fill" >
-                <Grid BackgroundColor="Transparent" >
-                    <VerticalStackLayout Margin="25,10,25,10" HorizontalOptions="Fill" >
-                        <Label x:Name="NoFeed" 
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"
-                   Margin="20"
-                   Text="Non ci sono notifiche al momento"></Label>
-                        <VerticalStackLayout 
-                AutomationId="MyStackList"
-                BindableLayout.ItemsSource="{Binding Intentions_tips}"
-                Spacing="10"
-                Margin="20,0,20,0"  >
-                            <BindableLayout.ItemTemplate    >
-                                <DataTemplate >
-                                    <Frame  Padding="0"
-                         BackgroundColor="{Binding BackGround}"
-                         CornerRadius="10" >
-                                        <Grid HorizontalOptions="Center" 
-                              ColumnSpacing="5" 
-                              RowSpacing="5"
-                              Padding="0">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition   Height="auto"/>
-                                                <RowDefinition   Height="auto"/>
-                                                <RowDefinition   Height="auto"/>
-                                                <RowDefinition   Height="auto"/>
-                                                <RowDefinition   Height="auto"/>
-                                                <RowDefinition   Height="auto"/>
-                                                <RowDefinition   Height="auto"/>
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <BoxView                                    
-                                    Grid.Row="0"
-                                    Margin="0"  
-                                    Color="#20509b" 
-                                    HorizontalOptions="Fill" 
-                                    VerticalOptions="Fill" 
-                                    Grid.Column="0" 
-                                    Grid.ColumnSpan="4"></BoxView>
-                                            <Label
-                                    Margin="15,0,15,0"
-                                    MaxLines="1"
-                                    BackgroundColor="#20509b"
-                                    Grid.Row="0"                                   
-                                    FontSize="11" 
-                                    TextColor="White" 
-                                    Grid.Column="0" 
-                                    Grid.ColumnSpan="4" 
-                                    FontAttributes="Bold" 
-                                    HorizontalOptions="Start" 
-                                    VerticalOptions="Center"  
-                                    Text="{Binding  Title}"></Label>
-                                            <Label 
-                                    MaxLines="1"
-                                    Grid.Row="1" 
-                                    Margin="15,0,15,0"
-                                    FontSize="11" 
-                                    TextColor="White" 
-                                    Grid.Column="0" 
-                                    Grid.ColumnSpan="4"
-                                    FontAttributes="Bold"
-                                    HorizontalOptions="Start"
-                                    VerticalOptions="Start" 
-                                    Text="{Binding  DateCreate}"></Label>
-                                            <HorizontalStackLayout Margin="10,0,10,0"
-                                    Grid.Row="2" 
-                                    Grid.Column="0" 
-                                    HorizontalOptions="Center"
-                                    VerticalOptions="Fill">
-                                                <Frame 
-                                        CornerRadius="100"
-                                        Padding="3" 
-                                        HeightRequest="60"
-                                        WidthRequest="60"
-                                        BackgroundColor="White"
-                                        HorizontalOptions="Start" 
-                                        BorderColor="white">
-                                                    <Image 
-                                            VerticalOptions="Center" 
-                                            HeightRequest="50"
-                                            WidthRequest="50" 
-                                            BackgroundColor="white"
-                                            HorizontalOptions="Center"
-                                            Source="{Binding icon}"></Image>
-                                                </Frame>
-
-                                            </HorizontalStackLayout>
-                                            <Label  
-                                        Grid.Row="2" 
-                                        Grid.Column="1"
-                                        Grid.ColumnSpan="3"
-                                        MaxLines="10"
-                                        Margin="15,0,15,0"
-                                        TextColor="White" 
-                                        HorizontalOptions="Start" 
-                                        FontAttributes="Bold"  
-                                        VerticalOptions="Center" 
-                                        Text="{Binding Message}"></Label>
-                                            <Label 
-                                    Margin="15,0,15,0"
-                                    Grid.Row="3" 
-                                    Grid.Column="0" 
-                                    Grid.ColumnSpan="4" 
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Center"  
-                                    TextColor="White"  
-                                    Text="{Binding Description}"></Label>
-                                            <Line Grid.Row="4"
-                                      Margin="15,0,15,0"
-                                      X1="0" X2="2000"
-                                      Y1="0" Y2="0" 
-                                      Grid.Column="0" 
-                                      Grid.ColumnSpan="4" 
-                                      HorizontalOptions="Center"
-                                      VerticalOptions="Center" 
-                                      Stroke="#20509b"></Line>
-                                            <Label 
-                                        Margin="15,5,10,15"
-                                       Grid.Row="5"
-                                       TextColor="White" 
-                                       Grid.Column="0" 
-                                       Grid.ColumnSpan="4"
-                                       HorizontalOptions="StartAndExpand"
-                                       VerticalOptions="Center" 
-                                       Text="{Binding  TipMessage}"></Label>
-                                            <HorizontalStackLayout 
-                                    Spacing="10"
-                                    IsVisible="{Binding responseToDo}"
-                                    Margin="5,5,10,15"
-                                    Grid.Row="6"
-                                    Grid.Column="0" 
-                                    Grid.ColumnSpan="4"
-                                    HorizontalOptions="Center">
-                                                <Button
-                                    BorderWidth="1"    
-                                    BorderColor="White"
-                                    TextColor="White" 
-                                    HorizontalOptions="StartAndExpand"
-                                    VerticalOptions="Center" 
-                                    Text="No"
-                                    Clicked="turnOff"></Button>
-                                                <Button
-                                     BorderWidth="1"
-                                    BorderColor="White"
-                                    TextColor="White" 
-                                    HorizontalOptions="StartAndExpand"
-                                    VerticalOptions="Center" 
-                                    Clicked="turnOn"
-                                    Text="Yes"></Button>
-                                            </HorizontalStackLayout>
-                                        </Grid>
-                                    </Frame>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </VerticalStackLayout>
-                    </VerticalStackLayout>
-                    <customControls:ActivityIndicatorControl x:Name="activityController"></customControls:ActivityIndicatorControl>
-
-                </Grid>
-            </ScrollView>
-        </RefreshView>
-    </ContentPage.Content>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:DateTimeToLocalTimeConverter x:Key="DateTimeToLocalTimeConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid>
+        <ScrollView VerticalOptions="Fill" HorizontalOptions="Fill">
+            <CollectionView x:Name="tipsCollectionView"  HorizontalOptions="Fill" VerticalOptions="Fill">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BackgroundColor="Transparent" VerticalOptions="Fill" HorizontalOptions="Fill" >
+                            <Label Grid.Row="0"  Text="{Binding Message}" />
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+        <customControls:ActivityIndicatorControl x:Name="activityController" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></customControls:ActivityIndicatorControl>
+    </Grid>
 </ContentPage>
+
    

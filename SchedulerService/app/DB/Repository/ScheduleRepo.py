@@ -56,7 +56,7 @@ class ScheduleRepo:
     def add_schedule(new_element_data, datetimeActivation, lastschedule=None,):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - add_schedule - {inspect.currentframe().f_globals['__file__']}")
         if  lastschedule is not None and lastschedule.DateTimeToSchedule is not None:
-            new_element_data['DateTimeToSchedule'] = lastschedule.DateTimeToSchedule.replace(minute=0, second=0, microsecond=0)
+            new_element_data['DateTimeToSchedule'] = lastschedule.DateTimeToSchedule.replace( second=0, microsecond=0)
         else:
             data_ieri = datetime.utcnow() - timedelta(days=1)
             new_element_data['DateTimeToSchedule'] = datetime(data_ieri.year, data_ieri.month, data_ieri.day, datetimeActivation.hour, 0, 0)
@@ -91,9 +91,11 @@ class ScheduleRepo:
             session.query(Schedule).delete()
             session.commit()
             
-    def get_all_current_hour():
-        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all_current_hour - {inspect.currentframe().f_globals['__file__']}")
-        current_datetime = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
+    def get_all_current():
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all_current - {inspect.currentframe().f_globals['__file__']}")
+        current_datetime = datetime.utcnow().replace( second=0, microsecond=0)
+        rounded_minute = (current_datetime.minute // 5) * 5
+        current_datetime = current_datetime.replace(minute=rounded_minute)
         with Session.get_database_session() as session:
             resultList = (
                     session.query(Schedule)

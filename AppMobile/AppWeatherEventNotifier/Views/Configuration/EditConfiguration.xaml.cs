@@ -84,7 +84,7 @@ public partial class EditConfiguration : ContentPage
         disableAll();
         var res = OnValidateClicked();
         if (res.Result == false) return;
-        if (frequencySelected != null && metricSelected != null && longitudine.Text.Replace(".", ",") != "" && latitudine.Text.Replace(".", ",") != "" && Simbolo.SelectedItem != null && Valore.Text != "")
+        if (NameConfiguration.Text!="" && frequencySelected != null && metricSelected != null && longitudine.Text.Replace(".", ",") != "" && latitudine.Text.Replace(".", ",") != "" && Simbolo.SelectedItem != null && Valore.Text != "")
         {
             int? IdFrequency = frequencySelected.Id;
             float Longitude;
@@ -112,7 +112,7 @@ public partial class EditConfiguration : ContentPage
             bool? IsActive = isActive.IsToggled;
 
 
-            var resp = await ConfigurationController.patch_configuration(Globals.ConfigurationSelected.Id,Longitude, Latitude, IdMetric, IdFrequency, Symbol, Value, dateTimeAttivazione, IsActive);
+            var resp = await ConfigurationController.patch_configuration(NameConfiguration.Text,Globals.ConfigurationSelected.Id,Longitude, Latitude, IdMetric, IdFrequency, Symbol, Value, dateTimeAttivazione, IsActive);
             if (resp == true)
             {
                 await DisplayAlert("Successo", "Configurazione modificata correttamente", "Ok");

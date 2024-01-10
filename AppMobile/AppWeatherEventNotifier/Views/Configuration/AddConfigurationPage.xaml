@@ -35,28 +35,32 @@
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Label Text="Latitudine" Margin="0"  VerticalOptions="Center" Grid.Row="0" Grid.Column="0"></Label>
-                        <Editor x:Name="Latitudine" Margin="0" BackgroundColor="White" VerticalOptions="Center" Keyboard="Numeric" TextColor="{StaticResource Primary}" Grid.Row="0" Grid.Column="1"></Editor>
+                        <Label Text="Nome" Margin="0"  VerticalOptions="Center" Grid.Row="0" Grid.Column="0"></Label>
+                        <Editor x:Name="NameConfiguration" Margin="0" BackgroundColor="White" VerticalOptions="Center" Keyboard="Text" TextColor="{StaticResource Primary}" Grid.Row="0" Grid.Column="1"></Editor>
+                        
+                        <Label Text="Latitudine" Margin="0"  VerticalOptions="Center" Grid.Row="1" Grid.Column="0"></Label>
+                        <Editor x:Name="Latitudine" Margin="0" BackgroundColor="White" VerticalOptions="Center" Keyboard="Numeric" TextColor="{StaticResource Primary}" Grid.Row="1" Grid.Column="1"></Editor>
 
-                        <Label Text="Longitudine" Margin="0"  VerticalOptions="Center" Grid.Row="1" Grid.Column="0"></Label>
-                        <Editor x:Name="Longitudine"  Margin="0"  BackgroundColor="White" Keyboard="Numeric" VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="1" Grid.Column="1"></Editor>
+                        <Label Text="Longitudine" Margin="0"  VerticalOptions="Center" Grid.Row="2" Grid.Column="0"></Label>
+                        <Editor x:Name="Longitudine"  Margin="0"  BackgroundColor="White" Keyboard="Numeric" VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="2" Grid.Column="1"></Editor>
 
-                        <Label Text="Data attivazione" Margin="0"  VerticalOptions="Center" Grid.Row="2" Grid.Column="0" ></Label>
-                        <HorizontalStackLayout Grid.Row="2" Grid.Column="1" HorizontalOptions="Fill" Spacing="20">
+                        <Label Text="Data attivazione" Margin="0"  VerticalOptions="Center" Grid.Row="3" Grid.Column="0" ></Label>
+                        <HorizontalStackLayout Grid.Row="3" Grid.Column="1" HorizontalOptions="Fill" Spacing="20">
                             <DatePicker x:Name="data_attivazione"   BackgroundColor="White" Margin="0"    VerticalOptions="Center" TextColor="{StaticResource Primary}" ></DatePicker>
                             <TimePicker x:Name="time_attivazione"  BackgroundColor="White" Margin="0"    VerticalOptions="Center" TextColor="{StaticResource Primary}" ></TimePicker>
                         </HorizontalStackLayout>
 
-                        <Label Text="Metrica" Margin="0"  VerticalOptions="Center" Grid.Row="3" Grid.Column="0"></Label>
-                        <Picker x:Name="Metrica" SelectedIndexChanged="OnPickerSelectedIndexChangedMetric"  Margin="0"  BackgroundColor="White" VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="3" ItemsSource="{Binding Intentions_metrics}"   Grid.Column="1"></Picker>
+                        <Label Text="Metrica" Margin="0"  VerticalOptions="Center" Grid.Row="4" Grid.Column="0"></Label>
+                        <Picker x:Name="Metrica" SelectedIndexChanged="OnPickerSelectedIndexChangedMetric"  Margin="0"  BackgroundColor="White" VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="4" ItemsSource="{Binding Intentions_metrics}"   Grid.Column="1"></Picker>
 
-                        <Label Text="Condizione"  Grid.Row="4" Grid.Column="0"  VerticalOptions="Center" HorizontalOptions="Start" ></Label>
-                        <HorizontalStackLayout  Grid.Row="4" Grid.Column="1" Margin="0" HorizontalOptions="FillAndExpand" Spacing="10">
+                        <Label Text="Condizione"  Grid.Row="5" Grid.Column="0"  VerticalOptions="Center" HorizontalOptions="Start" ></Label>
+                        <HorizontalStackLayout  Grid.Row="5" Grid.Column="1" Margin="0" HorizontalOptions="FillAndExpand" Spacing="10">
                             <Picker x:Name="Simbolo" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Start">
                                 <Picker.ItemsSource>
                                     <x:Array Type="{x:Type x:String}">
@@ -73,8 +77,8 @@
                         </HorizontalStackLayout>
 
 
-                        <Label Text="Frequenza" Margin="0"  VerticalOptions="Center" Grid.Row="5" Grid.Column="0"></Label>
-                        <Picker x:Name="Frequenza" SelectedIndexChanged="OnPickerSelectedIndexChangedFrequency" Margin="0"  BackgroundColor="White" VerticalOptions="Center" TextColor="{StaticResource Primary}" ItemsSource="{Binding Intentions_frequencys}"  Grid.Row="5" Grid.Column="1"></Picker>
+                        <Label Text="Frequenza" Margin="0"  VerticalOptions="Center" Grid.Row="6" Grid.Column="0"></Label>
+                        <Picker x:Name="Frequenza" SelectedIndexChanged="OnPickerSelectedIndexChangedFrequency" Margin="0"  BackgroundColor="White" VerticalOptions="Center" TextColor="{StaticResource Primary}" ItemsSource="{Binding Intentions_frequencys}"  Grid.Row="6" Grid.Column="1"></Picker>
                     </Grid>
                 </ScrollView>
                 <Grid Grid.Row="5" HeightRequest="200" >

@@ -5,8 +5,8 @@ import inspect
 from datetime import datetime
 class EventHandlers:  
     
-    def handle_tag_AnalyzeConfiguration(dat):
-        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_AnalyzeConfiguration - {inspect.currentframe().f_globals['__file__']}")
+    def handle_tag_SchedulationCurrent(dat):
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_SchedulationCurrent - {inspect.currentframe().f_globals['__file__']}")
         key=ApiKeyRepo.get_key()
         data=dat["Data"]
         response=OpenWeatherAPI.get_forecast_by_coords(data["Latitude"],data["Longitude"],key.apiKey)
@@ -94,5 +94,5 @@ class EventHandlers:
                         return None
         return None
     tag_handlers = {    
-       "AnalyzeConfiguration": handle_tag_AnalyzeConfiguration,
+       "SchedulationCurrent": handle_tag_SchedulationCurrent,
     }

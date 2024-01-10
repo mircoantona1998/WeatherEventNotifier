@@ -16,6 +16,8 @@ public partial class ConfigurationPage : ContentPage
     }
     protected override void OnAppearing()
     {
+        if (Globals.ConfigurationSelected.NameConfiguration != null)
+            NameConfiguration.Text = Globals.ConfigurationSelected.NameConfiguration.ToString();
         if (Globals.ConfigurationSelected.Longitude != null)
             Longitudine.Text = Globals.ConfigurationSelected.Longitude.ToString();
         if (Globals.ConfigurationSelected.Latitude != null)

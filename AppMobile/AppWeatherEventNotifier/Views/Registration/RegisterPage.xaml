@@ -39,14 +39,7 @@
                 FontAttributes="None"     FontSize="16"   
                   ></Entry>
                     </Frame>
-                    <Label TextColor="White"  Text="Email"    HorizontalOptions="Start"
-                FontAttributes="Bold"     FontSize="16"   
-                  ></Label>
-                        <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
-                            <Entry MaxLength="50" TextColor="Black"  BackgroundColor="White" x:Name="entryMail"  Keyboard="Email"    VerticalOptions="Center"  HorizontalOptions="FillAndExpand"
-                FontAttributes="None"     FontSize="16"   
-                  ></Entry>
-                        </Frame>
+
                         <Label TextColor="White"  Text="Password"  HorizontalOptions="Start"
                 FontAttributes="Bold"     FontSize="16"   
                   ></Label>
@@ -79,14 +72,7 @@
                 FontAttributes="None"     FontSize="16"   
                   ></Entry>
                                         </Frame>
-                                        <Label TextColor="White"  Text="Telefono"   HorizontalOptions="Start"
-                FontAttributes="Bold"     FontSize="16"   
-                  ></Label>
-                                            <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
-                    <Entry MaxLength="50" TextColor="Black" BackgroundColor="White" x:Name="entryTelefono"   Keyboard="Numeric"    VerticalOptions="Center" HorizontalOptions="FillAndExpand"
-                    FontAttributes="None"     FontSize="16"   
-                      ></Entry>
-                                            </Frame>
+            
                                             <Button   BackgroundColor="#20509b" Clicked="RegisterClicked"     BorderColor="{StaticResource White}" BorderWidth="1"   HorizontalOptions="FillAndExpand"     VerticalOptions="Center" Text="Registrati"   CornerRadius="10"  Padding="3"  FontAttributes="Bold"  ></Button>
         </VerticalStackLayout>
         </ScrollView>

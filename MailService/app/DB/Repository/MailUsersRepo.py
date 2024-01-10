@@ -20,26 +20,44 @@ class MailUsersRepo:
                 result_dicts.append(result_dict)
             return result_dicts
         
-    def get_user(idUser):
+    def get_user(idUser,allUsers):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_user - {inspect.currentframe().f_globals['__file__']}")
         if idUser is None:
-            return None  
-        with Session.get_database_session() as session:
-            query = session.query(MailUsers)
-            query = query.filter_by(idUser=idUser, isActive=True)
-            result_list = query.all() 
-            if len(result_list)==0:
-                return result_list 
-            result_dicts = []
-            for result in result_list:
-                result_dict = {
-                    "id": result.id,
-                    "mail": result.mail if result.mail is not None else None,
-                    "idUser": result.idUser,
-                    "isActive": bool(result.isActive) if result.isActive is not None else None,
-                }
-                result_dicts.append(result_dict)
-                return result_dicts
+            return None 
+        if allUsers is True:
+            with Session.get_database_session() as session:
+                query = session.query(MailUsers)
+                query = query.filter_by(idUser=idUser)
+                result_list = query.all() 
+                if len(result_list)==0:
+                    return result_list 
+                result_dicts = []
+                for result in result_list:
+                    result_dict = {
+                        "id": result.id,
+                        "mail": result.mail if result.mail is not None else None,
+                        "idUser": result.idUser,
+                        "isActive": bool(result.isActive) if result.isActive is not None else None,
+                    }
+                    result_dicts.append(result_dict)
+                    return result_dicts
+        else:
+            with Session.get_database_session() as session:
+                query = session.query(MailUsers)
+                query = query.filter_by(idUser=idUser, isActive=True)
+                result_list = query.all() 
+                if len(result_list)==0:
+                    return result_list 
+                result_dicts = []
+                for result in result_list:
+                    result_dict = {
+                        "id": result.id,
+                        "mail": result.mail if result.mail is not None else None,
+                        "idUser": result.idUser,
+                        "isActive": bool(result.isActive) if result.isActive is not None else None,
+                    }
+                    result_dicts.append(result_dict)
+                    return result_dicts
             
     def get_user_mail(idUser):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_user_mail - {inspect.currentframe().f_globals['__file__']}")

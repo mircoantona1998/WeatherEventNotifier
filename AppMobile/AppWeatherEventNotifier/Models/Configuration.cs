@@ -8,6 +8,7 @@ namespace AppWeatherEventNotifier.Models
         public int? IdUser { get; set; }
         public int? IdFrequency { get; set; }
         public int? IdMetric { get; set; }
+        public string? NameConfiguration { get; set; }
         public string? FrequencyName { get; set; }
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }

@@ -16,7 +16,7 @@ from Handler.event_handlers import EventHandlers
 from confluent_kafka.admin import AdminClient, NewTopic
 from Utils.Logger import Logger
 import inspect
-from datetime import datetime
+from datetime import datetime, timedelta
 class ConsumerClass:
     def run_request(self):
         consumer={}
@@ -58,13 +58,23 @@ class ConsumerClass:
                     print(f'{str(headersRequest.to_string())}')
                     Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersRequest.to_string())} - {inspect.currentframe().f_globals['__file__']}")
                     ScheduleRequestRepo.add_request_schedule()
-                elif ScheduleResponseRepo.get_last_element()!=None and ScheduleResponseRepo.get_last_element().date==datetime.utcnow().date() and ( RequestNotificationRepo.get_last_element()==None or RequestNotificationRepo.get_last_element().datetime!=datetime.utcnow().replace(minute=0, second=0, microsecond=0) ):
-                     #invia a notificatore le schedulazioni dell'ora corrente
-                    handler = EventHandlers.tag_handlers.get("SchedulationCurrentHour", lambda: f"Tag SchedulationCurrentHour non gestito")
+                elif (
+                    ScheduleResponseRepo.get_last_element() is not None
+                    and ScheduleResponseRepo.get_last_element().date == datetime.utcnow().date()
+                    and (
+                        RequestNotificationRepo.get_last_element() is None
+                        or (
+                            (datetime.utcnow().replace(second=0, microsecond=0) - RequestNotificationRepo.get_last_element().datetime)
+                            >= timedelta(minutes=5)
+                        )
+                    )
+                ):
+                     #invia a weather le schedulazioni corrent
+                    handler = EventHandlers.tag_handlers.get("SchedulationCurrent", lambda: f"Tag SchedulationCurrent non gestito")
                     responses = handler()
                     for response in responses:
-                        headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Response.value ,Tag="SchedulationCurrentHour", Creator=creator, Code = MessageCode.Ok.value)
-                        ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario("NotifierService"))            
+                        headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Response.value ,Tag="SchedulationCurrent", Creator=creator, Code = MessageCode.Ok.value)
+                        ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario("WeatherService"))            
                         print(f'{str(headersRequest.to_string())}')
                         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersRequest.to_string())} - {inspect.currentframe().f_globals['__file__']}")
                     RequestNotificationRepo.add_request_notification()

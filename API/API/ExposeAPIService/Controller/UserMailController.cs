@@ -16,7 +16,7 @@ namespace ExposeAPI.Controllers
         [HttpGet]
         [Route("Get")]
         [Authorize]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> Get(bool? all = null)
         {
             Logger log = new();
             log.LogAction("UserMailController  Get");
@@ -28,7 +28,8 @@ namespace ExposeAPI.Controllers
                 {
                     var dto = new
                     {
-                        IdUser = idUser
+                        IdUser = idUser,
+                        All = all
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetUserMail, ExposeAPI.Configurations.config.configuration["topic_to_mail"]);
                     usermail = await Kafka.Kafka.consumer.ConsumeResponse<List<UserMail>>((int)result.Offset);

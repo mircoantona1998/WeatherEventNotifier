@@ -71,10 +71,12 @@ class ConsumerClass:
                                         response = handler(json.loads(value))
                                         if response!=None:
                                             headersResponse= KafkaHeader(IdOffsetResponse=msg.offset(),Type=MessageType.Response.value ,Tag="GenerateNotification", Creator=creator, Code = MessageCode.Ok.value)
-                                            ProducerClass.send_message(headersResponse.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario(header.Creator))             
+                                            if header.Tag=="SchedulationCurrent":
+                                                ProducerClass.send_message(headersResponse.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario("NotifierService"))             
+                                            else:
+                                                ProducerClass.send_message(headersResponse.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario(header.Creator))             
                                             print(f'{str(headersResponse.to_string())}')
                                             Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersResponse.to_string())} - {inspect.currentframe().f_globals['__file__']}")
- 
                                     except Exception as ex:
                                         print(f'Error: {value}')
                                         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Error: {value} - {inspect.currentframe().f_globals['__file__']}")
@@ -84,7 +86,13 @@ class ConsumerClass:
                                         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersResponse.to_string())} - {inspect.currentframe().f_globals['__file__']}")
  
                                 else:
-                                    continue
+                                    handler = EventHandlers.tag_handlers.get(header.Tag, lambda: f"Tag {header.Tag} non gestito")
+                                    response = handler(json.loads(value))
+                                    if header.Tag=="SchedulationCurrent":
+                                        headersResponse= KafkaHeader(IdOffsetResponse=msg.offset(),Type=MessageType.Response.value ,Tag="GenerateNotification", Creator=creator, Code = MessageCode.Ok.value)
+                                        ProducerClass.send_message(headersResponse.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario("NotifierService"))             
+                                    print(f'{str(headersResponse.to_string())}')
+                                    Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersResponse.to_string())} - {inspect.currentframe().f_globals['__file__']}")
                             else:
                                 ConsumerClass.saveMessageWithError(msg)   
                                 consumer.commit(message=msg)

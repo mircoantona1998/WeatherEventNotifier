@@ -1,4 +1,6 @@
 using AppWeatherEventNotifier.Helper;
+using AppWeatherEventNotifier.Services;
+using AppWeatherEventNotifier.Services.RestController;
 namespace AppWeatherEventNotifier.Views.HomePage;
 
 public partial class SettingsPage : ContentPage
@@ -7,6 +9,26 @@ public partial class SettingsPage : ContentPage
     public SettingsPage()
     {
         InitializeComponent();
+
+        if (Globals.userTelegram != null) { 
+            Telegram.Text = Globals.userTelegram.ChatId;
+            TelegramSwitch.IsToggled = (bool)Globals.userTelegram.IsActive;
+        }else
+        {
+            Telegram.Text = "";
+            TelegramSwitch.IsToggled = false;
+        }
+
+        if (Globals.userMail != null)
+        {
+            Mail.Text=Globals.userMail.Mail;
+            MailSwitch.IsToggled = (bool)Globals.userMail.IsActive;
+        }
+        else
+        {
+            Mail.Text = "";
+            MailSwitch.IsToggled = false;
+        }
         if (modificaEnable == false)
         {
             modificaButton.Text = "Modifica";
@@ -35,10 +57,19 @@ public partial class SettingsPage : ContentPage
     private void RefreshClicked(object sender, EventArgs e)
     {
     }
+    private void disableAll()
+    {
+        activityController.turnOn();
 
+    }
+    private void enableAll()
+    {
+        activityController.turnOff();
+    }
     private async void Button_Modifica(object sender, EventArgs e)
     {
-        if(modificaEnable==false)
+        disableAll();
+        if ( modificaEnable==false )
         {
             modificaButton.Text = "Invia modifica";
             modificaEnable = true;
@@ -49,14 +80,60 @@ public partial class SettingsPage : ContentPage
         }
         else
         {
+            if (Telegram.Text != "") 
+            { 
+                var res=await TelegramController.patch_user_telegram(Telegram.Text,TelegramSwitch.IsToggled);
+                if(res!=true) {
+                    await DisplayAlert("Attenzione", "Modifica recapito di telegram NON riuscita", "Ok");
+                }
+            }
+            else
+            {
+                await DisplayAlert("Attenzione", "Modifica recapito di telegram NON riuscita", "Ok");
+            }
+            if (Mail.Text != "")
+            {
+                var res = await MailController.patch_user_mail(Mail.Text, MailSwitch.IsToggled);
+                if (res != true)
+                {
+                    await DisplayAlert("Attenzione", "Modifica recapito di mail NON riuscita", "Ok");
+                }
+            }
+            else await DisplayAlert("Attenzione", "Modifica recapito di mail NON riuscita", "Ok");
+
             modificaEnable = false;
             TelegramSwitch.IsEnabled = false;
             MailSwitch.IsEnabled = false;
             Mail.IsEnabled = false;
             Telegram.IsEnabled = false;
             modificaButton.Text = "Modifica";
-            await DisplayAlert("Attenzione", "Non hai modificato nulla", "Ok");
+
+            await Refresh.refreshTelegramUser();
+            await Refresh.refreshMailUser();
+
+            if (Globals.userTelegram != null)
+            {
+                Telegram.Text = Globals.userTelegram.ChatId;
+                TelegramSwitch.IsToggled = (bool)Globals.userTelegram.IsActive;
+            }
+            else
+            {
+                Telegram.Text = "";
+                TelegramSwitch.IsToggled = false;
+            }
+
+            if (Globals.userMail != null)
+            {
+                Mail.Text = Globals.userMail.Mail;
+                MailSwitch.IsToggled = (bool)Globals.userMail.IsActive;
+            }
+            else
+            {
+                Mail.Text = "";
+                MailSwitch.IsToggled = false;
+            }
+            
         }
-        
+        enableAll();
     }
 }

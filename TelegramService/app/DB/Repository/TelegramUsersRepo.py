@@ -20,24 +20,41 @@ class TelegramUsersRepo:
                 result_dicts.append(result_dict)
             return result_dicts
         
-    def get_user(idUser):
+    def get_user(idUser,AllUsers):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_user - {inspect.currentframe().f_globals['__file__']}")
         if idUser is None:
             return None  
-        with Session.get_database_session() as session:
-            query = session.query(TelegramUsers)
-            query = query.filter_by(idUser=idUser, isActive=True)
-            result_list = query.all()  
-            result_dicts = []
-            for result in result_list:
-                result_dict = {
-                    "id": result.id,
-                    "ChatId": result.chat_id if result.chat_id is not None else None,
-                    "idUser": result.idUser,
-                    "isActive": bool(result.isActive) if result.isActive is not None else None,
-                }
-                result_dicts.append(result_dict)
-            return result_dicts
+        if AllUsers is True:
+             with Session.get_database_session() as session:
+                query = session.query(TelegramUsers)
+                query = query.filter_by(idUser=idUser)
+                result_list = query.all()  
+                result_dicts = []
+                for result in result_list:
+                    result_dict = {
+                        "id": result.id,
+                        "ChatId": result.chat_id if result.chat_id is not None else None,
+                        "idUser": result.idUser,
+                        "isActive": bool(result.isActive) if result.isActive is not None else None,
+                    }
+                    result_dicts.append(result_dict)
+                return result_dicts
+        else:
+            
+            with Session.get_database_session() as session:
+                query = session.query(TelegramUsers)
+                query = query.filter_by(idUser=idUser, isActive=True)
+                result_list = query.all()  
+                result_dicts = []
+                for result in result_list:
+                    result_dict = {
+                        "id": result.id,
+                        "ChatId": result.chat_id if result.chat_id is not None else None,
+                        "idUser": result.idUser,
+                        "isActive": bool(result.isActive) if result.isActive is not None else None,
+                    }
+                    result_dicts.append(result_dict)
+                return result_dicts
         
     def get_user_telegram(idUser):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_user_telegram - {inspect.currentframe().f_globals['__file__']}")

@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppWeatherEventNotifier.Views.HomePage.SettingsPage"
-             xmlns:customControls="AppWeatherEventNotifie.Views.CustomControls"
+             xmlns:customControls="clr-namespace:AppWeatherEventNotifier.Views.CustomControls"
              Title="Impostazioni"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.ToolbarItems>
@@ -16,22 +16,37 @@
         </LinearGradientBrush>
     </ContentPage.Background>
     <ContentPage.Content >
-        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                <Label FontAttributes="Bold" Text="Telegram:" HorizontalOptions="Center" VerticalOptions="Center"  FontSize="Medium" ></Label>
-                <Frame VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="10" Padding="0">
-                    <Editor x:Name="Telegram" Text="11123232232ds"  BackgroundColor="White"   FontSize="Medium" />
-                </Frame>
-                <Switch  x:Name="TelegramSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="Center"   />
-            </HorizontalStackLayout>
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                <Label FontAttributes="Bold" Text="Mail:"    HorizontalOptions="Center" VerticalOptions="Center" FontSize="Medium" ></Label>
-                <Frame VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="10" Padding="0">
-                    <Editor x:Name="Mail" Text="mircoantona1998@libero.it"  BackgroundColor="White"    FontSize="Medium" />
-                </Frame>
-                <Switch x:Name="MailSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="Center"  />
-            </HorizontalStackLayout>
-            <Button x:Name="modificaButton" Text="Modifica" Clicked="Button_Modifica" HorizontalOptions="Center" Margin="10"></Button>
-        </StackLayout>
+        <Grid HorizontalOptions="FillAndExpand" Margin="20">
+            <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="20">
+
+                <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" FontAttributes="Bold" Text="Telegram:" HorizontalOptions="Start" VerticalOptions="Center" FontSize="Medium" />
+                    <Frame Grid.Column="1" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand" CornerRadius="10" Padding="0">
+                        <Editor x:Name="Telegram"  HorizontalOptions="Fill" Text="" BackgroundColor="White" FontSize="Medium" />
+                    </Frame>
+                    <Switch Grid.Column="2" x:Name="TelegramSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="End" />
+                </Grid>
+
+                <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" FontAttributes="Bold" Text="Mail:" HorizontalOptions="Start" VerticalOptions="Center" FontSize="Medium" />
+                    <Frame Grid.Column="1" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand" CornerRadius="10" Padding="0">
+                        <Editor x:Name="Mail"  HorizontalOptions="FillAndExpand" Text="" BackgroundColor="White" FontSize="Medium" />
+                    </Frame>
+                    <Switch Grid.Column="2" x:Name="MailSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="End" />
+                </Grid>
+                <Button x:Name="modificaButton" Text="Modifica" Clicked="Button_Modifica" HorizontalOptions="Center" Margin="10"></Button>
+            </StackLayout>
+            <customControls:ActivityIndicatorControl x:Name="activityController" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></customControls:ActivityIndicatorControl>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

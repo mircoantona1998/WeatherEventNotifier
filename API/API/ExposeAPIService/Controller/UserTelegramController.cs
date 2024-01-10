@@ -14,7 +14,7 @@ namespace ExposeAPI.Controllers
         [HttpGet]
         [Route("Get")]
         [Authorize]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> Get(bool? all = null)
         {
             Logger log = new();
             log.LogAction("UserTelegramController  Get");
@@ -26,7 +26,8 @@ namespace ExposeAPI.Controllers
                 {
                     var dto = new
                     {
-                        IdUser = idUser
+                        IdUser = idUser,
+                        All=all
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"]);
                     usertel = await Kafka.Kafka.consumer.ConsumeResponse<List<UserTelegram>>((int)result.Offset);

@@ -9,11 +9,12 @@ namespace AppWeatherEventNotifier.Services.RestController
 {
     internal class ConfigurationController
     {
-        public static async Task<bool> add_configuration( float longitude, float latitude, int? idMetric,int? idFrequency,string symbol,float value, DateTime? dateTimeAttivazione)
+        public static async Task<bool> add_configuration(string nameConfiguration, float longitude, float latitude, int? idMetric,int? idFrequency,string symbol,float value, DateTime? dateTimeAttivazione)
         {
             string endPoint = "/Configuration/Add";
             var body = new
             {
+                NameConfiguration= nameConfiguration,
                 Longitude = longitude,
                 Latitude = latitude,
                 IdMetric = idMetric,
@@ -40,12 +41,13 @@ namespace AppWeatherEventNotifier.Services.RestController
             if (res == true) { return true; }
             else return false;
         }
-        public static async Task<bool> patch_configuration(int? idConfiguration, float longitude, float latitude, int? metric, int? frequency,string symbol,float value,DateTime? dateTimeAttivazione,bool? isActive)
+        public static async Task<bool> patch_configuration(string nameConfiguration,int? idConfiguration, float longitude, float latitude, int? metric, int? frequency,string symbol,float value,DateTime? dateTimeAttivazione,bool? isActive)
         {
             string endPoint = "/Configuration/Patch";
             var body = new
             {
                 IdConfiguration = idConfiguration,
+                NameConfiguration= nameConfiguration,
                 Longitude = longitude,
                 Latitude = latitude,
                 IdMetric = metric,

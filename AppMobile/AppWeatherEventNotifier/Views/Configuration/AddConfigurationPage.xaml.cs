@@ -62,7 +62,7 @@ namespace AppWeatherEventNotifier.Views.Configuration;
             enableAll();
             return; 
         }
-        if (frequencySelected!=null && metricSelected != null && Longitudine.Text.Replace(".",",")!="" && Latitudine.Text.Replace(".", ",") != "" && Simbolo.SelectedItem !=null && Valore.Text!="")
+        if (NameConfiguration.Text!="" && frequencySelected!=null && metricSelected != null && Longitudine.Text.Replace(".",",")!="" && Latitudine.Text.Replace(".", ",") != "" && Simbolo.SelectedItem !=null && Valore.Text!="")
         { 
             int? IdFrequency = frequencySelected.Id;
             float Longitude;
@@ -88,7 +88,7 @@ namespace AppWeatherEventNotifier.Views.Configuration;
             float Value = Convert.ToInt64(Valore.Text.ToString());
             DateTime? dateTimeAttivazione = data_attivazione.Date.Add(time_attivazione.Time).ToUniversalTime();
 
-            var resp = await ConfigurationController.add_configuration( Longitude, Latitude, IdMetric, IdFrequency, Symbol, Value, dateTimeAttivazione);
+            var resp = await ConfigurationController.add_configuration(NameConfiguration.Text, Longitude, Latitude, IdMetric, IdFrequency, Symbol, Value, dateTimeAttivazione);
             if (resp == true)
             {
                 await DisplayAlert("Successo", "Configurazione creata correttamente", "Ok");

@@ -24,9 +24,9 @@ namespace AppWeatherEventNotifier.Helper
         public static string server=Constants.SERVER;
         public static string page_current = "";
         public static Configuration ConfigurationSelected;
-
+        public static UserTelegram userTelegram;
+        public static UserMail userMail;
         public static ConfigurationViewModel configurationViewModel=new ConfigurationViewModel();
-
         public static void send_notification(string title, string message)
         {
             object o = new object();

@@ -165,10 +165,6 @@ public partial class UserdataContext : DbContext
             entity.Property(e => e.DateUpdate)
                 .HasDefaultValueSql("(NULL)")
                 .HasColumnType("datetime");
-            entity.Property(e => e.Email)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasDefaultValueSql("(NULL)");
             entity.Property(e => e.IsActive)
                 .HasDefaultValueSql("(NULL)")
                 .HasColumnName("isActive");
@@ -183,10 +179,6 @@ public partial class UserdataContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValueSql("(NULL)");
             entity.Property(e => e.Password).HasDefaultValueSql("(NULL)");
-            entity.Property(e => e.Phone)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasDefaultValueSql("(NULL)");
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .IsUnicode(false)

@@ -41,7 +41,7 @@ class EventHandlers:
     
     def handle_tag_GetUserMail(data):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetUserMail - {inspect.currentframe().f_globals['__file__']}")
-        return MailUsersRepo.get_user(data["IdUser"])
+        return MailUsersRepo.get_user(data["IdUser"],data["All"])
     
     def handle_tag_AddUserMail(data):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_AddUserMail - {inspect.currentframe().f_globals['__file__']}")

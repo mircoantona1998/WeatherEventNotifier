@@ -15,7 +15,6 @@ namespace Userdata.ViewModels
         public string? City { get; set; }
         public string? Cognome { get; set; }
         public string? Nome { get; set; }
-        public string? Phone { get; set; }
 
     }
     public class LoginDTO
