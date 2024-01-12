@@ -28,4 +28,6 @@ public partial class User
     public DateTime? LastAccess { get; set; }
 
     public int? IsBlocked { get; set; }
+
+    public int? Partition { get; set; }
 }

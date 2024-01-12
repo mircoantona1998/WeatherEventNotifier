@@ -28,7 +28,7 @@ namespace ExposeAPI.Controllers
                     {
                         IdUser = idUser
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetMailSent, ExposeAPI.Configurations.config.configuration["topic_to_mail"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetMailSent, ExposeAPI.Configurations.config.configuration["topic_to_mail"],0);//TODO sistemare
                     messages = await Kafka.Kafka.consumer.ConsumeResponse<List<MailSent>>((int)result.Offset);
                 }
             }

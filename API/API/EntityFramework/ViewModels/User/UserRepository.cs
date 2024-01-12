@@ -5,6 +5,7 @@ using static EntityFramework.Classes.UserdataLib;
 using System.Diagnostics;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.AspNetCore.Identity;
+using Userdata.Utils;
 
 namespace Userdata.Models
 {
@@ -19,41 +20,111 @@ namespace Userdata.Models
            DB = new DbContextOptionsBuilder<UserdataContext>().UseSqlServer(config);
             mapperConfig = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<UserCreateDTO, User>();
+                cfg.CreateMap<UserInsertDTO, User>();
             });
+        }
+        public async Task<int> GetTotalUsersCount()
+        {
+            try
+            {
+                using var context = new UserdataContext(DB.Options);
+                int totalCount = await context.Users
+                    .AsNoTracking()
+                    .CountAsync()
+                    .ConfigureAwait(false);
+
+                return totalCount;
+            }
+            catch (Exception ex)
+            {
+                Logger log = new();
+                log.LogAction($"An error occurred: {ex.Message}");
+                throw; 
+            }
+        }
+        public async Task<int> GetMaxPartitionValue()
+        {
+            try
+            {
+                using var context = new UserdataContext(DB.Options);
+
+                // Check if there are any users before attempting to find the maximum partition value
+                bool anyUsers = await context.Users.AnyAsync().ConfigureAwait(false);
+
+                if (!anyUsers)
+                {
+                    return 0;
+                }
+
+                int maxPartitionValue = await context.Users
+                    .AsNoTracking()
+                    .MaxAsync(user => (int?)user.Partition ?? 0)
+                    .ConfigureAwait(false);
+
+                return maxPartitionValue;
+            }
+            catch (Exception ex)
+            {
+                Logger log = new Logger();
+                log.LogAction($"An error occurred: {ex.Message}");
+                throw;
+            }
         }
 
         #region POST
-        public async Task<bool?> Create(UserCreateDTO newItemDTO)
+        public async Task<bool?> Create(UserCreateDTO newItemDTO,int partition)
         {
             bool? isCreated = false;
             try
             {
+                UserInsertDTO insertDTO = new UserInsertDTO
+                {
+                    Username = newItemDTO.Username,
+                    Password = newItemDTO.Password,
+                    Address = newItemDTO.Address,
+                    Cap = newItemDTO.Cap,
+                    City = newItemDTO.City,
+                    Cognome = newItemDTO.Cognome,
+                    Nome = newItemDTO.Nome,
+                    Partition = partition
+                };
                 using var context = new UserdataContext(DB.Options);
                 var mapper = mapperConfig.CreateMapper();
-                var newItem = mapper.Map(newItemDTO, new User
+                var newItem = mapper.Map(insertDTO, new User
                 {
                     DateUpdate = DateTime.UtcNow,
                     IsActive = true,
                 });
-                var usr = await context.Users
+                bool userExists = await context.Users
                     .AsNoTracking()
-                    .Where(user =>user.Username==newItem.Username) 
-                    .ToListAsync();
-                if (usr.Any()==false)
-                {     
-                    await context.Users.AddAsync(newItem);
-                    isCreated = !IsNullOrZero(await context.SaveChangesAsync()); // && !IsNullOrZero(usr);
+                    .AnyAsync(user => user.Username == newItem.Username)
+                    .ConfigureAwait(false);
+                if (!userExists)
+                {
+                    using var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false);
+                    try
+                    {
+                        await context.Users.AddAsync(newItem);
+                        isCreated = !IsNullOrZero(await context.SaveChangesAsync().ConfigureAwait(false));
+                        await transaction.CommitAsync().ConfigureAwait(false);
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync().ConfigureAwait(false);
+                        throw; 
+                    }
                 }
-
             }
             catch (Exception ex)
             {
+                Logger log = new();
+                log.LogAction($"An error occurred: {ex.Message}");
             }
 
             return isCreated;
         }
         #endregion
+
 
         #region PATCH
         public async Task<IdentityUser> Login(LoginDTO loginDTO)
@@ -73,14 +144,6 @@ namespace Userdata.Models
                         Id = usr1.Id.ToString(),
                         UserName = usr1.Username,
                     };
-                    //// login = true;
-                    // context.Attach(usr);
-                    // //usr.LastAccess=DateTime.UtcNow;
-                    // context.Update(usr);
-                    // bool res = !IsNullOrZero(await context.SaveChangesAsync());
-                    // if (res)
-                    // {
-                    // }
                     return usr;
                 }
                 return null;

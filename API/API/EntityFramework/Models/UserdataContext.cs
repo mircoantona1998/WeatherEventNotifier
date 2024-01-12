@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Userdata.Configurations;
+
 namespace Userdata.Models;
 
 public partial class UserdataContext : DbContext
 {
-   
     public UserdataContext()
     {
     }
@@ -17,62 +15,23 @@ public partial class UserdataContext : DbContext
     {
     }
 
-    public virtual DbSet<Logging> Loggings { get; set; }
-
     public virtual DbSet<MessageReceived> MessageReceiveds { get; set; }
 
     public virtual DbSet<MessageSent> MessageSents { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
- 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings") ??
                  new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
     .Build()["ConnectionStrings:Userdata"]);
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Logging>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK_logging_id");
-
-            entity.ToTable("Logging");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.DateCreate)
-                .HasDefaultValueSql("(NULL)")
-                .HasColumnType("datetime")
-                .HasColumnName("dateCreate");
-            entity.Property(e => e.File)
-                .HasMaxLength(512)
-                .HasDefaultValueSql("(NULL)")
-                .HasColumnName("file");
-            entity.Property(e => e.Level)
-                .HasMaxLength(45)
-                .HasDefaultValueSql("(NULL)")
-                .HasColumnName("level");
-            entity.Property(e => e.LongMessage)
-                .HasDefaultValueSql("(NULL)")
-                .HasColumnName("longMessage");
-            entity.Property(e => e.Message)
-                .HasMaxLength(1024)
-                .HasDefaultValueSql("(NULL)")
-                .HasColumnName("message");
-            entity.Property(e => e.Module)
-                .HasMaxLength(512)
-                .HasDefaultValueSql("(NULL)")
-                .HasColumnName("module");
-            entity.Property(e => e.RecoveryAction)
-                .HasMaxLength(45)
-                .HasDefaultValueSql("(NULL)");
-        });
-
         modelBuilder.Entity<MessageReceived>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83F5620B82B");
+            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83F8D088E93");
 
             entity.ToTable("MessageReceived");
 
@@ -108,7 +67,7 @@ public partial class UserdataContext : DbContext
 
         modelBuilder.Entity<MessageSent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83FEAA8B022");
+            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83F1B33F555");
 
             entity.ToTable("MessageSent");
 

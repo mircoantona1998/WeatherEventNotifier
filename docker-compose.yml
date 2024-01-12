@@ -22,6 +22,7 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "topic_to_scheduler:1:1,topic_to_weather:1:1,topic_to_mail:1:1,topic_to_telegram:1:1,topic_to_notifier:1:1,topic_to_configuration:1:1,topic_to_userdata:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - kafka_data:/var/lib/kafka/data 
@@ -37,19 +38,11 @@ services:
     environment:
       - groupID=ExposeAPIService
       - bootstrapServers=kafka:9093
-      - topic_to_userdata=topic_to_userdata
-      - topic_to_configuration=topic_to_configuration
-      - topic_to_scheduler=topic_to_scheduler
-      - topic_to_notifier=topic_to_notifier
-      - topic_to_weather=topic_to_weather
-      - topic_to_mail=topic_to_mail
-      - topic_to_telegram=topic_to_telegram
-      - partition=partition
     networks:
       - microservices_network  
     depends_on:
       - kafka
-      
+     
   expose_api_db:
     extends:
       file: API/docker-compose.yml
@@ -58,22 +51,16 @@ services:
   
   configurator_service:
     extends:
-      file: ConfiguratorService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: configurator_service
     environment:
+     - PARTITION=0
      - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
      - CONSUMER_GROUP_ID=ConfiguratorService
      - CONSUMER_AUTO_OFFSET_RESET=earliest
      - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
      - PRODUCER_CLIENT_ID=ConfiguratorService
      - GROUP_ID=ConfiguratorService
-     - TOPIC_TO_SCHEDULER=topic_to_scheduler
-     - TOPIC_TO_WEATHER=topic_to_weather
-     - TOPIC_TO_MAIL=topic_to_mail
-     - TOPIC_TO_TELEGRAM=topic_to_telegram
-     - TOPIC_TO_NOTIFIER=topic_to_notifier
-     - TOPIC_TO_CONFIGURATION=topic_to_configuration
-     - TOPIC_TO_USERDATA=topic_to_userdata
     networks:
       - microservices_network  
     depends_on:
@@ -81,28 +68,22 @@ services:
       
   configurator_db:
     extends:
-      file: ConfiguratorService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: configurator_db
    
    
   mail_service:
     extends:
-      file: MailService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: mail_service
     environment:
+     - PARTITION=0
      - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
      - CONSUMER_GROUP_ID=MailService
      - CONSUMER_AUTO_OFFSET_RESET=earliest
      - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
      - PRODUCER_CLIENT_ID=MailService
      - GROUP_ID=MailService
-     - TOPIC_TO_SCHEDULER=topic_to_scheduler
-     - TOPIC_TO_WEATHER=topic_to_weather
-     - TOPIC_TO_MAIL=topic_to_mail
-     - TOPIC_TO_TELEGRAM=topic_to_telegram
-     - TOPIC_TO_NOTIFIER=topic_to_notifier
-     - TOPIC_TO_CONFIGURATION=topic_to_configuration
-     - TOPIC_TO_USERDATA=topic_to_userdata
     networks:
       - microservices_network  
     depends_on:
@@ -110,28 +91,22 @@ services:
       
   mail_db:
     extends:
-      file: MailService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: mail_db
   
       
   notifier_service:
     extends:
-      file: NotifierService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: notifier_service
     environment:
+     - PARTITION=0
      - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
      - CONSUMER_GROUP_ID=NotifierService
      - CONSUMER_AUTO_OFFSET_RESET=earliest
      - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
      - PRODUCER_CLIENT_ID=NotifierService
      - GROUP_ID=NotifierService
-     - TOPIC_TO_SCHEDULER=topic_to_scheduler
-     - TOPIC_TO_WEATHER=topic_to_weather
-     - TOPIC_TO_MAIL=topic_to_mail
-     - TOPIC_TO_TELEGRAM=topic_to_telegram
-     - TOPIC_TO_NOTIFIER=topic_to_notifier
-     - TOPIC_TO_CONFIGURATION=topic_to_configuration
-     - TOPIC_TO_USERDATA=topic_to_userdata
     networks:
       - microservices_network  
     depends_on:
@@ -139,27 +114,21 @@ services:
       
   notifier_db:
     extends:
-      file: NotifierService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: notifier_db
       
   scheduler_service:
     extends:
-      file: SchedulerService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: scheduler_service
     environment:
+     - PARTITION=0
      - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
      - CONSUMER_GROUP_ID=SchedulerService
      - CONSUMER_AUTO_OFFSET_RESET=earliest
      - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
      - PRODUCER_CLIENT_ID=SchedulerService
      - GROUP_ID=SchedulerService
-     - TOPIC_TO_SCHEDULER=topic_to_scheduler
-     - TOPIC_TO_WEATHER=topic_to_weather
-     - TOPIC_TO_MAIL=topic_to_mail
-     - TOPIC_TO_TELEGRAM=topic_to_telegram
-     - TOPIC_TO_NOTIFIER=topic_to_notifier
-     - TOPIC_TO_CONFIGURATION=topic_to_configuration
-     - TOPIC_TO_USERDATA=topic_to_userdata
     networks:
       - microservices_network  
     depends_on:
@@ -167,27 +136,21 @@ services:
       
   scheduler_db:
     extends:
-      file: SchedulerService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: scheduler_db
       
   telegram_service:
     extends:
-      file: TelegramService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: telegram_service
     environment:
+     - PARTITION=0
      - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
      - CONSUMER_GROUP_ID=TelegramService
      - CONSUMER_AUTO_OFFSET_RESET=earliest
      - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
      - PRODUCER_CLIENT_ID=TelegramService
      - GROUP_ID=TelegramService
-     - TOPIC_TO_SCHEDULER=topic_to_scheduler
-     - TOPIC_TO_WEATHER=topic_to_weather
-     - TOPIC_TO_MAIL=topic_to_mail
-     - TOPIC_TO_TELEGRAM=topic_to_telegram
-     - TOPIC_TO_NOTIFIER=topic_to_notifier
-     - TOPIC_TO_CONFIGURATION=topic_to_configuration
-     - TOPIC_TO_USERDATA=topic_to_userdata
     networks:
       - microservices_network  
     depends_on:
@@ -195,27 +158,21 @@ services:
       
   telegram_db:
     extends:
-      file: TelegramService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: telegram_db
       
   weather_service:
     extends:
-      file: WeatherService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: weather_service
     environment:
+     - PARTITION=0
      - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
      - CONSUMER_GROUP_ID=WeatherService
      - CONSUMER_AUTO_OFFSET_RESET=earliest
      - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
      - PRODUCER_CLIENT_ID=WeatherService
      - GROUP_ID=WeatherService
-     - TOPIC_TO_SCHEDULER=topic_to_scheduler
-     - TOPIC_TO_WEATHER=topic_to_weather
-     - TOPIC_TO_MAIL=topic_to_mail
-     - TOPIC_TO_TELEGRAM=topic_to_telegram
-     - TOPIC_TO_NOTIFIER=topic_to_notifier
-     - TOPIC_TO_CONFIGURATION=topic_to_configuration
-     - TOPIC_TO_USERDATA=topic_to_userdata
     networks:
       - microservices_network  
     depends_on:
@@ -223,7 +180,7 @@ services:
       
   weather_db:
     extends:
-      file: WeatherService/docker-compose.yml
+      file: docker-compose-microservice.yml
       service: weather_db
       
       

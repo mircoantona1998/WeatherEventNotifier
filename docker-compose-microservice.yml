@@ -1,0 +1,83 @@
+version: '3'
+
+services:
+  
+  configurator_service:
+    extends:
+      file: ConfiguratorService/docker-compose.yml
+      service: configurator_service
+      
+  configurator_db:
+    extends:
+      file: ConfiguratorService/docker-compose.yml
+      service: configurator_db
+   
+  mail_service:
+    extends:
+      file: MailService/docker-compose.yml
+      service: mail_service
+      
+  mail_db:
+    extends:
+      file: MailService/docker-compose.yml
+      service: mail_db
+  
+      
+  notifier_service:
+    extends:
+      file: NotifierService/docker-compose.yml
+      service: notifier_service
+
+      
+  notifier_db:
+    extends:
+      file: NotifierService/docker-compose.yml
+      service: notifier_db
+      
+  scheduler_service:
+    extends:
+      file: SchedulerService/docker-compose.yml
+      service: scheduler_service
+      
+  scheduler_db:
+    extends:
+      file: SchedulerService/docker-compose.yml
+      service: scheduler_db
+      
+  telegram_service:
+    extends:
+      file: TelegramService/docker-compose.yml
+      service: telegram_service
+      
+  telegram_db:
+    extends:
+      file: TelegramService/docker-compose.yml
+      service: telegram_db
+      
+  weather_service:
+    extends:
+      file: WeatherService/docker-compose.yml
+      service: weather_service
+      
+  weather_db:
+    extends:
+      file: WeatherService/docker-compose.yml
+      service: weather_db
+      
+      
+volumes:
+  configurator_database:  
+    name: configurator_database
+  mail_database:  
+    name: mail_database
+  telegram_database:  
+    name: telegram_database
+  notifier_database:
+    name: notifier_database
+  weather_database:  
+    name: weather_database
+  scheduler_database:  
+    name: scheduler_database
+
+
+

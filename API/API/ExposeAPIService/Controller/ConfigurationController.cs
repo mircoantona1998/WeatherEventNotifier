@@ -29,8 +29,8 @@ namespace ExposeAPI.Controllers
                     {
                         IdUser = idUser
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
-                     configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<ConfigurationUser>>((int)result.Offset);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], 0);//TODO sistemare
+                    configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<ConfigurationUser>>((int)result.Offset);
                 }
             }
             else
@@ -58,7 +58,7 @@ namespace ExposeAPI.Controllers
                     if (newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
                     {
                         var kafkaRequest = ConfigurationCreateRequestKafka.ConvertConfigurationCreateToRequestKafka(newItemDTO, idUser);
-                        var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
+                        var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], 0);//TODO sistemare
                         res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                     }else return Problem("Inserire un simbolo valido", null, 500);
                 }
@@ -88,7 +88,7 @@ namespace ExposeAPI.Controllers
                     if (newItemDTO.Symbol==null || newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
                     {
                         var kafkaRequest = ConfigurationPatchRequestKafka.ConvertConfigurationPatchToRequestKafka(newItemDTO, idUser);
-                        var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
+                        var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], 0);//TODO sistemare
                         res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                     }
                     else return Problem("Inserire un simbolo valido", null, 500);
@@ -121,7 +121,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser,
                         IdConfiguration = IdConfiguration,
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], 0);//TODO sistemare
                     res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }

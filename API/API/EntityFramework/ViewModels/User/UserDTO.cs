@@ -17,6 +17,10 @@ namespace Userdata.ViewModels
         public string? Nome { get; set; }
 
     }
+    public class UserInsertDTO:UserCreateDTO
+    {
+        public int Partition { get; set; }
+    }
     public class LoginDTO
     {
         public string Username { get; set; } = string.Empty;

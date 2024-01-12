@@ -1,5 +1,5 @@
 import json
-from confluent_kafka import Consumer, KafkaError
+from confluent_kafka import Consumer, KafkaError, TopicPartition
 from Configurations.Configurations import Configurations
 from DB.Repository.MessageReceivedRepo import MessageReceivedRepo
 from DB.Repository.ScheduleRequestRepo import ScheduleRequestRepo
@@ -48,7 +48,8 @@ class ConsumerClass:
                 else:
                     print(f"Errore durante la creazione del topic: {e}")
                     Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Errore durante la creazione del topic: {e} - {inspect.currentframe().f_globals['__file__']}")
-        consumer.subscribe([topic])
+        partitions_to_subscribe= [int(part) for part in Configurations().partition]
+        consumer.assign([TopicPartition(topic=topic, partition=part) for part in partitions_to_subscribe])
         try:
             while True:
                 if  ScheduleRequestRepo.get_last_element()==None or ScheduleRequestRepo.get_last_element().date!=datetime.utcnow().date() :
@@ -79,9 +80,9 @@ class ConsumerClass:
                         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersRequest.to_string())} - {inspect.currentframe().f_globals['__file__']}")
                     RequestNotificationRepo.add_request_notification()
                 else:
-                    msg = consumer.poll(1.0)
-                    if msg is not None:
-                        if MessageReceivedRepo.get_latest_message() ==None or MessageReceivedRepo.get_latest_message().offset==None or (msg.offset()!=None and msg.offset() > MessageReceivedRepo.get_latest_message().offset):
+                        msg = consumer.poll(1.0)
+                        if msg is not None:
+                        #if MessageReceivedRepo.get_latest_message() ==None or MessageReceivedRepo.get_latest_message().offset==None or (msg.offset()!=None and msg.offset() > MessageReceivedRepo.get_latest_message().offset):
                             print(f'Received message {str(msg.value().decode("utf-8"))} on topic {msg.topic()} [{msg.partition()}] @ offset {msg.offset()}')     
                             Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Received message {str(msg.value().decode('utf-8'))} on topic {msg.topic()} [{msg.partition()}] @ offset {msg.offset()} - {inspect.currentframe().f_globals['__file__']}")
                             value=msg.value().decode("utf-8")

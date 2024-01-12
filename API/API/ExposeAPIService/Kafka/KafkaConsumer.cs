@@ -47,9 +47,9 @@ namespace ExposeAPI.Kafka
                         Console.WriteLine($"Received message  {result.Message.Value} on {result.TopicPartitionOffset}");
                         log.LogAction($"Received message  {result.Message.Value} on {result.TopicPartitionOffset}");
                         var headers = result.Message.Headers;
-                        var messLast = await messRepo.GetLast();
-                        if (messLast == null || ((int)result.Offset.Value) > messLast.Offset)
-                        {
+                        //var messLast = await messRepo.GetLast();
+                       // if (messLast == null || ((int)result.Offset.Value) > messLast.Offset)
+                       // {
                             if (headers != null && headers.Count > 0)
                             {
                                 try
@@ -61,10 +61,10 @@ namespace ExposeAPI.Kafka
                                         bool save = false;
                                         try
                                         {
-                                            
                                             Dictionary<string, T> dictionary = JsonConvert.DeserializeObject<Dictionary<string, T>>(result.Message.Value);
                                             var obj = dictionary.Values.First();
                                             await saveMessage(result, headerKafka);
+                                            consumer.Commit(result);
                                             save = true;
                                             if (obj != null)
                                             {
@@ -73,9 +73,12 @@ namespace ExposeAPI.Kafka
                                             }
                                         }
                                         catch
-                                        {  
-                                            if(save==false)
+                                        {
+                                            if (save == false)
+                                            {
                                                 await saveMessageWithError(result);
+                                                consumer.Commit(result);
+                                            }
                                             break;
                                         }
                                     }
@@ -83,13 +86,15 @@ namespace ExposeAPI.Kafka
                                 catch
                                 {
                                     await saveMessageWithError(result);
+                                    consumer.Commit(result);
+                                    break;
                                 }             
                             }
-                        }
-                        else
-                        {
-                            await saveMessageWithError(result);
-                        }
+                       // }
+                       // else
+                       // {
+                       //     await saveMessageWithError(result);
+                       // }
                     }
                 }
                 catch (ConsumeException e)

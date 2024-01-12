@@ -16,7 +16,6 @@ namespace ExposeAPI.Auth
                     {
                         Id = (int)Convert.ToInt64(loggingUser.Id),
                         Username = loggingUser.UserName,
-
                     };
                     var accessToken = tokenModule.TokenCreation(_configuration);
                     var refreshToken = tokenModule.GenerateRefreshToken(loggingUser.UserName);

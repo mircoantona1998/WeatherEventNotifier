@@ -15,7 +15,7 @@ namespace ExposeAPI.Kafka
         {
             messSentRepo = new MessageSentRepository(config.confdb);
         }
-        public async Task<DeliveryResult<Null, string>> ProduceRequest<T>(Object message,MessageType type,MessageTag tag,string topic)
+        public async Task<DeliveryResult<Null, string>> ProduceRequest<T>(Object message,MessageType type,MessageTag tag,string topic,int partition)
         {
             string mess = Json.ConvertObjectToJson(message);
             using var producer = new ProducerBuilder<Null, string>(Kafka.producerConfig).Build();
@@ -26,7 +26,8 @@ namespace ExposeAPI.Kafka
                 { "Tag", Encoding.UTF8.GetBytes(EnumUtils.EnumToString(tag)) },
                 { "Code", Encoding.UTF8.GetBytes(EnumUtils.EnumToString(MessageCode.Ok)) },
             };
-            var result = producer.ProduceAsync(topic, new Message<Null, string> { Value = mess, Headers = headers }).Result;
+            var topicPart = new TopicPartition(topic, new Partition(partition));
+            var result = producer.ProduceAsync(topicPart, new Message<Null, string> { Value = mess, Headers = headers}).Result;
             await saveMessage(result,headers);
             Console.WriteLine($"Produced message {result.Message.Value} on {result.TopicPartitionOffset}");
             log.LogAction($"Produced message {result.Message.Value} on {result.TopicPartitionOffset}");

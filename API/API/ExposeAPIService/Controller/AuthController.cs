@@ -11,9 +11,10 @@ using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
 using ExposeAPI.Auth;
+using Confluent.Kafka;
 namespace ExposeAPI.Controllers
 {
-    [Route("[controller]")]
+[Route("[controller]")]
 [ApiController]
 
 public class AuthController : ControllerBase
@@ -33,7 +34,21 @@ public class AuthController : ControllerBase
         {
             Logger log = new();
             log.LogAction("AuthController  Create");
-            var newItemID = await userRepo.Create(newItemDTO);
+
+            int totalUsers=await userRepo.GetTotalUsersCount();
+            int maxPartition=await userRepo.GetMaxPartitionValue();
+            int usersPartition = 0;
+            if (maxPartition == 0)
+                usersPartition = totalUsers;
+            else usersPartition = totalUsers / maxPartition;
+            int partition = 0;
+            string valueEnv = Environment.GetEnvironmentVariable("MaxUsersPartition") ?? "5";
+            if (usersPartition > Convert.ToInt32(valueEnv)) 
+            {
+                partition = maxPartition + 1;
+            }
+            else partition = maxPartition;
+            var newItemID = await userRepo.Create(newItemDTO,partition);
             return (bool)newItemID ? Ok(newItemID) : Problem(null, null, 401);
         }
 

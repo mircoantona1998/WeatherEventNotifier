@@ -14,6 +14,8 @@ class Configurations:
     def _load_configurations(self):
             Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - load_configurations - {inspect.currentframe().f_globals['__file__']}")
         # Usa le variabili d'ambiente, altrimenti carica default
+            self.partition = os.getenv("PARTITION", "0")
+            print(f'{str(self.partition)}')
             self.consumer_bootstrap_servers = os.getenv("CONSUMER_BOOTSTRAP_SERVERS", "127.0.0.1:9092")
             print(f'{str(self.consumer_bootstrap_servers)}')
             self.consumer_group_id = os.getenv("CONSUMER_GROUP_ID", "NotifierService")

@@ -29,7 +29,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser,
                         All=all
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], 0);//TODO sistemare
                     usertel = await Kafka.Kafka.consumer.ConsumeResponse<List<UserTelegram>>((int)result.Offset);
                 }
             }
@@ -56,7 +56,7 @@ namespace ExposeAPI.Controllers
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var kafkaRequest = TelegramCreateRequestKafka.ConvertTelegramCreateToRequestKafka(newItemDTO, idUser);
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], 0);//TODO sistemare
                     res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }
@@ -83,7 +83,7 @@ namespace ExposeAPI.Controllers
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var kafkaRequest = TelegramPatchRequestKafka.ConvertTelegramPatchToRequestKafka(newItemDTO, idUser);
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], 0);//TODO sistemare
                     res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }
@@ -113,7 +113,7 @@ namespace ExposeAPI.Controllers
                     {
                         IdUser = idUser
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.DeleteUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.DeleteUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], 0);//TODO sistemare
                     isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }

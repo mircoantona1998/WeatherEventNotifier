@@ -29,7 +29,7 @@ namespace ExposeAPI.Controllers
                     {
                         IdUser = idUser
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetTelegramSent, ExposeAPI.Configurations.config.configuration["topic_to_telegram"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetTelegramSent, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], 0);//TODO sistemare
                     messages = await Kafka.Kafka.consumer.ConsumeResponse<List<TelegramSent>>((int)result.Offset);
                 }
             }

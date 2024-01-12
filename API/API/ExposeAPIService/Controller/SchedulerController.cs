@@ -29,7 +29,7 @@ namespace ExposeAPI.Controllers
                     {
                         IdUser = idUser
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetSchedulation, ExposeAPI.Configurations.config.configuration["topic_to_scheduler"]);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetSchedulation, ExposeAPI.Configurations.config.configuration["topic_to_scheduler"], 0);//TODO sistemare
                     schedulations = await Kafka.Kafka.consumer.ConsumeResponse<List<Schedulation>>((int)result.Offset);
                 }
             }
