@@ -40,10 +40,10 @@ public class AuthController : ControllerBase
             int usersPartition = 0;
             if (maxPartition == 0)
                 usersPartition = totalUsers;
-            else usersPartition = totalUsers / maxPartition;
+            else usersPartition = totalUsers / (maxPartition+1);
             int partition = 0;
-            string valueEnv = Environment.GetEnvironmentVariable("MaxUsersPartition") ?? "5";
-            if (usersPartition > Convert.ToInt32(valueEnv)) 
+            string valueEnv = Environment.GetEnvironmentVariable("MaxUsersPartition") ?? "2";
+            if (usersPartition+1 > Convert.ToInt32(valueEnv)) 
             {
                 partition = maxPartition + 1;
             }
@@ -60,39 +60,39 @@ public class AuthController : ControllerBase
             log.LogAction("AuthController  Login");
             AuthenticationResponse authResponse = null;
             var res = await userRepo.Login(loginDTO);
-            if (res !=null)
+            if (res.Item1 !=null)
             {
-                 authResponse = await AuthResponse.GenerateAuthResponse(res,_configuration);
+                 authResponse = await AuthResponse.GenerateAuthResponse(res.Item1,_configuration, res.Item2);
             }
             return authResponse != null ? Ok(authResponse) : Unauthorized();
         }
 
-        [HttpPost]
-        [Route("refresh-token")]
-        public async Task<IActionResult> RefreshToken(TokenCustom jwtToken)
-        {
-            Logger log = new();
-            log.LogAction("AuthController  RefreshToken");
-            AuthenticationResponse? authResponse = null;
-            if (string.IsNullOrWhiteSpace(jwtToken.access_token) || string.IsNullOrWhiteSpace(jwtToken.refresh_token))
-            {
-                return BadRequest("Access and refresh tokens must be both non-nullable and non-empty");
-            }
-            var tokenModule = new TokenAuthenticationModule();
-            var principal = tokenModule.GetPrincipalFromExpiredToken(jwtToken.access_token,_configuration);
-            if (principal != null)
-            {
-                var username = principal.Identity?.Name;
-                var refreshTokenSaved = tokenModule.GenerateRefreshToken(username);
-                var loggingUser = await userRepo.Get_user_Login(username);
+        //[HttpPost]
+        //[Route("refresh-token")]
+        //public async Task<IActionResult> RefreshToken(TokenCustom jwtToken)
+        //{
+        //    Logger log = new();
+        //    log.LogAction("AuthController  RefreshToken");
+        //    AuthenticationResponse? authResponse = null;
+        //    if (string.IsNullOrWhiteSpace(jwtToken.access_token) || string.IsNullOrWhiteSpace(jwtToken.refresh_token))
+        //    {
+        //        return BadRequest("Access and refresh tokens must be both non-nullable and non-empty");
+        //    }
+        //    var tokenModule = new TokenAuthenticationModule();
+        //    var principal = tokenModule.GetPrincipalFromExpiredToken(jwtToken.access_token,_configuration);
+        //    if (principal != null)
+        //    {
+        //        var username = principal.Identity?.Name;
+        //        var refreshTokenSaved = tokenModule.GenerateRefreshToken(username);
+        //        var loggingUser = await userRepo.Get_user_Login(username);
 
-                if (loggingUser != null && refreshTokenSaved == jwtToken.refresh_token)
-                {
-                    authResponse = await AuthResponse.GenerateAuthResponse(loggingUser, _configuration, true);
-                }
-            }
-            return authResponse != null ? Ok(authResponse) : Unauthorized();
-        }
+        //        if (loggingUser != null && refreshTokenSaved == jwtToken.refresh_token)
+        //        {
+        //            authResponse = await AuthResponse.GenerateAuthResponse(loggingUser, _configuration, true);
+        //        }
+        //    }
+        //    return authResponse != null ? Ok(authResponse) : Unauthorized();
+        //}
         #endregion
         
         }

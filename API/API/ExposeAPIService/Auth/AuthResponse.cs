@@ -5,7 +5,7 @@ namespace ExposeAPI.Auth
 {
     public static class AuthResponse
     {
-        public static async Task<AuthenticationResponse?> GenerateAuthResponse(IdentityUser loggingUser, IConfiguration _configuration, bool? isRefreshing = null)
+        public static async Task<AuthenticationResponse?> GenerateAuthResponse(IdentityUser loggingUser, IConfiguration _configuration,int? partition, bool? isRefreshing = null)
         {
             AuthenticationResponse? authResponse = null;
             try
@@ -18,6 +18,7 @@ namespace ExposeAPI.Auth
                         Username = loggingUser.UserName,
                     };
                     var accessToken = tokenModule.TokenCreation(_configuration);
+                    accessToken.Payload["Partition"] = partition;
                     var refreshToken = tokenModule.GenerateRefreshToken(loggingUser.UserName);
                     authResponse = new AuthenticationResponse
                     {

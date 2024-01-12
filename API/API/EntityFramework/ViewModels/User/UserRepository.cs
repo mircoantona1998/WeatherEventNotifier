@@ -127,7 +127,7 @@ namespace Userdata.Models
 
 
         #region PATCH
-        public async Task<IdentityUser> Login(LoginDTO loginDTO)
+        public async Task<(IdentityUser,int?)> Login(LoginDTO loginDTO)
         {
             IdentityUser usr =new IdentityUser();
             try
@@ -144,14 +144,14 @@ namespace Userdata.Models
                         Id = usr1.Id.ToString(),
                         UserName = usr1.Username,
                     };
-                    return usr;
+                    return (usr,usr1.Partition);
                 }
-                return null;
+                return (null,null);
             }
             catch (Exception ex)
             {
             }
-            return null;
+            return (null,null);
         }
 
         public async Task<IdentityUser> Get_user_Login(string Username)

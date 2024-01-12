@@ -22,6 +22,7 @@ namespace ExposeAPI.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
+                int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var dto = new
@@ -29,7 +30,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser,
                         All=all
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], 0);//TODO sistemare
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
                     usertel = await Kafka.Kafka.consumer.ConsumeResponse<List<UserTelegram>>((int)result.Offset);
                 }
             }
@@ -53,10 +54,11 @@ namespace ExposeAPI.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
+                int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var kafkaRequest = TelegramCreateRequestKafka.ConvertTelegramCreateToRequestKafka(newItemDTO, idUser);
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], 0);//TODO sistemare
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
                     res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }
@@ -80,10 +82,11 @@ namespace ExposeAPI.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
+                int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var kafkaRequest = TelegramPatchRequestKafka.ConvertTelegramPatchToRequestKafka(newItemDTO, idUser);
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], 0);//TODO sistemare
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
                     res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }
@@ -107,13 +110,14 @@ namespace ExposeAPI.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
+                int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var dto = new
                     {
                         IdUser = idUser
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.DeleteUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], 0);//TODO sistemare
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.DeleteUserTelegram, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
                     isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }

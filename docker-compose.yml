@@ -36,6 +36,7 @@ services:
       file: API/docker-compose.yml
       service: expose_api
     environment:
+      - MaxUsersPartition=2
       - groupID=ExposeAPIService
       - bootstrapServers=kafka:9093
     networks:
