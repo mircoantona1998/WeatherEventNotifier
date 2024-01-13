@@ -34,20 +34,8 @@ public class AuthController : ControllerBase
         {
             Logger log = new();
             log.LogAction("AuthController  Create");
-
-            int totalUsers=await userRepo.GetTotalUsersCount();
-            int maxPartition=await userRepo.GetMaxPartitionValue();
-            int usersPartition = 0;
-            if (maxPartition == 0)
-                usersPartition = totalUsers;
-            else usersPartition = totalUsers / (maxPartition+1);
-            int partition = 0;
-            string valueEnv = Environment.GetEnvironmentVariable("MaxUsersPartition") ?? "2";
-            if (usersPartition+1 > Convert.ToInt32(valueEnv)) 
-            {
-                partition = maxPartition + 1;
-            }
-            else partition = maxPartition;
+            string valueEnv = Environment.GetEnvironmentVariable("HowManyPartition") ?? "2";
+            int partition=await userRepo.GetMinPartition(Convert.ToInt32(valueEnv));
             var newItemID = await userRepo.Create(newItemDTO,partition);
             return (bool)newItemID ? Ok(newItemID) : Problem(null, null, 401);
         }

@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppWeatherEventNotifier.Views.Registration.RegisterPage"
+             xmlns:customControls="clr-namespace:AppWeatherEventNotifier.Views.CustomControls"
              Title="Registrazione">
     <ContentPage.Background>
         <LinearGradientBrush >
@@ -10,11 +11,20 @@
         </LinearGradientBrush>
     </ContentPage.Background>
     <ContentPage.Content >
-        <ScrollView x:Name="scrolla">
+        <Grid>
+            <ScrollView x:Name="scrolla">
             <VerticalStackLayout Margin="10"
         BackgroundColor="Transparent"
          VerticalOptions="FillAndExpand" 
         Spacing="5">
+                        <Label TextColor="White"  Text="Server"    HorizontalOptions="Start"
+        FontAttributes="Bold"     FontSize="16"   
+          ></Label>
+        <Frame Padding="0" Margin="2" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+         <Editor MaxLength="50" TextColor="Black"  BackgroundColor="White" x:Name="serverEntry" Keyboard="Plain"    VerticalOptions="Center" HorizontalOptions="FillAndExpand"
+        FontAttributes="None"     FontSize="16"   Placeholder="inserisci indirizzo privato del server es.: 172.20.10.3"
+          ></Editor>
+        </Frame>
                 <Label TextColor="White"  Text="Nome"    HorizontalOptions="Start"
                 FontAttributes="Bold"     FontSize="16"   
                   ></Label>
@@ -73,8 +83,10 @@
                   ></Entry>
                                         </Frame>
             
-                                            <Button   BackgroundColor="#20509b" Clicked="RegisterClicked"     BorderColor="{StaticResource White}" BorderWidth="1"   HorizontalOptions="FillAndExpand"     VerticalOptions="Center" Text="Registrati"   CornerRadius="10"  Padding="3"  FontAttributes="Bold"  ></Button>
+          <Button x:Name="register"   BackgroundColor="#20509b" Clicked="RegisterClicked"     BorderColor="{StaticResource White}" BorderWidth="1"   HorizontalOptions="FillAndExpand"     VerticalOptions="Center" Text="Registrati"   CornerRadius="10"  Padding="3"  FontAttributes="Bold"  ></Button>
         </VerticalStackLayout>
         </ScrollView>
+        <customControls:ActivityIndicatorControl x:Name="activityController"></customControls:ActivityIndicatorControl>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

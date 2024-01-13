@@ -23,6 +23,59 @@ namespace Userdata.Models
                 cfg.CreateMap<UserInsertDTO, User>();
             });
         }
+        public async Task<int> GetMinPartition(int maxPartition)
+        {
+            try
+            {
+                List<(int, bool)> partitions = [];
+                int x = 0;
+                while (x < maxPartition)
+                {
+                    partitions.Add((x, false));
+                    x++;
+                }
+
+                using var context = new UserdataContext(DB.Options);
+                var partitionCounts = await context.Users
+                    .Where(u => u.Partition >= 0 && u.Partition <= maxPartition)
+                    .GroupBy(u => u.Partition)
+                    .Select(g => new { Partition = g.Key, Count = g.Count() })
+                    .OrderBy(u=> u.Partition)
+                    .ToListAsync()
+                    .ConfigureAwait(false);
+
+
+                x = 0;
+                while(x < partitionCounts.Count)
+                {
+                    partitions[x] = (x, true);
+                    x++;
+                }
+
+                x = 0;
+                while (x < partitions.Count)
+                {
+                    if (partitions[x] == (x, false))
+                        return x;
+                    x++;
+                }
+
+                var minPartitionCount = partitionCounts
+                    .OrderBy(g => g.Count)
+                    .FirstOrDefault();
+
+                int minPartition = minPartitionCount?.Partition ?? 0;
+
+                return minPartition;
+            }
+            catch (Exception ex)
+            {
+                Logger log = new();
+                log.LogAction($"An error occurred: {ex.Message}");
+                throw;
+            }
+        }
+
         public async Task<int> GetTotalUsersCount()
         {
             try

@@ -2,41 +2,14 @@ version: '3'
 
 services:
     
-  telegram_db:
-    container_name: telegram_db
+  telegram-db:
+    container_name: telegram-db
     build:
       context: ./Telegramdata
       dockerfile: Dockerfile
-    ports:
-      - "3311:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - telegram_database:/var/lib/mysql
-    networks:
-      - microservices_network
       
-  telegram_service:
-    container_name: telegram_service  
+  telegram-service:
+    container_name: telegram-service
     build:
       context: ./app
       dockerfile: Dockerfile
-    environment:
-     - DOCKER_ENVIRONMENT=True
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=telegram_db
-     - DATABASE_NAME=Telegram
-    networks:
-      - microservices_network 
-    depends_on:
-      - telegram_db
-      
-
-volumes:
-  telegram_database:  
-    name: telegram_database
-networks:
-  microservices_network:
-    name: microservices_network

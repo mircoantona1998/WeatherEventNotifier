@@ -31,7 +31,8 @@ class ProducerClass:
                 key='key',  
                 value=str(msg),
                 headers=header,
-                callback=ProducerClass.delivery_report
+                callback=ProducerClass.delivery_report,
+                partition=int(Configurations().partition)
             )
             producer.flush()
         except KafkaException as e:

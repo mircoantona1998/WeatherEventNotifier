@@ -7,11 +7,11 @@ services:
     ports:
       - "2181:2181"
     networks:
-      - microservices_network
+      - microservices-network
       
   kafka:
     image: wurstmeister/kafka:latest
-    container_name: kafka_service
+    container_name: kafka-service
     ports:
       - "9092:9092"
     expose:
@@ -24,13 +24,13 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - kafka_data:/var/lib/kafka/data 
+      - kafka-data:/var/lib/kafka/data 
     depends_on:
       - zookeeper
     networks:
-      - microservices_network
+      - microservices-network
     
-  sql_server_db:
+  sql-server-db:
     image: mcr.microsoft.com/mssql/server
     container_name: userdata
     ports:
@@ -40,11 +40,11 @@ services:
       ACCEPT_EULA: Y
       MSSQL_PID: Express
     volumes:
-      - userdata_database:/var/opt/mssql
+      - userdata-database:/var/opt/mssql
     networks:
-      - microservices_network
+      - microservices-network
     
-  mysql_db:
+  mysql-db:
     container_name: weatherdata
     build:
       context: ./Weatherdata
@@ -56,15 +56,15 @@ services:
     volumes:
       - weather_database:/var/lib/mysql
     networks:
-      - microservices_network   
+      - microservices-network   
 
 volumes:
-  userdata_database:
-    name: userdata_database
-  weather_database:  
-    name: weather_database
-  kafka_data:  
-    name: kafka_data
+  userdata-database:
+    name: userdata-database
+  weather-database:  
+    name: weather-database
+  kafka-data:  
+    name: kafka-data
 networks:
-  microservices_network:
-    name: microservices_network
+  microservices-network:
+    name: microservices-network

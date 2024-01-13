@@ -68,8 +68,8 @@ public partial class EditConfiguration : ContentPage
             Simbolo.SelectedItem = Globals.ConfigurationSelected.Symbol.ToString();
         if (Globals.ConfigurationSelected.Value != null)
             Valore.Text = Globals.ConfigurationSelected.Value.ToString();
-        if (Globals.ConfigurationSelected.ValueUnit != null)
-            ValueUnit.Text = Globals.ConfigurationSelected.ValueUnit.ToString();
+        //if (Globals.ConfigurationSelected.ValueUnit != null)
+        //    ValueUnit.Text = Globals.ConfigurationSelected.ValueUnit.ToString();
         enableAll();
     }
 

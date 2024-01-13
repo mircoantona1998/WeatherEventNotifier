@@ -21,6 +21,7 @@ public partial class LoginPage : ContentPage
     {
         base.OnAppearing();
         Globals.page_current = "Login";
+        serverEntry.Text = Globals.server.Replace("http://","").Replace(":8080","");
         if (Globals.first == false)
         {
 
@@ -55,7 +56,7 @@ public partial class LoginPage : ContentPage
     {
         activityController.turnOn();
         disabledAllButton();
-
+        Globals.server = "http://" + serverEntry.Text.Replace("http://", "").Replace(":8080", "") + ":8080";
         var x = await _model.OnLoginClicked();
         if (x == true)
         {
@@ -102,7 +103,8 @@ public partial class LoginPage : ContentPage
     }
     private async void RegisterClicked(object sender, EventArgs e)
     {
-       await Navigation.PushAsync(new RegisterPage());
+        Globals.server = "http://" + serverEntry.Text.Replace("http://", "").Replace(":8080", "") + ":8080";
+        await Navigation.PushAsync(new RegisterPage());
     }
 
     private void ShowPassClicked(object sender, EventArgs e)

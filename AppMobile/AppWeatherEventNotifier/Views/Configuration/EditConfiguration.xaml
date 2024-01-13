@@ -84,7 +84,7 @@
                                 </Picker.ItemsSource>
                             </Picker>
                             <Editor  x:Name="Valore" Margin="0"  Keyboard="Numeric"  HorizontalOptions="FillAndExpand" VerticalOptions="Center" TextColor="{StaticResource Primary}" BackgroundColor="White" ></Editor>
-                            <Label x:Name="ValueUnit"  Margin="0"  HorizontalOptions="EndAndExpand" VerticalOptions="Center" ></Label>
+                        
                         </HorizontalStackLayout>
                         <Label Text="Frequenza" Margin="0"  VerticalOptions="Center" Grid.Row="6" Grid.Column="0"></Label>
                         <Picker x:Name="frequenza" SelectedIndexChanged="OnPickerSelectedIndexChangedFrequency" Margin="0"   BackgroundColor="White"  VerticalOptions="Center" TextColor="{StaticResource Primary}" Grid.Row="6" Grid.Column="1">

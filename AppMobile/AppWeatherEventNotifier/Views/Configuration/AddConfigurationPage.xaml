@@ -23,8 +23,8 @@
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
+                   <!-- <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition> -->
                 </Grid.RowDefinitions>
                 <ScrollView Grid.Row="0" Grid.RowSpan="5" Orientation="Vertical">
                     <Grid RowSpacing="12" ColumnSpacing="12" Padding="12">
@@ -73,7 +73,6 @@
                                 </Picker.ItemsSource>
                             </Picker>
                             <Editor x:Name="Valore" Margin="0" Keyboard="Numeric" BackgroundColor="White" HorizontalOptions="FillAndExpand" VerticalOptions="Center" TextColor="{StaticResource Primary}"></Editor>
-                            <Label x:Name="ValueUnit" Text="%" Margin="0"  HorizontalOptions="EndAndExpand" VerticalOptions="Center" ></Label>
                         </HorizontalStackLayout>
 
 
@@ -81,13 +80,13 @@
                         <Picker x:Name="Frequenza" SelectedIndexChanged="OnPickerSelectedIndexChangedFrequency" Margin="0"  BackgroundColor="White" VerticalOptions="Center" TextColor="{StaticResource Primary}" ItemsSource="{Binding Intentions_frequencys}"  Grid.Row="6" Grid.Column="1"></Picker>
                     </Grid>
                 </ScrollView>
-                <Grid Grid.Row="5" HeightRequest="200" >
+                <!-- <Grid Grid.Row="5" HeightRequest="200" >
                     
                     <maps:SfMaps x:Name="sfMaps"  >
-                        <!-- Add layers, shapes, or other map-related elements here -->
+                        --><!-- Add layers, shapes, or other map-related elements here --><!--
                     </maps:SfMaps>
-                </Grid>
-                <Grid Grid.Row="6"  VerticalOptions="CenterAndExpand">
+                </Grid>-->
+                <Grid Grid.Row="5"  VerticalOptions="CenterAndExpand">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>

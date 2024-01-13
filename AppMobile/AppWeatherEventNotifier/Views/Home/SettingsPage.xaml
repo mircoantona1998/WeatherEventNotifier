@@ -29,7 +29,14 @@
                     <Frame Grid.Column="1" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand" CornerRadius="10" Padding="0">
                         <Editor x:Name="Telegram"  HorizontalOptions="Fill" Text="" BackgroundColor="White" FontSize="Medium" />
                     </Frame>
-                    <Switch Grid.Column="2" x:Name="TelegramSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="End" />
+                    <Switch Grid.Column="2" x:Name="TelegramSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="End" IsEnabled="False" >
+                        <Switch.Resources>
+                            <Style TargetType="Switch">
+                                <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
+                                <Setter Property="OnColor" Value="{StaticResource Secondary}" />
+                            </Style>
+                        </Switch.Resources>
+                    </Switch>
                 </Grid>
 
                 <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5">
@@ -42,7 +49,14 @@
                     <Frame Grid.Column="1" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand" CornerRadius="10" Padding="0">
                         <Editor x:Name="Mail"  HorizontalOptions="FillAndExpand" Text="" BackgroundColor="White" FontSize="Medium" />
                     </Frame>
-                    <Switch Grid.Column="2" x:Name="MailSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="End" />
+                    <Switch Grid.Column="2" x:Name="MailSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="End"  IsEnabled="False" >
+                        <Switch.Resources >
+                            <Style TargetType="Switch" >
+                                <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
+                                <Setter Property="OnColor" Value="{StaticResource Secondary}" />
+                            </Style>
+                        </Switch.Resources>
+                    </Switch>
                 </Grid>
                 <Button x:Name="modificaButton" Text="Modifica" Clicked="Button_Modifica" HorizontalOptions="Center" Margin="10"></Button>
             </StackLayout>

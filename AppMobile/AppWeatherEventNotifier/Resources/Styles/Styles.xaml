@@ -332,8 +332,8 @@
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="OnColor" Value="{StaticResource Gray300}" />
-                            <Setter Property="ThumbColor" Value="{StaticResource Gray300}" />
+                            <Setter Property="OnColor" Value="{StaticResource Secondary}" />
+                            <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="On">
@@ -344,7 +344,8 @@
                     </VisualState>
                     <VisualState x:Name="Off">
                         <VisualState.Setters>
-                            <Setter Property="ThumbColor" Value="{StaticResource Gray400}" />
+                            <Setter Property="OnColor" Value="{StaticResource Secondary}" />
+                            <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>

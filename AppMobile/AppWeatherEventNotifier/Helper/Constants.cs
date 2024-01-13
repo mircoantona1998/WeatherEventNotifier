@@ -6,8 +6,8 @@ namespace AppWeatherEventNotifier.Helper
         public const string PHOTO_DIR = "Pictures";
         public const string NO_PHOTO = "Non hai altre foto";
         public const string FILE_DIR = "Files";
-        public const string SERVER = "http://192.168.1.9:8080";
-        public const string SERVER_DEBUG = "http://192.168.1.9:8080"; //indirizzo publico del server se si fa port forwarding altrimenti collegare il telefono alla stessa rete del server e mettere indirizzo ip locale del server     
+        public const string SERVER = ""; //"http://172.20.10.3:8080";
+        public const string SERVER_DEBUG = ""; //"http://172.20.10.3:8080"; //indirizzo publico del server se si fa port forwarding altrimenti collegare il telefono alla stessa rete del server e mettere indirizzo ip locale del server     
 
         public const bool debug= true;
 

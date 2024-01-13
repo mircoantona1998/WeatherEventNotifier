@@ -24,9 +24,18 @@
             <StackLayout>
                 <Grid BackgroundColor="Transparent" >
                     <StackLayout   Margin="0" Padding="0"  BackgroundColor="Transparent">
-                        <Frame Margin="0,0,0,5" BorderColor="Transparent" BackgroundColor="Transparent" HeightRequest="300"  WidthRequest="300" VerticalOptions="Start" HorizontalOptions="Center" CornerRadius="0">
+                        <Frame BorderColor="{StaticResource White}" BackgroundColor="White"  CornerRadius="10" WidthRequest="300" HorizontalOptions="Fill" VerticalOptions="Center" Padding="0" Margin="40,0,40,0">
+                                <Editor WidthRequest="250" HorizontalOptions="FillAndExpand" Placeholder="inserisci indirizzo privato del server es.: 172.20.10.3"   
+                                     PlaceholderColor="#20509b"   
+                                     BackgroundColor="White"  Keyboard="Plain"                                
+                                     x:Name="serverEntry" Text="" 
+                                     TextColor="Black"   >
+                                </Editor>
+                        </Frame>
+                        <Frame Margin="0,0,0,0" BorderColor="Transparent" BackgroundColor="Transparent" HeightRequest="300"  WidthRequest="300" VerticalOptions="Start" HorizontalOptions="Center" CornerRadius="0">
                             <Image VerticalOptions="Fill" HorizontalOptions="Fill"  HeightRequest="300"  WidthRequest="300" Source="meteo.jpg" ></Image>
                         </Frame>
+
                         <Frame BorderColor="{StaticResource White}" BackgroundColor="White"  CornerRadius="10" WidthRequest="300" HorizontalOptions="Fill" VerticalOptions="Center" Padding="0" Margin="40,0,40,0">
                             <HorizontalStackLayout HorizontalOptions="Fill">
                                 <Image  Margin="5,0,0,0" VerticalOptions="Center"  WidthRequest="25"  HeightRequest="25"  HorizontalOptions="Start"  Grid.Row="0" Grid.Column="0"     Source="username.png" ></Image>
@@ -38,7 +47,7 @@
                                 </Entry>
                             </HorizontalStackLayout>
                         </Frame>
-                        <Frame BorderColor="{StaticResource White}" BackgroundColor="White"  CornerRadius="10"  VerticalOptions="Center" Padding="0" WidthRequest="300"  Margin="40,20,40,10">
+                        <Frame BorderColor="{StaticResource White}" BackgroundColor="White"  CornerRadius="10"  VerticalOptions="Center" Padding="0" WidthRequest="300"  Margin="40,20,40,0">
                             <HorizontalStackLayout Margin="0" HorizontalOptions="Fill" >
                                 <Image  Margin="5,0,0,0"  HeightRequest="25"  WidthRequest="25" VerticalOptions="Center" HorizontalOptions="Start"       Source="password.png" ></Image>
                                 <Entry WidthRequest="235" HorizontalOptions="FillAndExpand" 
@@ -52,18 +61,18 @@
                                 <ImageButton x:Name="pass" HeightRequest="20" WidthRequest="20"  VerticalOptions="Center" HorizontalOptions="End" Clicked="ShowPassClicked"    Source="eye.png" ></ImageButton>
                             </HorizontalStackLayout>
                         </Frame>
-                        <Button   BackgroundColor="Transparent"  BorderColor="Transparent"     HorizontalOptions="End"     VerticalOptions="Center"  
+                        <!--<Button   BackgroundColor="Transparent"  BorderColor="Transparent"     HorizontalOptions="End"     VerticalOptions="Center"  
                  Text="Password dimenticata?" InputTransparent="True"    Padding="3"  Margin="0,0,50,0"          >
-                        </Button>
+                        </Button>-->
                         <Button x:Name="login"  BackgroundColor="#20509b" Clicked="LoginClicked"     BorderColor="{StaticResource White}" BorderWidth="1"   HorizontalOptions="FillAndExpand"     VerticalOptions="Center" 
-                 Text="Accedi"   CornerRadius="10"  Padding="3"  Margin="30,40,30,10"         FontAttributes="Bold"  >
+                 Text="Accedi"   CornerRadius="10"  Padding="3"  Margin="30,10,30,10"         FontAttributes="Bold"  >
                         </Button>
                         <HorizontalStackLayout  HorizontalOptions="Start" Spacing="0" Margin="40,0,0,0" BackgroundColor="Transparent" VerticalOptions="Center">
                             <CheckBox VerticalOptions="Center" HorizontalOptions="Fill" Margin="0" x:Name="check"></CheckBox>
                             <Button x:Name="labcheck"  Clicked="CheckClicked" Padding="1" Margin="0"  VerticalOptions="Center" HorizontalOptions="Start" Text="Ricordami" BackgroundColor="Transparent" InputTransparent="False" TextColor="White"></Button>
                         </HorizontalStackLayout>
                         <Button x:Name="reg"   BackgroundColor="#20509b" Clicked="RegisterClicked"     BorderColor="{StaticResource White}" BorderWidth="1"   HorizontalOptions="FillAndExpand"     VerticalOptions="Center" 
-                            Text="Registrati"   CornerRadius="10"  Padding="3"  Margin="30,40,30,10"         FontAttributes="Bold"  >
+                            Text="Registrati"   CornerRadius="10"  Padding="3"  Margin="30,10,30,10"         FontAttributes="Bold"  >
                         </Button>
                     </StackLayout>
                     <customControls:ActivityIndicatorControl x:Name="activityController"></customControls:ActivityIndicatorControl>
