@@ -30,6 +30,33 @@ services:
       - zookeeper
     networks:
       - microservices-network
+      
+  prometheus:
+      image: prom/prometheus
+      container_name: prometheus-service
+      ports:
+        - "9090:9090"
+      networks:
+        - microservices-network
+      volumes:
+        - ./API/promconfig.yml:/etc/prometheus/prometheus.yml
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+        - '--web.enable-lifecycle'
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-service
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - microservices-network 
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_data:/var/lib/grafana
           
   expose-api:
     extends:
@@ -48,11 +75,7 @@ services:
     extends:
       file: API/docker-compose.yml
       service: expose-api-db
-    # deploy:
-      # resources:
-        # limits:
-          # cpus: '0.2'  
-          # memory: '216M'        
+       
 #to add a partition duplicate from this and change the PARTITION= last partition+1 and change the names
   configurator-service-part0-rep0:
     container_name: configurator-service-part0-rep0
@@ -976,8 +999,13 @@ volumes:
     name: scheduler-database-part1
   kafka-data:  
     name: kafka-data
+  prometheus_data:
+   name: prometheus_data-data
+  grafana_data:
+   name: grafana_data
 networks:
   microservices-network:
     name: microservices-network
+    driver: bridge
 
 

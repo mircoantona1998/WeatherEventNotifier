@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Confluent.Kafka.Admin;
 using ExposeAPI.Utils;
+using Prometheus;
 
 config.configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -178,6 +179,12 @@ builder.Services.AddCors(options =>
 });
 var app = builder.Build();
 app.UseCors("CorsPolicy");
+app.UseRouting();
+app.UseHttpMetrics();
+app.UseEndpoints(endpoints =>
+{
+endpoints.MapMetrics();
+});
 app.UseSwagger();
 app.UseSwaggerUI();
 //app.UseHttpsRedirection();
