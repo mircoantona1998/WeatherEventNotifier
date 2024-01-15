@@ -22,7 +22,7 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "topic_to_scheduler:2:1,topic_to_weather:2:1,topic_to_mail:2:1,topic_to_telegram:2:1,topic_to_notifier:2:1,topic_to_configuration:2:1,topic_to_userdata:2:1"
+      KAFKA_CREATE_TOPICS: "topic_to_scheduler:1:1,topic_to_weather:1:1,topic_to_mail:1:1,topic_to_telegram:1:1,topic_to_notifier:1:1,topic_to_configuration:1:1,topic_to_userdata:1:1,topic_to_manager:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - kafka-data:/var/lib/kafka/data 
@@ -39,11 +39,12 @@ services:
       networks:
         - microservices-network
       volumes:
-        - ./API/promconfig.yml:/etc/prometheus/prometheus.yml
+        - ./Prometheus/promconfig.yml:/etc/prometheus/prometheus.yml
+        - prometheus_data:/etc/prometheus/data
       command:
         - '--config.file=/etc/prometheus/prometheus.yml'
         - '--web.enable-lifecycle'
-
+        
   grafana:
     image: grafana/grafana
     container_name: grafana-service
@@ -63,7 +64,7 @@ services:
       file: API/docker-compose.yml
       service: expose-api
     environment:
-      - HowManyPartition=2
+      - HowManyPartition=1
       - groupID=ExposeAPIService
       - bootstrapServers=kafka:9093
     networks:
@@ -75,7 +76,24 @@ services:
     extends:
       file: API/docker-compose.yml
       service: expose-api-db
-       
+      
+  sla-manager:
+    extends:
+      file: SLAManager/docker-compose.yml
+      service: sla-manager
+    environment:
+      - HowManyPartition=1
+      - groupID=ExposeAPIService
+      - bootstrapServers=kafka:9093
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka
+     
+  sla-manager-db:
+    extends:
+      file: SLAManager/docker-compose.yml
+      service: sla-manager-db
 #to add a partition duplicate from this and change the PARTITION= last partition+1 and change the names
   configurator-service-part0-rep0:
     container_name: configurator-service-part0-rep0
@@ -524,38 +542,8 @@ services:
 #to this  
 
 #PARTITION 1  
-  configurator-service-part1-rep0:
-    container_name: configurator-service-part1-rep0
-    build:
-      context: ./ConfiguratorService/app
-      dockerfile: Dockerfile
-    environment:
-     - PARTITION=1
-     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     - CONSUMER_GROUP_ID=ConfiguratorService
-     - CONSUMER_AUTO_OFFSET_RESET=earliest
-     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     - PRODUCER_CLIENT_ID=ConfiguratorService
-     - GROUP_ID=ConfiguratorService
-     - DOCKER_ENVIRONMENT=True
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=configurator-db-part1
-     - DATABASE_NAME=ConfigurationAlert
-    networks:
-      - microservices-network  
-    depends_on:
-      - kafka
-      - configurator-db-part1
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'  
-          memory: '216M'      
-          
-  # configurator-service-part1-rep1:
-    # container_name: configurator-service-part1-rep1
+  # configurator-service-part1-rep0:
+    # container_name: configurator-service-part1-rep0
     # build:
       # context: ./ConfiguratorService/app
       # dockerfile: Dockerfile
@@ -582,54 +570,54 @@ services:
       # resources:
         # limits:
           # cpus: '0.2'  
-          # memory: '216M'
-      
-  configurator-db-part1:
-    container_name: configurator-db-part1
-    build:
-      context: ./ConfiguratorService/Configuratordata
-      dockerfile: Dockerfile
-    ports:
-      - "3313:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - configurator-database-part1:/var/lib/mysql
-    networks:
-      - microservices-network     
-   
-  mail-service-part1-rep0:
-    container_name: mail-service-part1-rep0
-    build:
-      context: ./MailService/app
-      dockerfile: Dockerfile
-    environment:
-     - PARTITION=1
-     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     - CONSUMER_GROUP_ID=MailService
-     - CONSUMER_AUTO_OFFSET_RESET=earliest
-     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     - PRODUCER_CLIENT_ID=MailService
-     - GROUP_ID=MailService
-     - DOCKER_ENVIRONMENT=True
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=mail-db-part1
-     - DATABASE_NAME=Mail
-    networks:
-      - microservices-network  
-    depends_on:
-      - kafka
-      - mail-db-part1 
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'  
-          memory: '216M'        
+          # memory: '216M'      
           
-  # mail-service-part1-rep1:
-    # container_name: mail-service-part1-rep1
+  # # configurator-service-part1-rep1:
+    # # container_name: configurator-service-part1-rep1
+    # # build:
+      # # context: ./ConfiguratorService/app
+      # # dockerfile: Dockerfile
+    # # environment:
+     # # - PARTITION=1
+     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - CONSUMER_GROUP_ID=ConfiguratorService
+     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
+     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - PRODUCER_CLIENT_ID=ConfiguratorService
+     # # - GROUP_ID=ConfiguratorService
+     # # - DOCKER_ENVIRONMENT=True
+     # # - DATABASE_USERNAME=root
+     # # - DATABASE_PASSWORD=root
+     # # - DATABASE_PORTA=3306
+     # # - DATABASE_IP=configurator-db-part1
+     # # - DATABASE_NAME=ConfigurationAlert
+    # # networks:
+      # # - microservices-network  
+    # # depends_on:
+      # # - kafka
+      # # - configurator-db-part1
+    # # deploy:
+      # # resources:
+        # # limits:
+          # # cpus: '0.2'  
+          # # memory: '216M'
+      
+  # configurator-db-part1:
+    # container_name: configurator-db-part1
+    # build:
+      # context: ./ConfiguratorService/Configuratordata
+      # dockerfile: Dockerfile
+    # ports:
+      # - "3313:3306"
+    # environment:
+      # MYSQL_ROOT_PASSWORD: root
+    # volumes:
+      # - configurator-database-part1:/var/lib/mysql
+    # networks:
+      # - microservices-network     
+   
+  # mail-service-part1-rep0:
+    # container_name: mail-service-part1-rep0
     # build:
       # context: ./MailService/app
       # dockerfile: Dockerfile
@@ -656,54 +644,54 @@ services:
       # resources:
         # limits:
           # cpus: '0.2'  
-          # memory: '216M'
-      
-  mail-db-part1:
-    container_name: mail-db-part1
-    build:
-      context: ./MailService/Maildata
-      dockerfile: Dockerfile
-    ports:
-      - "3314:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - mail-database-part1:/var/lib/mysql
-    networks:
-      - microservices-network    
-     
-  notifier-service-part1-rep0:
-    container_name: notifier-service-part1-rep0
-    build:
-      context: ./NotifierService/app
-      dockerfile: Dockerfile
-    environment:
-     - PARTITION=1
-     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     - CONSUMER_GROUP_ID=NotifierService
-     - CONSUMER_AUTO_OFFSET_RESET=earliest
-     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     - PRODUCER_CLIENT_ID=NotifierService
-     - GROUP_ID=NotifierService
-     - DOCKER_ENVIRONMENT=True
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=notifier-db-part1
-     - DATABASE_NAME=Notifier
-    networks:
-      - microservices-network  
-    depends_on:
-      - kafka
-      - notifier-db-part1 
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'  
-          memory: '216M'
+          # memory: '216M'        
           
-  # notifier-service-part1-rep1:
-    # container_name: notifier-service-part1-rep1
+  # # mail-service-part1-rep1:
+    # # container_name: mail-service-part1-rep1
+    # # build:
+      # # context: ./MailService/app
+      # # dockerfile: Dockerfile
+    # # environment:
+     # # - PARTITION=1
+     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - CONSUMER_GROUP_ID=MailService
+     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
+     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - PRODUCER_CLIENT_ID=MailService
+     # # - GROUP_ID=MailService
+     # # - DOCKER_ENVIRONMENT=True
+     # # - DATABASE_USERNAME=root
+     # # - DATABASE_PASSWORD=root
+     # # - DATABASE_PORTA=3306
+     # # - DATABASE_IP=mail-db-part1
+     # # - DATABASE_NAME=Mail
+    # # networks:
+      # # - microservices-network  
+    # # depends_on:
+      # # - kafka
+      # # - mail-db-part1 
+    # # deploy:
+      # # resources:
+        # # limits:
+          # # cpus: '0.2'  
+          # # memory: '216M'
+      
+  # mail-db-part1:
+    # container_name: mail-db-part1
+    # build:
+      # context: ./MailService/Maildata
+      # dockerfile: Dockerfile
+    # ports:
+      # - "3314:3306"
+    # environment:
+      # MYSQL_ROOT_PASSWORD: root
+    # volumes:
+      # - mail-database-part1:/var/lib/mysql
+    # networks:
+      # - microservices-network    
+     
+  # notifier-service-part1-rep0:
+    # container_name: notifier-service-part1-rep0
     # build:
       # context: ./NotifierService/app
       # dockerfile: Dockerfile
@@ -731,53 +719,53 @@ services:
         # limits:
           # cpus: '0.2'  
           # memory: '216M'
-      
-  notifier-db-part1:
-    container_name: notifier-db-part1
-    build:
-      context: ./NotifierService/Notifierdata
-      dockerfile: Dockerfile
-    ports:
-      - "3315:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - notifier-database-part1:/var/lib/mysql
-    networks:
-      - microservices-network 
-      
-  scheduler-service-part1-rep0:
-    container_name: scheduler-service-part1-rep0
-    build:
-      context: ./SchedulerService/app
-      dockerfile: Dockerfile
-    environment:
-     - PARTITION=1
-     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     - CONSUMER_GROUP_ID=SchedulerService
-     - CONSUMER_AUTO_OFFSET_RESET=earliest
-     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     - PRODUCER_CLIENT_ID=SchedulerService
-     - GROUP_ID=SchedulerService
-     - DOCKER_ENVIRONMENT=True
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=scheduler-db-part1
-     - DATABASE_NAME=Scheduler
-    networks:
-      - microservices-network  
-    depends_on:
-      - kafka
-      - scheduler-db-part1 
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'  
-          memory: '216M'
           
-  # scheduler-service-part1-rep1:
-    # container_name: scheduler-service-part1-rep1
+  # # notifier-service-part1-rep1:
+    # # container_name: notifier-service-part1-rep1
+    # # build:
+      # # context: ./NotifierService/app
+      # # dockerfile: Dockerfile
+    # # environment:
+     # # - PARTITION=1
+     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - CONSUMER_GROUP_ID=NotifierService
+     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
+     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - PRODUCER_CLIENT_ID=NotifierService
+     # # - GROUP_ID=NotifierService
+     # # - DOCKER_ENVIRONMENT=True
+     # # - DATABASE_USERNAME=root
+     # # - DATABASE_PASSWORD=root
+     # # - DATABASE_PORTA=3306
+     # # - DATABASE_IP=notifier-db-part1
+     # # - DATABASE_NAME=Notifier
+    # # networks:
+      # # - microservices-network  
+    # # depends_on:
+      # # - kafka
+      # # - notifier-db-part1 
+    # # deploy:
+      # # resources:
+        # # limits:
+          # # cpus: '0.2'  
+          # # memory: '216M'
+      
+  # notifier-db-part1:
+    # container_name: notifier-db-part1
+    # build:
+      # context: ./NotifierService/Notifierdata
+      # dockerfile: Dockerfile
+    # ports:
+      # - "3315:3306"
+    # environment:
+      # MYSQL_ROOT_PASSWORD: root
+    # volumes:
+      # - notifier-database-part1:/var/lib/mysql
+    # networks:
+      # - microservices-network 
+      
+  # scheduler-service-part1-rep0:
+    # container_name: scheduler-service-part1-rep0
     # build:
       # context: ./SchedulerService/app
       # dockerfile: Dockerfile
@@ -799,59 +787,59 @@ services:
       # - microservices-network  
     # depends_on:
       # - kafka
-      # - scheduler-db-part1   
+      # - scheduler-db-part1 
     # deploy:
       # resources:
         # limits:
           # cpus: '0.2'  
           # memory: '216M'
-      
-  scheduler-db-part1:
-    container_name: scheduler-db-part1
-    build:
-      context: ./SchedulerService/Schedulerdata
-      dockerfile: Dockerfile
-    ports:
-      - "3316:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - scheduler-database-part1:/var/lib/mysql
-    networks:
-      - microservices-network 
-       
-  telegram-service-part1-rep0:
-    container_name: telegram-service-part1-rep0
-    build:
-      context: ./TelegramService/app
-      dockerfile: Dockerfile
-    environment:
-     - PARTITION=1
-     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     - CONSUMER_GROUP_ID=TelegramService
-     - CONSUMER_AUTO_OFFSET_RESET=earliest
-     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     - PRODUCER_CLIENT_ID=TelegramService
-     - GROUP_ID=TelegramService
-     - DOCKER_ENVIRONMENT=True
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=telegram-db-part1
-     - DATABASE_NAME=Telegram
-    networks:
-      - microservices-network  
-    depends_on:
-      - kafka
-      - telegram-db-part1 
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'  
-          memory: '216M'     
           
-  # telegram-service-part1-rep1:
-    # container_name: telegram-service-part1-rep1
+  # # scheduler-service-part1-rep1:
+    # # container_name: scheduler-service-part1-rep1
+    # # build:
+      # # context: ./SchedulerService/app
+      # # dockerfile: Dockerfile
+    # # environment:
+     # # - PARTITION=1
+     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - CONSUMER_GROUP_ID=SchedulerService
+     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
+     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - PRODUCER_CLIENT_ID=SchedulerService
+     # # - GROUP_ID=SchedulerService
+     # # - DOCKER_ENVIRONMENT=True
+     # # - DATABASE_USERNAME=root
+     # # - DATABASE_PASSWORD=root
+     # # - DATABASE_PORTA=3306
+     # # - DATABASE_IP=scheduler-db-part1
+     # # - DATABASE_NAME=Scheduler
+    # # networks:
+      # # - microservices-network  
+    # # depends_on:
+      # # - kafka
+      # # - scheduler-db-part1   
+    # # deploy:
+      # # resources:
+        # # limits:
+          # # cpus: '0.2'  
+          # # memory: '216M'
+      
+  # scheduler-db-part1:
+    # container_name: scheduler-db-part1
+    # build:
+      # context: ./SchedulerService/Schedulerdata
+      # dockerfile: Dockerfile
+    # ports:
+      # - "3316:3306"
+    # environment:
+      # MYSQL_ROOT_PASSWORD: root
+    # volumes:
+      # - scheduler-database-part1:/var/lib/mysql
+    # networks:
+      # - microservices-network 
+       
+  # telegram-service-part1-rep0:
+    # container_name: telegram-service-part1-rep0
     # build:
       # context: ./TelegramService/app
       # dockerfile: Dockerfile
@@ -873,59 +861,59 @@ services:
       # - microservices-network  
     # depends_on:
       # - kafka
-      # - telegram-db-part1     
+      # - telegram-db-part1 
     # deploy:
       # resources:
         # limits:
           # cpus: '0.2'  
-          # memory: '216M'
-      
-  telegram-db-part1:
-    container_name: telegram-db-part1
-    build:
-      context: ./TelegramService/Telegramdata
-      dockerfile: Dockerfile
-    ports:
-      - "3317:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - telegram-database-part1:/var/lib/mysql
-    networks:
-      - microservices-network 
-     
-  weather-service-part1-rep0:
-    container_name: weather-service-part1-rep0
-    build:
-      context: ./WeatherService/app
-      dockerfile: Dockerfile
-    environment:
-     - PARTITION=1
-     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     - CONSUMER_GROUP_ID=WeatherService
-     - CONSUMER_AUTO_OFFSET_RESET=earliest
-     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     - PRODUCER_CLIENT_ID=WeatherService
-     - GROUP_ID=WeatherService
-     - DOCKER_ENVIRONMENT=True
-     - DATABASE_USERNAME=root
-     - DATABASE_PASSWORD=root
-     - DATABASE_PORTA=3306
-     - DATABASE_IP=weather-db-part1
-     - DATABASE_NAME=Weather
-    networks:
-      - microservices-network  
-    depends_on:
-      - kafka
-      - weather-db-part1
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'  
-          memory: '216M'  
+          # memory: '216M'     
           
-  # weather-service-part1-rep1:
-    # container_name: weather-service-part1-rep1
+  # # telegram-service-part1-rep1:
+    # # container_name: telegram-service-part1-rep1
+    # # build:
+      # # context: ./TelegramService/app
+      # # dockerfile: Dockerfile
+    # # environment:
+     # # - PARTITION=1
+     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - CONSUMER_GROUP_ID=TelegramService
+     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
+     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - PRODUCER_CLIENT_ID=TelegramService
+     # # - GROUP_ID=TelegramService
+     # # - DOCKER_ENVIRONMENT=True
+     # # - DATABASE_USERNAME=root
+     # # - DATABASE_PASSWORD=root
+     # # - DATABASE_PORTA=3306
+     # # - DATABASE_IP=telegram-db-part1
+     # # - DATABASE_NAME=Telegram
+    # # networks:
+      # # - microservices-network  
+    # # depends_on:
+      # # - kafka
+      # # - telegram-db-part1     
+    # # deploy:
+      # # resources:
+        # # limits:
+          # # cpus: '0.2'  
+          # # memory: '216M'
+      
+  # telegram-db-part1:
+    # container_name: telegram-db-part1
+    # build:
+      # context: ./TelegramService/Telegramdata
+      # dockerfile: Dockerfile
+    # ports:
+      # - "3317:3306"
+    # environment:
+      # MYSQL_ROOT_PASSWORD: root
+    # volumes:
+      # - telegram-database-part1:/var/lib/mysql
+    # networks:
+      # - microservices-network 
+     
+  # weather-service-part1-rep0:
+    # container_name: weather-service-part1-rep0
     # build:
       # context: ./WeatherService/app
       # dockerfile: Dockerfile
@@ -952,21 +940,51 @@ services:
       # resources:
         # limits:
           # cpus: '0.2'  
-          # memory: '216M'
+          # memory: '216M'  
+          
+  # # weather-service-part1-rep1:
+    # # container_name: weather-service-part1-rep1
+    # # build:
+      # # context: ./WeatherService/app
+      # # dockerfile: Dockerfile
+    # # environment:
+     # # - PARTITION=1
+     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - CONSUMER_GROUP_ID=WeatherService
+     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
+     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     # # - PRODUCER_CLIENT_ID=WeatherService
+     # # - GROUP_ID=WeatherService
+     # # - DOCKER_ENVIRONMENT=True
+     # # - DATABASE_USERNAME=root
+     # # - DATABASE_PASSWORD=root
+     # # - DATABASE_PORTA=3306
+     # # - DATABASE_IP=weather-db-part1
+     # # - DATABASE_NAME=Weather
+    # # networks:
+      # # - microservices-network  
+    # # depends_on:
+      # # - kafka
+      # # - weather-db-part1
+    # # deploy:
+      # # resources:
+        # # limits:
+          # # cpus: '0.2'  
+          # # memory: '216M'
       
-  weather-db-part1:
-    container_name: weather-db-part1
-    build:
-      context: ./WeatherService/Weatherdata
-      dockerfile: Dockerfile
-    ports:
-      - "3318:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - weather-database-part1:/var/lib/mysql
-    networks:
-      - microservices-network
+  # weather-db-part1:
+    # container_name: weather-db-part1
+    # build:
+      # context: ./WeatherService/Weatherdata
+      # dockerfile: Dockerfile
+    # ports:
+      # - "3318:3306"
+    # environment:
+      # MYSQL_ROOT_PASSWORD: root
+    # volumes:
+      # - weather-database-part1:/var/lib/mysql
+    # networks:
+      # - microservices-network
  
 #END PARTITION 1
 
@@ -975,34 +993,36 @@ volumes:
     name: userdata-database
   configurator-database-part0:  
     name: configurator-database-part0
-  configurator-database-part1:  
-    name: configurator-database-part1
+  # configurator-database-part1:  
+    # name: configurator-database-part1
   mail-database-part0:  
     name: mail-database-part0
-  mail-database-part1:  
-    name: mail-database-part1
+  # mail-database-part1:  
+    # name: mail-database-part1
   telegram-database-part0:  
     name: telegram-database-part0
-  telegram-database-part1:  
-    name: telegram-database-part1
+  # telegram-database-part1:  
+    # name: telegram-database-part1
   notifier-database-part0:
     name: notifier-database-part0
-  notifier-database-part1:
-    name: notifier-database-part1
+  # notifier-database-part1:
+    # name: notifier-database-part1
   weather-database-part0:  
     name: weather-database-part0
-  weather-database-part1:  
-    name: weather-database-part1
+  # weather-database-part1:  
+    # name: weather-database-part1
   scheduler-database-part0:  
     name: scheduler-database-part0
-  scheduler-database-part1:  
-    name: scheduler-database-part1
+  # scheduler-database-part1:  
+    # name: scheduler-database-part1
   kafka-data:  
     name: kafka-data
   prometheus_data:
-   name: prometheus_data-data
+    name: prometheus_data
   grafana_data:
-   name: grafana_data
+    name: grafana_data
+  sla-manager-database:
+    name: sla-manager-database
 networks:
   microservices-network:
     name: microservices-network
