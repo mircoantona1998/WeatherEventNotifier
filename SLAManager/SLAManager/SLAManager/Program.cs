@@ -19,11 +19,11 @@ Logger log= new();
 
 string sqlServerHost = Environment.GetEnvironmentVariable("SQL_SERVER_HOST") ?? "localhost";
 string sqlServerPort = Environment.GetEnvironmentVariable("SQL_SERVER_PORT") ?? "1434";
-string sqlServerDatabase = Environment.GetEnvironmentVariable("SQL_SERVER_DATABASE") ?? "Userdata";
+string sqlServerDatabase = Environment.GetEnvironmentVariable("SQL_SERVER_DATABASE") ?? "SLAManager";
 string sqlServerUser = Environment.GetEnvironmentVariable("SQL_SERVER_USER") ?? "sa";
 string sqlServerPassword = Environment.GetEnvironmentVariable("SQL_SERVER_PASSWORD") ?? "RootRoot.1";
 string masterConnectionString = Environment.GetEnvironmentVariable("ConnectionStringsMaster") ?? $"Data Source={sqlServerHost},{sqlServerPort};User ID={sqlServerUser};Password={sqlServerPassword};";
-string connectionString = Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:Userdata"];
+string connectionString = Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:SLAManager"];
 string sqlServerScriptPath = "init-sqlServer.sql";
 string sqlServerDump = File.ReadAllText(sqlServerScriptPath);
 connectionString = connectionString+"TrustServerCertificate = true";

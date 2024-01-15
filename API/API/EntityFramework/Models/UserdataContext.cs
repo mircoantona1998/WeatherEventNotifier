@@ -22,16 +22,14 @@ public partial class UserdataContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings") ??
-                 new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .Build()["ConnectionStrings:Userdata"]);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=127.0.0.1,1433;Initial Catalog=Userdata;User ID=sa;Password=RootRoot.1; Encrypt=False;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<MessageReceived>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83F8D088E93");
+            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83FDFED8CFE");
 
             entity.ToTable("MessageReceived");
 
@@ -67,7 +65,7 @@ public partial class UserdataContext : DbContext
 
         modelBuilder.Entity<MessageSent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83F1B33F555");
+            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83F979BAACB");
 
             entity.ToTable("MessageSent");
 
@@ -137,6 +135,7 @@ public partial class UserdataContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasDefaultValueSql("(NULL)");
+            entity.Property(e => e.Partition).HasDefaultValueSql("(NULL)");
             entity.Property(e => e.Password).HasDefaultValueSql("(NULL)");
             entity.Property(e => e.Username)
                 .HasMaxLength(50)

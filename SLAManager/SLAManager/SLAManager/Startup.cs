@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using SLAManagerdata.Models;
 using Userdata.Models;
 
 public class Startup
@@ -15,11 +14,11 @@ public class Startup
     }
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddIdentity<User, IdentityRole>()
+        services.AddIdentity<Service, IdentityRole>()
          .AddEntityFrameworkStores<SlamanagerContext>()
          .AddDefaultTokenProviders();
-        services.AddScoped<UserManager<User>>();
-        services.AddScoped<SignInManager<User>>();
+        services.AddScoped<UserManager<Service>>();
+        services.AddScoped<SignInManager<Service>>();
         services.AddDbContext<SlamanagerContext>(options => options.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings") ?? Configuration.GetConnectionString("Userdata")));
         services.AddAuthorization();
         services.AddControllers();

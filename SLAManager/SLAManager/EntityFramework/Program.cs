@@ -2,7 +2,6 @@ using Userdata.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Userdata.Configurations;
-using SLAManagerdata.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();

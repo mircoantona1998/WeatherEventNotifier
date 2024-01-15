@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using SLAManager.Models;
 
-namespace SLAManagerdata.Models;
+namespace Userdata.Models;
 
 public partial class SlamanagerContext : DbContext
 {
@@ -19,7 +20,7 @@ public partial class SlamanagerContext : DbContext
 
     public virtual DbSet<MessageSent> MessageSents { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Service> Services { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -99,7 +100,7 @@ public partial class SlamanagerContext : DbContext
                 .HasColumnName("type");
         });
 
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<Service>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_users_Id");
 
@@ -114,11 +115,12 @@ public partial class SlamanagerContext : DbContext
                 .HasColumnName("isBlocked");
             entity.Property(e => e.Partition).HasDefaultValueSql("(NULL)");
             entity.Property(e => e.Password).HasDefaultValueSql("(NULL)");
-            entity.Property(e => e.Service)
+            entity.Property(e => e.Service1)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasDefaultValueSql("(NULL)");
-            entity.Property(e => e.Username)
+                .HasDefaultValueSql("(NULL)")
+                .HasColumnName("Service");
+            entity.Property(e => e.Servicename)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasDefaultValueSql("(NULL)");

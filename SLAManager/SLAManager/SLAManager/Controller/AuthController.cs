@@ -19,18 +19,18 @@ namespace SLAManager.Controllers
 
 public class AuthController : ControllerBase
 {
-        private readonly UserRepository userRepo;
+        private readonly ServiceRepository userRepo;
         private readonly IConfiguration _configuration;
         public AuthController(IConfiguration configuration)
         {
             this._configuration = configuration;
-            userRepo = new UserRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("Userdata"));
+            userRepo = new ServiceRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("Userdata"));
         }
 
         #region POST
         [HttpPost]
         [Route("Registration")]
-        public async Task<ActionResult> Create(UserCreateDTO newItemDTO)
+        public async Task<ActionResult> Create(ServiceCreateDTO newItemDTO)
         {
             Logger log = new();
             log.LogAction("AuthController  Create");

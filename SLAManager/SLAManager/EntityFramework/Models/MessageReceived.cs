@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SLAManagerdata.Models;
+namespace SLAManager.Models;
 
 public partial class MessageReceived
 {

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using static EntityFramework.Classes.UserdataLib;
 using System.Diagnostics;
 using Microsoft.IdentityModel.Logging;
-using SLAManagerdata.Models;
 
 namespace Userdata.Models
 {
