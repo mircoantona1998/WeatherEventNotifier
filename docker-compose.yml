@@ -14,7 +14,6 @@ services:
     container_name: kafka-service
     ports:
       - "9092:9092"
-      - "9094:9094"
     expose:
       - "9093"
     environment:
@@ -23,9 +22,7 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "topic_to_scheduler:1:1,topic_to_weather:1:1,topic_to_mail:1:1,topic_to_telegram:1:1,topic_to_notifier:1:1,topic_to_configuration:1:1,topic_to_userdata:1:1,topic_to_manager:1:1"
-      KAFKA_JMX_PORT: 9094  
-      JMX_PORT: 9094   
+      KAFKA_CREATE_TOPICS: "topic_to_scheduler:1:1,topic_to_weather:1:1,topic_to_mail:1:1,topic_to_telegram:1:1,topic_to_notifier:1:1,topic_to_configuration:1:1,topic_to_userdata:1:1,topic_to_manager:1:1"  
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - kafka-data:/var/lib/kafka/data 

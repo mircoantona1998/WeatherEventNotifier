@@ -26,7 +26,7 @@ services:
     environment:
       - Logging:LogLevel:Default=Information
       - Logging:LogLevel:Microsoft.AspNetCore=Warning
-      - ConnectionStrings=Data Source=sla-manager-db,1433;Initial Catalog=Userdata;User ID=sa;Password=RootRoot.1; Encrypt=False;
+      - ConnectionStrings=Data Source=sla-manager-db,1433;Initial Catalog=SLAManager;User ID=sa;Password=RootRoot.1; Encrypt=False;
       - ConnectionStringsMaster=Data Source=sla-manager-db,1433;User ID=sa;Password=RootRoot.1;Encrypt=False;
       - Jwt=c5eKUcbKfkzGq6HfpnFhP7/G2pgS3S++YH33ue/A5uc=
       - AllowedHosts=*
