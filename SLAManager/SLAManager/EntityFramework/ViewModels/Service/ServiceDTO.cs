@@ -2,7 +2,7 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace Userdata.ViewModels
+namespace SLAManagerdata.ViewModels
 {
     #region USER
     public class ServiceCreateDTO

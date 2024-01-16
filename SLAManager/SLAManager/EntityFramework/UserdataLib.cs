@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 namespace EntityFramework.Classes
 {
-    public class UserdataLib : ControllerBase
+    public class SLAManagerdataLib : ControllerBase
     {
 
         #region UTILS

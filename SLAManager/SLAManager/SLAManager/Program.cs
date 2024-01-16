@@ -10,6 +10,7 @@ using Confluent.Kafka.Admin;
 using SLAManager.Utils;
 using Prometheus;
 
+
 config.configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
@@ -42,7 +43,7 @@ foreach (string command in DB.GetSqlCommands(sqlServerDump))
     }
     else DB.ExecuteSqlCommand(connectionString, command);
 }
-config.confdb = Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:Userdata"];
+config.confdb = Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:SLAManagerdata"];
 Kafka.producer = new KafkaProducer();
 Kafka.consumer = new KafkaConsumer(Environment.GetEnvironmentVariable("topic_to_manager") ?? config.configuration["topic_to_manager"]);
 Kafka.consumerConfig = new ConsumerConfig
@@ -179,18 +180,26 @@ builder.Services.AddCors(options =>
     );
 });
 var app = builder.Build();
+//if (env.IsDevelopment())
+//{
+//}
+//else
+//{
+//    app.UseExceptionHandler("/Home/Error");
+//    app.UseHsts();
+//}
 app.UseCors("CorsPolicy");
 app.UseRouting();
-app.UseHttpMetrics();
-//app.UseEndpoints(endpoints =>
-//{
-//endpoints.MapMetrics();
-//});
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseDeveloperExceptionPage();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
-//app.UseHttpsRedirection();
 app.UseResponseCaching();
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 app.Run();
-
-

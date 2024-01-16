@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace Userdata.Utils
+namespace SLAManagerdata.Utils
 {
 
     public  class Logger

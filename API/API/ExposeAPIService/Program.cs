@@ -178,18 +178,30 @@ builder.Services.AddCors(options =>
     );
 });
 var app = builder.Build();
-app.UseCors("CorsPolicy");
-app.UseRouting();
+//if (env.IsDevelopment())
+//{
+    app.UseDeveloperExceptionPage();
+//}
+//else
+//{
+//    app.UseExceptionHandler("/Home/Error");
+//    app.UseHsts();
+//}
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseHttpMetrics();
-app.UseEndpoints(endpoints =>
-{
-endpoints.MapMetrics();
-});
 app.UseSwagger();
 app.UseSwaggerUI();
-//app.UseHttpsRedirection();
 app.UseResponseCaching();
+app.UseRouting();
+app.UseCors("CorsPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+app.UseDeveloperExceptionPage();
 app.MapControllers();
+app.MapMetrics();
 app.Run();
-
-

@@ -2,8 +2,8 @@
 using SLAManager.Configurations;
 using SLAManager.Utils;
 using System.Text;
-using Userdata.Models;
-using Userdata.ViewModels;
+using SLAManagerdata.Models;
+using SLAManagerdata.ViewModels;
 
 namespace SLAManager.Kafka
 {

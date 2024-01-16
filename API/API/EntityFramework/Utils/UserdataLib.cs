@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-namespace EntityFramework.Classes
+namespace EntityFramework.Utils
 {
     public class UserdataLib : ControllerBase
     {

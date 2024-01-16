@@ -1,6 +1,6 @@
 ﻿
 
-namespace Userdata.Configurations
+namespace SLAManagerdata.Configurations
 {
     public static class config
     {

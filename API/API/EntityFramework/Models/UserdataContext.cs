@@ -14,6 +14,12 @@ public partial class UserdataContext : DbContext
     public UserdataContext(DbContextOptions<UserdataContext> options)
         : base(options)
     {
+        if(config.configuration==null)
+            config.configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .AddEnvironmentVariables()
+            .Build();
     }
 
     public virtual DbSet<MessageReceived> MessageReceiveds { get; set; }

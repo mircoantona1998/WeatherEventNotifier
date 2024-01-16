@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Userdata.ViewModels;
+using SLAManagerdata.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using static EntityFramework.Classes.UserdataLib;
+using static EntityFramework.Classes.SLAManagerdataLib;
 using System.Diagnostics;
 using Microsoft.IdentityModel.Logging;
 
-namespace Userdata.Models
+namespace SLAManagerdata.Models
 {
     public class MessageSentRepository
     {

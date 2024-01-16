@@ -1,6 +1,6 @@
 ﻿
 
-namespace Userdata.ViewModels
+namespace SLAManagerdata.ViewModels
 {
     #region MESSAGESENT
     public partial class MessageSentDTO

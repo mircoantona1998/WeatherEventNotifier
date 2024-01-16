@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Userdata.Models;
-using Userdata.ViewModels;
+using SLAManagerdata.Models;
+using SLAManagerdata.ViewModels;
 using SLAManager.Utils;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
@@ -24,7 +24,7 @@ public class AuthController : ControllerBase
         public AuthController(IConfiguration configuration)
         {
             this._configuration = configuration;
-            userRepo = new ServiceRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("Userdata"));
+            userRepo = new ServiceRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("SLAManagerdata"));
         }
 
         #region POST

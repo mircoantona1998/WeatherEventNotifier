@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Userdata.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using static EntityFramework.Classes.UserdataLib;
+using static EntityFramework.Utils.UserdataLib;
 using System.Diagnostics;
 using Microsoft.IdentityModel.Logging;
 

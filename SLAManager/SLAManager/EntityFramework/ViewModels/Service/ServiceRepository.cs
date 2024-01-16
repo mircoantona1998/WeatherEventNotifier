@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using Userdata.ViewModels;
+using SLAManagerdata.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using static EntityFramework.Classes.UserdataLib;
+using static EntityFramework.Classes.SLAManagerdataLib;
 using System.Diagnostics;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.AspNetCore.Identity;
-using Userdata.Utils;
+using SLAManagerdata.Utils;
 
 
-namespace Userdata.Models
+namespace SLAManagerdata.Models
 {
     public class ServiceRepository
     {

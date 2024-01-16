@@ -1,13 +1,6 @@
-using Userdata.Models;
+using SLAManagerdata.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using Userdata.Configurations;
-
-config.configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .AddEnvironmentVariables()
-    .Build();
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -20,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SlamanagerContext>(options =>
 {
-    options.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings") ?? builder.Configuration.GetConnectionString("Userdata"));
+    options.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings") ?? builder.Configuration.GetConnectionString("SLAManagerdata"));
 });
 builder.Services.AddCors(options =>
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Userdata.Models;
+namespace SLAManagerdata.Models;
 
 public partial class MessageSent
 {

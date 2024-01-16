@@ -58,8 +58,10 @@ services:
       - prometheus
       - sla-manager-db
     volumes:
-      - grafana_data:/var/lib/grafana
-          
+      - grafana-data:/var/lib/grafana
+      - ./Grafana:/etc/grafana
+      - ./Grafana/dashboards:/etc/grafana/dashboards
+     # - /grafana/grafana.db:/etc/grafana/grafana.db   
   expose-api:
     extends:
       file: API/docker-compose.yml
@@ -1020,8 +1022,8 @@ volumes:
     name: kafka-data
   prometheus_data:
     name: prometheus_data
-  grafana_data:
-    name: grafana_data
+  grafana-data:
+    name: grafana-data
   sla-manager-database:
     name: sla-manager-database
 networks:

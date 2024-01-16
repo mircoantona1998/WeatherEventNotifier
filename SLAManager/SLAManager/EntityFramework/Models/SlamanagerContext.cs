@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SLAManager.Models;
-using Userdata.Configurations;
-
-namespace Userdata.Models;
+using SLAManagerdata.Configurations;
+namespace SLAManagerdata.Models;
 
 public partial class SlamanagerContext : DbContext
 {
@@ -15,6 +12,12 @@ public partial class SlamanagerContext : DbContext
     public SlamanagerContext(DbContextOptions<SlamanagerContext> options)
         : base(options)
     {
+        if (config.configuration == null)
+            config.configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .AddEnvironmentVariables()
+            .Build();
     }
 
     public virtual DbSet<MessageReceived> MessageReceiveds { get; set; }

@@ -1,4 +1,4 @@
 ﻿EntityFramework
 https://www.entityframeworktutorial.net/efcore/create-model-for-existing-database-in-ef-core.aspx
 -Scaffolding su DB 
-Scaffold-DbContext "Data Source=127.0.0.1,1434;Initial Catalog=SLAManager;User ID=sa;Password=RootRoot.1; Encrypt=False;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Namespace Userdata.Models -Force
+Scaffold-DbContext "Data Source=127.0.0.1,1434;Initial Catalog=SLAManager;User ID=sa;Password=RootRoot.1; Encrypt=False;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Namespace SLAManagerdata.Models -Force
