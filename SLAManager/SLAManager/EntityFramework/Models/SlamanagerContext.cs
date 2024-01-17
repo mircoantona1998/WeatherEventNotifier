@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SLAManager.Models;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using SLAManagerdata.Configurations;
+
 namespace SLAManagerdata.Models;
 
 public partial class SlamanagerContext : DbContext
@@ -10,7 +12,7 @@ public partial class SlamanagerContext : DbContext
     }
 
     public SlamanagerContext(DbContextOptions<SlamanagerContext> options)
-        : base(options)
+    : base(options)
     {
         if (config.configuration == null)
             config.configuration = new ConfigurationBuilder()
@@ -19,6 +21,12 @@ public partial class SlamanagerContext : DbContext
             .AddEnvironmentVariables()
             .Build();
     }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:SLAManager"]);
+
+
+    public virtual DbSet<Heartbeat> Heartbeats { get; set; }
 
     public virtual DbSet<MessageReceived> MessageReceiveds { get; set; }
 
@@ -26,15 +34,23 @@ public partial class SlamanagerContext : DbContext
 
     public virtual DbSet<Service> Services { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:SLAManager"]);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Heartbeat>(entity =>
+        {
+            entity.ToTable("Heartbeat");
+
+            entity.Property(e => e.Timestamp).HasColumnType("datetime");
+
+            entity.HasOne(d => d.IdServiceNavigation).WithMany(p => p.Heartbeats)
+                .HasForeignKey(d => d.IdService)
+                .HasConstraintName("FK_heartbeat_Services");
+        });
+
         modelBuilder.Entity<MessageReceived>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83F799DDF6C");
+            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83F37306096");
 
             entity.ToTable("MessageReceived");
 
@@ -70,7 +86,7 @@ public partial class SlamanagerContext : DbContext
 
         modelBuilder.Entity<MessageSent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83FF1937444");
+            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83FE5594040");
 
             entity.ToTable("MessageSent");
 

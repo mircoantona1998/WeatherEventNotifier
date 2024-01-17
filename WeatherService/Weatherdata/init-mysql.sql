@@ -14,12 +14,32 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+create database `Weather`;
+use `Weather`;
+-- Table structure for table `HeartbeatSent`
+--
+
+DROP TABLE IF EXISTS `HeartbeatSent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+
+
+CREATE TABLE `HeartbeatSent` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `HeartbeatSent` WRITE;
+/*!40000 ALTER TABLE `HeartbeatSent` DISABLE KEYS */;
+/*!40000 ALTER TABLE `HeartbeatSent` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 --
 -- Table structure for table `Key`
 --
-create database `Weather`;
-use `Weather`;
+
 DROP TABLE IF EXISTS `Key`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;

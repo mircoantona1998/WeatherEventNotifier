@@ -20,4 +20,6 @@ public partial class Service
     public int? IsBlocked { get; set; }
 
     public int? Partition { get; set; }
+
+    public virtual ICollection<Heartbeat> Heartbeats { get; set; } = new List<Heartbeat>();
 }

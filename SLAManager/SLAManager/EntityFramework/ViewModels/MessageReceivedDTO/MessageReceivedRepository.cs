@@ -2,10 +2,7 @@
 using SLAManagerdata.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using static EntityFramework.Classes.SLAManagerdataLib;
-using System.Diagnostics;
-using Microsoft.IdentityModel.Logging;
-using System.Security.Principal;
-using SLAManager.Models;
+
 
 
 namespace SLAManagerdata.Models

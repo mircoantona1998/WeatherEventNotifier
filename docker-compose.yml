@@ -30,7 +30,25 @@ services:
       - zookeeper
     networks:
       - microservices-network
-         
+      
+  sla-manager:
+    extends:
+      file: SLAManager/docker-compose.yml
+      service: sla-manager
+    environment:
+      - HowManyPartition=1
+      - groupID=SLAManager
+      - bootstrapServers=kafka:9093
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka
+     
+  sla-manager-db:
+    extends:
+      file: SLAManager/docker-compose.yml
+      service: sla-manager-db
+
   expose-api:
     extends:
       file: API/docker-compose.yml
@@ -64,24 +82,6 @@ services:
         - '--web.enable-lifecycle'
       depends_on:
         - expose-api   
-      
-  sla-manager:
-    extends:
-      file: SLAManager/docker-compose.yml
-      service: sla-manager
-    environment:
-      - HowManyPartition=1
-      - groupID=SLAManager
-      - bootstrapServers=kafka:9093
-    networks:
-      - microservices-network  
-    depends_on:
-      - kafka
-     
-  sla-manager-db:
-    extends:
-      file: SLAManager/docker-compose.yml
-      service: sla-manager-db
  
   grafana:
     image: grafana/grafana
@@ -98,8 +98,6 @@ services:
       - microservices-network 
     volumes:
       - ./Grafana/data/:/var/lib/grafana
-      - ./Grafana/provisioning/:/etc/grafana/provisioning
-      - ./Grafana/provisioning/dashboards/:/etc/grafana/dashboards 
     depends_on:
       - prometheus
       - sla-manager-db
@@ -124,11 +122,13 @@ services:
      - DATABASE_PORTA=3306
      - DATABASE_IP=configurator-db-part0
      - DATABASE_NAME=ConfigurationAlert
+     - SLAMANAGER=sla-manager
     networks:
       - microservices-network  
     depends_on:
       - kafka
       - configurator-db-part0
+      - sla-manager
     deploy:
       resources:
         limits:
@@ -154,11 +154,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=configurator-db-part0
      # - DATABASE_NAME=ConfigurationAlert
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - configurator-db-part0
+      # - sla-manager
     # deploy:
       # resources:
         # limits:
@@ -198,11 +200,13 @@ services:
      - DATABASE_PORTA=3306
      - DATABASE_IP=mail-db-part0
      - DATABASE_NAME=Mail
+     - SLAMANAGER=sla-manager
     networks:
       - microservices-network  
     depends_on:
       - kafka
       - mail-db-part0
+      - sla-manager
     deploy:
       resources:
         limits:
@@ -228,11 +232,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=mail-db-part0
      # - DATABASE_NAME=Mail
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - mail-db-part0
+      # - sla-manager
     # deploy:
       # resources:
         # limits:
@@ -272,11 +278,13 @@ services:
      - DATABASE_PORTA=3306
      - DATABASE_IP=notifier-db-part0
      - DATABASE_NAME=Notifier
+     - SLAMANAGER=sla-manager
     networks:
       - microservices-network  
     depends_on:
       - kafka
       - notifier-db-part0
+      - sla-manager
     deploy:
       resources:
         limits:
@@ -302,11 +310,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=notifier-db-part0
      # - DATABASE_NAME=Notifier
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - notifier-db-part0
+      # - sla-manager
     # deploy:
       # resources:
         # limits:
@@ -346,11 +356,13 @@ services:
      - DATABASE_PORTA=3306
      - DATABASE_IP=scheduler-db-part0
      - DATABASE_NAME=Scheduler
+     - SLAMANAGER=sla-manager
     networks:
       - microservices-network  
     depends_on:
       - kafka
       - scheduler-db-part0
+      - sla-manager
     deploy:
       resources:
         limits:
@@ -376,11 +388,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=scheduler-db-part0
      # - DATABASE_NAME=Scheduler
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - scheduler-db-part0
+      # - sla-manager
     # deploy:
       # resources:
         # limits:
@@ -420,11 +434,13 @@ services:
      - DATABASE_PORTA=3306
      - DATABASE_IP=telegram-db-part0
      - DATABASE_NAME=Telegram
+     - SLAMANAGER=sla-manager
     networks:
       - microservices-network  
     depends_on:
       - kafka
       - telegram-db-part0
+      - sla-manager
     deploy:
       resources:
         limits:
@@ -450,11 +466,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=telegram-db-part0
      # - DATABASE_NAME=Telegram
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - telegram-db-part0
+      #- sla-manager
     # deploy:
       # resources:
         # limits:
@@ -494,11 +512,13 @@ services:
      - DATABASE_PORTA=3306
      - DATABASE_IP=weather-db-part0
      - DATABASE_NAME=Weather
+     - SLAMANAGER=sla-manager
     networks:
       - microservices-network  
     depends_on:
       - kafka
       - weather-db-part0 
+      - sla-manager
     deploy:
       resources:
         limits:
@@ -524,11 +544,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=weather-db
      # - DATABASE_NAME=Weather
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
-      # - weather-db-part0     
+      # - weather-db-part0    
+      # - sla-manager      
     # deploy:
       # resources:
         # limits:
@@ -571,11 +593,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=configurator-db-part1
      # - DATABASE_NAME=ConfigurationAlert
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - configurator-db-part1
+      # - sla-manager
     # deploy:
       # resources:
         # limits:
@@ -601,11 +625,13 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=configurator-db-part1
      # # - DATABASE_NAME=ConfigurationAlert
+     #   - SLAMANAGER=sla-manager
     # # networks:
       # # - microservices-network  
     # # depends_on:
       # # - kafka
       # # - configurator-db-part1
+      # - sla-manager
     # # deploy:
       # # resources:
         # # limits:
@@ -645,11 +671,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=mail-db-part1
      # - DATABASE_NAME=Mail
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - mail-db-part1 
+      # - sla-manager
     # deploy:
       # resources:
         # limits:
@@ -675,11 +703,13 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=mail-db-part1
      # # - DATABASE_NAME=Mail
+     # - SLAMANAGER=sla-manager
     # # networks:
       # # - microservices-network  
     # # depends_on:
       # # - kafka
       # # - mail-db-part1 
+      # - sla-manager
     # # deploy:
       # # resources:
         # # limits:
@@ -719,11 +749,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=notifier-db-part1
      # - DATABASE_NAME=Notifier
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - notifier-db-part1 
+      # - sla-manager
     # deploy:
       # resources:
         # limits:
@@ -749,11 +781,13 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=notifier-db-part1
      # # - DATABASE_NAME=Notifier
+     # - SLAMANAGER=sla-manager
     # # networks:
       # # - microservices-network  
     # # depends_on:
       # # - kafka
       # # - notifier-db-part1 
+      # - sla-manager
     # # deploy:
       # # resources:
         # # limits:
@@ -793,11 +827,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=scheduler-db-part1
      # - DATABASE_NAME=Scheduler
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - scheduler-db-part1 
+      # - sla-manager
     # deploy:
       # resources:
         # limits:
@@ -823,11 +859,13 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=scheduler-db-part1
      # # - DATABASE_NAME=Scheduler
+     # - SLAMANAGER=sla-manager
     # # networks:
       # # - microservices-network  
     # # depends_on:
       # # - kafka
       # # - scheduler-db-part1   
+      # - sla-manager
     # # deploy:
       # # resources:
         # # limits:
@@ -867,11 +905,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=telegram-db-part1
      # - DATABASE_NAME=Telegram
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - telegram-db-part1 
+      # - sla-manager
     # deploy:
       # resources:
         # limits:
@@ -897,11 +937,13 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=telegram-db-part1
      # # - DATABASE_NAME=Telegram
+     # - SLAMANAGER=sla-manager
     # # networks:
       # # - microservices-network  
     # # depends_on:
       # # - kafka
-      # # - telegram-db-part1     
+      # # - telegram-db-part1    
+        # - sla-manager      
     # # deploy:
       # # resources:
         # # limits:
@@ -941,11 +983,13 @@ services:
      # - DATABASE_PORTA=3306
      # - DATABASE_IP=weather-db-part1
      # - DATABASE_NAME=Weather
+     # - SLAMANAGER=sla-manager
     # networks:
       # - microservices-network  
     # depends_on:
       # - kafka
       # - weather-db-part1
+      # - sla-manager
     # deploy:
       # resources:
         # limits:
@@ -971,11 +1015,13 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=weather-db-part1
      # # - DATABASE_NAME=Weather
+     #  - SLAMANAGER=sla-manager
     # # networks:
       # # - microservices-network  
     # # depends_on:
       # # - kafka
       # # - weather-db-part1
+      #  - sla-manager
     # # deploy:
       # # resources:
         # # limits:

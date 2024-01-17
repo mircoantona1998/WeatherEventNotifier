@@ -89,6 +89,25 @@ CREATE TABLE `MailUsers` (
 -- Dumping data for table `MailUsers`
 --
 
+-- Table structure for table `HeartbeatSent`
+--
+
+DROP TABLE IF EXISTS `HeartbeatSent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+
+
+CREATE TABLE `HeartbeatSent` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `HeartbeatSent` WRITE;
+/*!40000 ALTER TABLE `HeartbeatSent` DISABLE KEYS */;
+/*!40000 ALTER TABLE `HeartbeatSent` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 --
 -- Table structure for table `MessageReceived`

@@ -20,11 +20,13 @@ namespace SLAManager.Controllers
 public class AuthController : ControllerBase
 {
         private readonly ServiceRepository userRepo;
+        private readonly HeartBeatRepository hearthbeatRepo;
         private readonly IConfiguration _configuration;
         public AuthController(IConfiguration configuration)
         {
             this._configuration = configuration;
             userRepo = new ServiceRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("SLAManagerdata"));
+            hearthbeatRepo = new HeartBeatRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("Userdata"));
         }
 
         #region POST
@@ -51,6 +53,7 @@ public class AuthController : ControllerBase
             if (res.Item1 !=null)
             {
                  authResponse = await AuthResponse.GenerateAuthResponse(res.Item1,_configuration, res.Item2);
+                 await hearthbeatRepo.Add(Convert.ToInt32(res.Item1.Id));
             }
             return authResponse != null ? Ok(authResponse) : Unauthorized();
         }
