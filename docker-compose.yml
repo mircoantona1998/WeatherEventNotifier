@@ -123,6 +123,7 @@ services:
      - DATABASE_IP=configurator-db-part0
      - DATABASE_NAME=ConfigurationAlert
      - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
     networks:
       - microservices-network  
     depends_on:
@@ -155,6 +156,7 @@ services:
      # - DATABASE_IP=configurator-db-part0
      # - DATABASE_NAME=ConfigurationAlert
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -201,6 +203,7 @@ services:
      - DATABASE_IP=mail-db-part0
      - DATABASE_NAME=Mail
      - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
     networks:
       - microservices-network  
     depends_on:
@@ -233,6 +236,7 @@ services:
      # - DATABASE_IP=mail-db-part0
      # - DATABASE_NAME=Mail
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -279,6 +283,7 @@ services:
      - DATABASE_IP=notifier-db-part0
      - DATABASE_NAME=Notifier
      - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
     networks:
       - microservices-network  
     depends_on:
@@ -311,6 +316,7 @@ services:
      # - DATABASE_IP=notifier-db-part0
      # - DATABASE_NAME=Notifier
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -357,6 +363,7 @@ services:
      - DATABASE_IP=scheduler-db-part0
      - DATABASE_NAME=Scheduler
      - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
     networks:
       - microservices-network  
     depends_on:
@@ -389,6 +396,7 @@ services:
      # - DATABASE_IP=scheduler-db-part0
      # - DATABASE_NAME=Scheduler
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -435,6 +443,7 @@ services:
      - DATABASE_IP=telegram-db-part0
      - DATABASE_NAME=Telegram
      - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
     networks:
       - microservices-network  
     depends_on:
@@ -467,6 +476,7 @@ services:
      # - DATABASE_IP=telegram-db-part0
      # - DATABASE_NAME=Telegram
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -513,6 +523,7 @@ services:
      - DATABASE_IP=weather-db-part0
      - DATABASE_NAME=Weather
      - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
     networks:
       - microservices-network  
     depends_on:
@@ -545,6 +556,7 @@ services:
      # - DATABASE_IP=weather-db
      # - DATABASE_NAME=Weather
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -594,6 +606,7 @@ services:
      # - DATABASE_IP=configurator-db-part1
      # - DATABASE_NAME=ConfigurationAlert
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -626,6 +639,7 @@ services:
      # # - DATABASE_IP=configurator-db-part1
      # # - DATABASE_NAME=ConfigurationAlert
      #   - SLAMANAGER=sla-manager
+     #   - HEARTBEAT_FREQUENCY=10
     # # networks:
       # # - microservices-network  
     # # depends_on:
@@ -672,6 +686,7 @@ services:
      # - DATABASE_IP=mail-db-part1
      # - DATABASE_NAME=Mail
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -703,7 +718,8 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=mail-db-part1
      # # - DATABASE_NAME=Mail
-     # - SLAMANAGER=sla-manager
+     #   - SLAMANAGER=sla-manager
+     #   - HEARTBEAT_FREQUENCY=10
     # # networks:
       # # - microservices-network  
     # # depends_on:
@@ -750,6 +766,7 @@ services:
      # - DATABASE_IP=notifier-db-part1
      # - DATABASE_NAME=Notifier
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -781,7 +798,8 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=notifier-db-part1
      # # - DATABASE_NAME=Notifier
-     # - SLAMANAGER=sla-manager
+     #   - SLAMANAGER=sla-manager
+     #   - HEARTBEAT_FREQUENCY=10
     # # networks:
       # # - microservices-network  
     # # depends_on:
@@ -828,6 +846,7 @@ services:
      # - DATABASE_IP=scheduler-db-part1
      # - DATABASE_NAME=Scheduler
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -859,7 +878,8 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=scheduler-db-part1
      # # - DATABASE_NAME=Scheduler
-     # - SLAMANAGER=sla-manager
+     #   - SLAMANAGER=sla-manager
+     #   - HEARTBEAT_FREQUENCY=10
     # # networks:
       # # - microservices-network  
     # # depends_on:
@@ -906,6 +926,7 @@ services:
      # - DATABASE_IP=telegram-db-part1
      # - DATABASE_NAME=Telegram
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -937,7 +958,8 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=telegram-db-part1
      # # - DATABASE_NAME=Telegram
-     # - SLAMANAGER=sla-manager
+     #   - SLAMANAGER=sla-manager
+     #   - HEARTBEAT_FREQUENCY=10
     # # networks:
       # # - microservices-network  
     # # depends_on:
@@ -984,6 +1006,7 @@ services:
      # - DATABASE_IP=weather-db-part1
      # - DATABASE_NAME=Weather
      # - SLAMANAGER=sla-manager
+     # - HEARTBEAT_FREQUENCY=10
     # networks:
       # - microservices-network  
     # depends_on:
@@ -1015,7 +1038,8 @@ services:
      # # - DATABASE_PORTA=3306
      # # - DATABASE_IP=weather-db-part1
      # # - DATABASE_NAME=Weather
-     #  - SLAMANAGER=sla-manager
+     #   - SLAMANAGER=sla-manager
+     #   - HEARTBEAT_FREQUENCY=10
     # # networks:
       # # - microservices-network  
     # # depends_on:

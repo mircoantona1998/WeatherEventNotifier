@@ -15,6 +15,8 @@ class Configurations:
     def _load_configurations(self):
             Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - load_configurations  - {inspect.currentframe().f_globals['__file__']}")
         # Usa le variabili d'ambiente, altrimenti carica default
+            self.heartbeatfrequency= os.getenv("HEARTBEAT_FREQUENCY", "5")
+            print(f'{str(self.heartbeatfrequency)}')
             self.slamanager= os.getenv("SLAMANAGER", "localhost")
             print(f'{str(self.slamanager)}')
             self.partition = os.getenv("PARTITION", "0")

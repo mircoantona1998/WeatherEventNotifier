@@ -10,11 +10,18 @@ class Heartbeat:
             "Servicename": Configurations().group_id +'_part'+ Configurations().partition,
             "password": Configurations().group_id +'_part'+ Configurations().partition,
         }
-        response = requests.post(url, json=data)
-        if response.status_code == 200:
-            Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Heartbeat inviato con successo. - {inspect.currentframe().f_globals['__file__']}")
-        else:
-            Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Heartbeat NON inviato con successo. {response.status_code} - {inspect.currentframe().f_globals['__file__']}")
-            print(response.text)  
+        try:
+            response = requests.post(url, json=data)
+            if response.status_code == 200:
+                Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Heartbeat inviato con successo. - {inspect.currentframe().f_globals['__file__']}")
+                return True
+            else:
+                Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Heartbeat NON inviato con successo. {response.status_code} - {inspect.currentframe().f_globals['__file__']}")
+                return False 
+        except requests.exceptions.RequestException as e:
+            Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Heartbeat NON inviato con successo. ERRORE CATCH - {inspect.currentframe().f_globals['__file__']}")
+            print('Error:', e)
+            return False
+       
 
 

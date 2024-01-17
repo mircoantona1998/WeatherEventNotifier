@@ -55,10 +55,11 @@ class ConsumerClass:
                      if (HeartbeatSentRepo.get_last_element() is None  
                          or (HeartbeatSentRepo.get_last_element() is not None
                              and (datetime.utcnow().replace(second=0, microsecond=0) - HeartbeatSentRepo.get_last_element().datetime)
-                      >= timedelta(minutes=10))):
+                      >= timedelta(minutes=int(Configurations().heartbeatfrequency)))):
                         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - HEARTBEAT - {inspect.currentframe().f_globals['__file__']}")
-                        Heartbeat.message()
-                        HeartbeatSentRepo.add_heartbeat_sent()        
+                        result=Heartbeat.message()
+                        if result==True:
+                             HeartbeatSentRepo.add_heartbeat_sent()        
                      else: 
                         msg = consumer.poll(1.0)
                         if msg is not None:
