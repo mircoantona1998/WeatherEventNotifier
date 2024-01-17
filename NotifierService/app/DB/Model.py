@@ -6,6 +6,12 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 metadata = Base.metadata
 
+class HeartbeatSent(Base):
+    __tablename__ = 'HeartbeatSent'
+
+    id = Column(Integer, primary_key=True)
+    datetime = Column(DateTime)
+    
 class MessageReceived(Base):
     __tablename__ = 'MessageReceived'
 

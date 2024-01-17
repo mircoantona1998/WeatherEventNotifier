@@ -13,8 +13,9 @@ class Heartbeat:
         response = requests.post(url, json=data)
         if response.status_code == 200:
             Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Heartbeat inviato con successo. - {inspect.currentframe().f_globals['__file__']}")
+            return True
         else:
             Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Heartbeat NON inviato con successo. {response.status_code} - {inspect.currentframe().f_globals['__file__']}")
-            print(response.text)  
+            return False 
 
 

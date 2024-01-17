@@ -24,6 +24,7 @@
   <ItemGroup>
     <Compile Include="Configurations\Configurations.py" />
     <Compile Include="DB\Model.py" />
+    <Compile Include="DB\Repository\HeartbeatSentRepo.py" />
     <Compile Include="DB\Repository\TelegramUsersRepo.py" />
     <Compile Include="DB\Repository\TelegramConfigurationRepo.py" />
     <Compile Include="DB\Repository\TelegramMessagesRepo.py" />

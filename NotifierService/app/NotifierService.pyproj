@@ -23,6 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Configurations\Configurations.py" />
+    <Compile Include="DB\Repository\HeartbeatSentRepo.py" />
     <Compile Include="Handler\event_destinators.py" />
     <Compile Include="NotifierService.py" />
     <Compile Include="DB\Repository\NotifyRepo.py" />
@@ -36,6 +37,7 @@
     <Compile Include="Kafka\Producer.py" />
     <Compile Include="Utils\EnumMessageCode.py" />
     <Compile Include="Utils\EnumMessageType.py" />
+    <Compile Include="Utils\Heartbeat.py" />
     <Compile Include="Utils\Json.py" />
     <Compile Include="Utils\Logger.py" />
   </ItemGroup>

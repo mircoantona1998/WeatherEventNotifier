@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import datetime,timedelta
 import json
 from confluent_kafka import Consumer, KafkaError, TopicPartition
 from Configurations.Configurations import Configurations
+from DB.Repository.HeartbeatSentRepo import HeartbeatSentRepo
 from DB.Repository.MessageReceivedRepo import MessageReceivedRepo
 from Handler.event_destinators import GestoreDestinatari
 from Kafka.KafkaHeader import KafkaHeader
@@ -10,6 +11,7 @@ from Utils.EnumMessageCode import MessageCode
 from Utils.EnumMessageType import MessageType
 from Utils.Json import Json
 from DB.Model import MessageReceived
+from Utils.Heartbeat import Heartbeat
 from Handler.event_handlers import EventHandlers
 from confluent_kafka.admin import AdminClient, NewTopic
 from Utils.Logger import Logger
@@ -50,6 +52,14 @@ class ConsumerClass:
         consumer.assign([TopicPartition(topic=topic, partition=part) for part in partitions_to_subscribe])
         try:
             while True:
+                     if (HeartbeatSentRepo.get_last_element() is None  
+                         or (HeartbeatSentRepo.get_last_element() is not None
+                             and (datetime.utcnow().replace(second=0, microsecond=0) - HeartbeatSentRepo.get_last_element().datetime)
+                      >= timedelta(minutes=10))):
+                        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - HEARTBEAT - {inspect.currentframe().f_globals['__file__']}")
+                        Heartbeat.message()
+                        HeartbeatSentRepo.add_heartbeat_sent()        
+                     else: 
                         msg = consumer.poll(1.0)
                         if msg is not None:
                         #if MessageReceivedRepo.get_latest_message() ==None or MessageReceivedRepo.get_latest_message().offset==None or (msg.offset()!=None and msg.offset() > MessageReceivedRepo.get_latest_message().offset):

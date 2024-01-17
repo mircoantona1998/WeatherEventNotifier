@@ -24,6 +24,7 @@
   <ItemGroup>
     <Compile Include="Configurations\Configurations.py" />
     <Compile Include="DB\Model.py" />
+    <Compile Include="DB\Repository\HeartbeatSentRepo.py" />
     <Compile Include="DB\Session.py" />
     <Compile Include="DB\Repository\MessageReceivedRepo.py" />
     <Compile Include="DB\Repository\MessageSentRepo.py" />

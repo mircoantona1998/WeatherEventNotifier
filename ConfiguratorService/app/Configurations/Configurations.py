@@ -49,7 +49,7 @@ class Configurations:
             print(str(self.database_username))
             self.database_password = os.getenv("DATABASE_PASSWORD", "root")
             print(str(self.database_password))
-            self.database_porta = os.getenv("DATABASE_PORTA", "3308")
+            self.database_porta = os.getenv("DATABASE_PORTA", "3307")
             print(str(self.database_porta))
             self.database_ip = os.getenv("DATABASE_IP", "127.0.0.1")
             print(str(self.database_ip))

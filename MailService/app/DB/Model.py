@@ -7,6 +7,12 @@ Base = declarative_base()
 metadata = Base.metadata
 
 
+class HeartbeatSent(Base):
+    __tablename__ = 'HeartbeatSent'
+
+    id = Column(Integer, primary_key=True)
+    datetime = Column(DateTime)
+    
 class Mail(Base):
     __tablename__ = 'Mail'
 

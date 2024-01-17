@@ -1,6 +1,7 @@
 import json
 from confluent_kafka import Consumer, KafkaError, TopicPartition
 from Configurations.Configurations import Configurations
+from DB.Repository.HeartbeatSentRepo import HeartbeatSentRepo
 from DB.Repository.MessageReceivedRepo import MessageReceivedRepo
 from DB.Repository.ScheduleRequestRepo import ScheduleRequestRepo
 from DB.Repository.RequestNotificationRepo import RequestNotificationRepo
@@ -8,6 +9,7 @@ from DB.Repository.ScheduleResponseRepo import ScheduleResponseRepo
 from Handler.event_destinators import GestoreDestinatari
 from Kafka.KafkaHeader import KafkaHeader
 from Kafka.Producer import ProducerClass
+from Utils.Heartbeat import Heartbeat
 from Utils.EnumMessageCode import MessageCode
 from Utils.EnumMessageType import MessageType
 from Utils.Json import Json
@@ -52,7 +54,14 @@ class ConsumerClass:
         consumer.assign([TopicPartition(topic=topic, partition=part) for part in partitions_to_subscribe])
         try:
             while True:
-                if  ScheduleRequestRepo.get_last_element()==None or ScheduleRequestRepo.get_last_element().date!=datetime.utcnow().date() :
+                if (HeartbeatSentRepo.get_last_element() is None  
+                    or (HeartbeatSentRepo.get_last_element() is not None
+                        and (datetime.utcnow().replace(second=0, microsecond=0) - HeartbeatSentRepo.get_last_element().datetime)
+                >= timedelta(minutes=10))):
+                    Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - HEARTBEAT - {inspect.currentframe().f_globals['__file__']}")
+                    Heartbeat.message()
+                    HeartbeatSentRepo.add_heartbeat_sent()        
+                elif  ScheduleRequestRepo.get_last_element()==None or ScheduleRequestRepo.get_last_element().date!=datetime.utcnow().date() :
                     #produrre richiesta per avere tutte le configurazioni con isactive=true e datetimeactivation < della data di oggi alle 23:59, e aggiungere a schedulazioni
                     headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="GetConfigurationForToday", Creator=creator, Code = MessageCode.Ok.value)
                     ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': ""}, indent=2),GestoreDestinatari().determina_destinatario("ConfiguratorService"))            

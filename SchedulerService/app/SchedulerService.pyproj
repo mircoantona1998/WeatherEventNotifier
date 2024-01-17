@@ -24,6 +24,7 @@
   <ItemGroup>
     <Compile Include="Configurations\Configurations.py" />
     <Compile Include="DB\Model.py" />
+    <Compile Include="DB\Repository\HeartbeatSentRepo.py" />
     <Compile Include="DB\Repository\RequestNotificationRepo.py" />
     <Compile Include="DB\Repository\ScheduleResponseRepo.py" />
     <Compile Include="DB\Repository\ScheduleRequestRepo.py" />
@@ -37,6 +38,7 @@
     <Compile Include="Kafka\KafkaHeader.py" />
     <Compile Include="Kafka\Producer.py" />
     <Compile Include="SchedulerService.py" />
+    <Compile Include="Utils\Heartbeat.py" />
     <Compile Include="Utils\Json.py" />
     <Compile Include="Utils\EnumMessageType.py" />
     <Compile Include="Utils\EnumMessageCode.py" />

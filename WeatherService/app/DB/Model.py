@@ -15,6 +15,12 @@ class Key(Base):
     apiKey = Column(String(500))
 
 
+class HeartbeatSent(Base):
+    __tablename__ = 'HeartbeatSent'
+
+    id = Column(Integer, primary_key=True)
+    datetime = Column(DateTime)
+
 class MessageReceived(Base):
     __tablename__ = 'MessageReceived'
 
