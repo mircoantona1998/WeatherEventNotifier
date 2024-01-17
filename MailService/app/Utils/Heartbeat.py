@@ -4,7 +4,7 @@ from Utils.Logger import Logger
 from datetime import datetime
 import inspect
 class Heartbeat:
-    def message(self):
+    def message():
         url = f"http://{Configurations().slamanager}:8081/Auth/Login"
         data = {
             "Servicename": Configurations().group_id +'_part'+ Configurations().partition,
