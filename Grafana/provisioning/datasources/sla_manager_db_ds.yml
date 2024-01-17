@@ -1,0 +1,14 @@
+datasources:
+- name: sla_manager_db
+  type: mssql
+  access: proxy
+  url: sla_manager_db
+  database: sla_manager_db
+  user: sa
+  password: RootRoot.1
+  isDefault: true
+  jsonData:
+    encrypt: false  
+    maxOpenConns: 0  
+    maxIdleConns: 2  
+    timezone: 'browser'

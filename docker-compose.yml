@@ -30,38 +30,7 @@ services:
       - zookeeper
     networks:
       - microservices-network
-      
-  prometheus:
-      image: prom/prometheus
-      container_name: prometheus-service
-      ports:
-        - "9090:9090"
-      networks:
-        - microservices-network
-      volumes:
-        - ./Prometheus/promconfig.yml:/etc/prometheus/prometheus.yml
-        - prometheus_data:/etc/prometheus/data
-      command:
-        - '--config.file=/etc/prometheus/prometheus.yml'
-        - '--web.enable-lifecycle'
-        
-  grafana:
-    image: grafana/grafana
-    container_name: grafana-service
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    networks:
-      - microservices-network 
-    depends_on:
-      - prometheus
-      - sla-manager-db
-    volumes:
-      - grafana-data:/var/lib/grafana
-      - ./Grafana:/etc/grafana
-      - ./Grafana/dashboards:/etc/grafana/dashboards
-     # - /grafana/grafana.db:/etc/grafana/grafana.db   
+         
   expose-api:
     extends:
       file: API/docker-compose.yml
@@ -80,6 +49,22 @@ services:
       file: API/docker-compose.yml
       service: expose-api-db
       
+  prometheus:
+      image: prom/prometheus
+      container_name: prometheus-service
+      ports:
+        - "9090:9090"
+      networks:
+        - microservices-network
+      volumes:
+        - ./Prometheus/promconfig.yml:/etc/prometheus/prometheus.yml
+        - prometheus_data:/etc/prometheus/data
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+        - '--web.enable-lifecycle'
+      depends_on:
+        - expose-api   
+      
   sla-manager:
     extends:
       file: SLAManager/docker-compose.yml
@@ -97,6 +82,28 @@ services:
     extends:
       file: SLAManager/docker-compose.yml
       service: sla-manager-db
+ 
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-service
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_DEFAULT_THEME=light
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,vertamedia-clickhouse-datasource
+    networks:
+      - microservices-network 
+    volumes:
+      - ./Grafana/data/:/var/lib/grafana
+      - ./Grafana/provisioning/:/etc/grafana/provisioning
+      - ./Grafana/provisioning/dashboards/:/etc/grafana/dashboards 
+    depends_on:
+      - prometheus
+      - sla-manager-db
+        
 #to add a partition duplicate from this and change the PARTITION= last partition+1 and change the names
   configurator-service-part0-rep0:
     container_name: configurator-service-part0-rep0
@@ -1022,8 +1029,6 @@ volumes:
     name: kafka-data
   prometheus_data:
     name: prometheus_data
-  grafana-data:
-    name: grafana-data
   sla-manager-database:
     name: sla-manager-database
 networks:
