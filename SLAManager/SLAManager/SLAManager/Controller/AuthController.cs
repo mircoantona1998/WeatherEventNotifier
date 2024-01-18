@@ -1,17 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SLAManagerdata.Models;
 using SLAManagerdata.ViewModels;
 using SLAManager.Utils;
-using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Principal;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using System.Security.Claims;
-using System.Text;
 using SLAManager.Auth;
-using Confluent.Kafka;
+using SLAManagerdata.Models;
 namespace SLAManager.Controllers
 {
 [Route("[controller]")]
@@ -19,32 +10,30 @@ namespace SLAManager.Controllers
 
 public class AuthController : ControllerBase
 {
-        private readonly ServiceRepository userRepo;
-        private readonly HeartBeatRepository hearthbeatRepo;
+        private readonly UserRepository userRepo;
         private readonly IConfiguration _configuration;
         public AuthController(IConfiguration configuration)
         {
             this._configuration = configuration;
-            userRepo = new ServiceRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("SLAManagerdata"));
-            hearthbeatRepo = new HeartBeatRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("Userdata"));
+            userRepo = new UserRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("SLAManagerdata"));
         }
 
         #region POST
         [HttpPost]
         [Route("Registration")]
-        public async Task<ActionResult> Create(ServiceCreateDTO newItemDTO)
+        public async Task<ActionResult> Create(UserCreateDTO newItemDTO)
         {
             Logger log = new();
             log.LogAction("AuthController  Create");
             //string valueEnv = Environment.GetEnvironmentVariable("HowManyPartition") ?? "2";
             //int partition=await userRepo.GetMinPartition(Convert.ToInt32(valueEnv));
-            var newItemID = await userRepo.Create(newItemDTO);//,partition);
+            var newItemID = await userRepo.Create(newItemDTO,0);//,partition);
             return (bool)newItemID ? Ok(newItemID) : Problem(null, null, 401);
         }
 
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult> Login(LoginDTO loginDTO)
+        public async Task<ActionResult> Login(LoginUserDTO loginDTO)
         {
             Logger log = new();
             log.LogAction("AuthController  Login");
@@ -52,8 +41,7 @@ public class AuthController : ControllerBase
             var res = await userRepo.Login(loginDTO);
             if (res.Item1 !=null)
             {
-                 authResponse = await AuthResponse.GenerateAuthResponse(res.Item1,_configuration, res.Item2);
-                 await hearthbeatRepo.Add(Convert.ToInt32(res.Item1.Id));
+                 authResponse = await AuthResponse.GenerateAuthResponse(res.Item1,_configuration, res.Item2);              
             }
             return authResponse != null ? Ok(authResponse) : Unauthorized();
         }

@@ -12,7 +12,7 @@ public partial class SlamanagerContext : DbContext
     }
 
     public SlamanagerContext(DbContextOptions<SlamanagerContext> options)
-    : base(options)
+   : base(options)
     {
         if (config.configuration == null)
             config.configuration = new ConfigurationBuilder()
@@ -28,11 +28,26 @@ public partial class SlamanagerContext : DbContext
 
     public virtual DbSet<Heartbeat> Heartbeats { get; set; }
 
+    public virtual DbSet<HeartbeatView> HeartbeatViews { get; set; }
+
     public virtual DbSet<MessageReceived> MessageReceiveds { get; set; }
 
     public virtual DbSet<MessageSent> MessageSents { get; set; }
 
+    public virtual DbSet<MonitoringMetric> MonitoringMetrics { get; set; }
+
     public virtual DbSet<Service> Services { get; set; }
+    public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<Sla> Slas { get; set; }
+
+    public virtual DbSet<SlaMetricStatus> SlaMetricStatuses { get; set; }
+
+    public virtual DbSet<SlaMetricViolation> SlaMetricViolations { get; set; }
+
+    public virtual DbSet<SlaMetricViolationForecast> SlaMetricViolationForecasts { get; set; }
+
+    public virtual DbSet<Status> Statuses { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,9 +63,21 @@ public partial class SlamanagerContext : DbContext
                 .HasConstraintName("FK_heartbeat_Services");
         });
 
+        modelBuilder.Entity<HeartbeatView>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("Heartbeat_view");
+
+            entity.Property(e => e.Servicename)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Timestamp).HasColumnType("datetime");
+        });
+
         modelBuilder.Entity<MessageReceived>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83F37306096");
+            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83F15C70FDA");
 
             entity.ToTable("MessageReceived");
 
@@ -86,7 +113,7 @@ public partial class SlamanagerContext : DbContext
 
         modelBuilder.Entity<MessageSent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83FE5594040");
+            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83F5324B4F5");
 
             entity.ToTable("MessageSent");
 
@@ -120,6 +147,20 @@ public partial class SlamanagerContext : DbContext
                 .HasColumnName("type");
         });
 
+        modelBuilder.Entity<MonitoringMetric>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_MetricMonitoring");
+
+            entity.ToTable("MonitoringMetric");
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Metric)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<Service>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_users_Id");
@@ -146,6 +187,115 @@ public partial class SlamanagerContext : DbContext
                 .HasDefaultValueSql("(NULL)");
         });
 
+        modelBuilder.Entity<Sla>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_SLA");
+
+            entity.ToTable("Sla");
+
+            entity.Property(e => e.Symbol)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.UpdateDatetime).HasColumnType("datetime");
+            entity.Property(e => e.Value)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .IsFixedLength();
+        });
+
+        modelBuilder.Entity<SlaMetricStatus>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_StatusMetricSla");
+
+            entity.ToTable("SlaMetricStatus");
+
+            entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.SlaMetricStatus1).HasColumnName("SlaMetricStatus");
+        });
+
+        modelBuilder.Entity<SlaMetricViolation>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_ViolationMetricSla");
+
+            entity.ToTable("SlaMetricViolation");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.Violation)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<SlaMetricViolationForecast>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_ForecastViolationMetricSla");
+
+            entity.ToTable("SlaMetricViolationForecast");
+
+            entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.Violation)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Status>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Status");
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Status1)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Status");
+        });
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_users_Id");
+
+            entity.Property(e => e.Address)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValueSql("(NULL)");
+            entity.Property(e => e.Cap)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValueSql("(NULL)");
+            entity.Property(e => e.City)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValueSql("(NULL)");
+            entity.Property(e => e.Cognome)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValueSql("(NULL)");
+            entity.Property(e => e.DateUpdate)
+                .HasDefaultValueSql("(NULL)")
+                .HasColumnType("datetime");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValueSql("(NULL)")
+                .HasColumnName("isActive");
+            entity.Property(e => e.IsBlocked)
+                .HasDefaultValueSql("(NULL)")
+                .HasColumnName("isBlocked");
+            entity.Property(e => e.LastAccess)
+                .HasDefaultValueSql("(NULL)")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Nome)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValueSql("(NULL)");
+            entity.Property(e => e.Partition).HasDefaultValueSql("(NULL)");
+            entity.Property(e => e.Password).HasDefaultValueSql("(NULL)");
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValueSql("(NULL)");
+        });
         OnModelCreatingPartial(modelBuilder);
     }
 

@@ -5,7 +5,7 @@ from datetime import datetime
 import inspect
 class Heartbeat:
     def message():
-        url = f"http://{Configurations().slamanager}:8081/Auth/Login"
+        url = f"http://{Configurations().slamanager}:8081/Heartbeat/Send"
         data = {
             "Servicename": Configurations().group_id +'_part'+ Configurations().partition,
             "password": Configurations().group_id +'_part'+ Configurations().partition,

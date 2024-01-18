@@ -1,27 +1,24 @@
 ﻿using AutoMapper;
-using SLAManagerdata.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using static EntityFramework.Classes.SLAManagerdataLib;
-using System.Diagnostics;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.AspNetCore.Identity;
+using SLAManagerdata.ViewModels;
 using SLAManagerdata.Utils;
-
+using EntityFramework.Utils;
 
 namespace SLAManagerdata.Models
 {
-    public class ServiceRepository
+    public class UserRepository
     {
         private readonly MapperConfiguration mapperConfig;
         private readonly DbContextOptionsBuilder<SlamanagerContext> DB;
 
-        public ServiceRepository( string config)
+        public UserRepository( string config)
         {
 
            DB = new DbContextOptionsBuilder<SlamanagerContext>().UseSqlServer(config);
             mapperConfig = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<ServiceInsertDTO, Service>();
+                cfg.CreateMap<UserInsertDTO, User>();
             });
         }
         public async Task<int> GetMinPartition(int maxPartition)
@@ -37,7 +34,7 @@ namespace SLAManagerdata.Models
                 }
 
                 using var context = new SlamanagerContext(DB.Options);
-                var partitionCounts = await context.Services
+                var partitionCounts = await context.Users
                     .Where(u => u.Partition >= 0 && u.Partition <= maxPartition)
                     .GroupBy(u => u.Partition)
                     .Select(g => new { Partition = g.Key, Count = g.Count() })
@@ -82,7 +79,7 @@ namespace SLAManagerdata.Models
             try
             {
                 using var context = new SlamanagerContext(DB.Options);
-                int totalCount = await context.Services
+                int totalCount = await context.Users
                     .AsNoTracking()
                     .CountAsync()
                     .ConfigureAwait(false);
@@ -103,14 +100,14 @@ namespace SLAManagerdata.Models
                 using var context = new SlamanagerContext(DB.Options);
 
                 // Check if there are any users before attempting to find the maximum partition value
-                bool anyUsers = await context.Services.AnyAsync().ConfigureAwait(false);
+                bool anyUsers = await context.Users.AnyAsync().ConfigureAwait(false);
 
                 if (!anyUsers)
                 {
                     return 0;
                 }
 
-                int maxPartitionValue = await context.Services
+                int maxPartitionValue = await context.Users
                     .AsNoTracking()
                     .MaxAsync(user => (int?)user.Partition ?? 0)
                     .ConfigureAwait(false);
@@ -126,36 +123,40 @@ namespace SLAManagerdata.Models
         }
 
         #region POST
-        public async Task<bool?> Create(ServiceCreateDTO newItemDTO)//,int partition)
+        public async Task<bool?> Create(UserCreateDTO newItemDTO,int partition)
         {
             bool? isCreated = false;
             try
             {
-                ServiceInsertDTO insertDTO = new ServiceInsertDTO
+                UserInsertDTO insertDTO = new UserInsertDTO
                 {
-                    Service=newItemDTO.Service,
-                    Servicename = newItemDTO.Servicename,
+                    Username = newItemDTO.Username,
                     Password = newItemDTO.Password,
-                    Partition = 0
+                    Address = newItemDTO.Address,
+                    Cap = newItemDTO.Cap,
+                    City = newItemDTO.City,
+                    Cognome = newItemDTO.Cognome,
+                    Nome = newItemDTO.Nome,
+                    Partition = partition
                 };
                 using var context = new SlamanagerContext(DB.Options);
                 var mapper = mapperConfig.CreateMapper();
-                var newItem = mapper.Map(insertDTO, new Service
+                var newItem = mapper.Map(insertDTO, new User
                 {
                     DateUpdate = DateTime.UtcNow,
                     IsActive = true,
                 });
-                bool userExists = await context.Services
+                bool userExists = await context.Users
                     .AsNoTracking()
-                    .AnyAsync(user => user.Servicename == newItem.Servicename)
+                    .AnyAsync(user => user.Username == newItem.Username)
                     .ConfigureAwait(false);
                 if (!userExists)
                 {
                     using var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false);
                     try
                     {
-                        await context.Services.AddAsync(newItem);
-                        isCreated = !IsNullOrZero(await context.SaveChangesAsync().ConfigureAwait(false));
+                        await context.Users.AddAsync(newItem);
+                        isCreated = !UserdataLib.IsNullOrZero(await context.SaveChangesAsync().ConfigureAwait(false));
                         await transaction.CommitAsync().ConfigureAwait(false);
                     }
                     catch (Exception)
@@ -177,22 +178,22 @@ namespace SLAManagerdata.Models
 
 
         #region PATCH
-        public async Task<(IdentityUser,int?)> Login(LoginServiceDTO loginDTO)
+        public async Task<(IdentityUser,int?)> Login(LoginUserDTO loginDTO)
         {
             IdentityUser usr =new IdentityUser();
             try
             {
                 using var context = new SlamanagerContext(DB.Options);
                 var mapper = mapperConfig.CreateMapper();
-                var usr1 = await context.Services
-                    .Where(user => user.Servicename == loginDTO.Servicename && user.Password == loginDTO.Password)
+                var usr1 = await context.Users
+                    .Where(user => user.Username == loginDTO.Username && user.Password == loginDTO.Password)
                     .SingleOrDefaultAsync();
                 if(usr1!=null)
                 {
                     usr = new IdentityUser
                     {
                         Id = usr1.Id.ToString(),
-                        UserName = usr1.Servicename,
+                        UserName = usr1.Username,
                     };
                     return (usr,usr1.Partition);
                 }
@@ -211,15 +212,15 @@ namespace SLAManagerdata.Models
             {
                 using var context = new SlamanagerContext(DB.Options);
                 var mapper = mapperConfig.CreateMapper();
-                var usr1 = await context.Services
-                    .Where(user => user.Servicename == Username )
+                var usr1 = await context.Users
+                    .Where(user => user.Username == Username )
                     .SingleOrDefaultAsync();
                 if (usr1 != null)
                 {
                     usr = new IdentityUser
                     {
                         Id = usr1.Id.ToString(),
-                        UserName = usr1.Servicename,
+                        UserName = usr1.Username,
                     };
 
                     return usr;

@@ -38,6 +38,7 @@
     <Compile Include="Kafka\KafkaHeader.py" />
     <Compile Include="MailService.py" />
     <Compile Include="Utils\EnumMessageCode.py" />
+    <Compile Include="Utils\Heartbeat.py" />
     <Compile Include="Utils\Json.py" />
     <Compile Include="Utils\EnumMessageType.py" />
     <Compile Include="Utils\EmailService.py" />

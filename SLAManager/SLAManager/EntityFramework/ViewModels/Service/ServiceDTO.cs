@@ -16,7 +16,7 @@ namespace SLAManagerdata.ViewModels
     {
         public int Partition { get; set; }
     }
-    public class LoginDTO
+    public class LoginServiceDTO
     {
         public string Servicename { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
