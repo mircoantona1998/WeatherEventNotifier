@@ -25,6 +25,7 @@
     <Compile Include="Configurations\Configurations.py" />
     <Compile Include="DB\Model.py" />
     <Compile Include="DB\Repository\HeartbeatSentRepo.py" />
+    <Compile Include="DB\Repository\WeatherRepo.py" />
     <Compile Include="DB\Session.py" />
     <Compile Include="DB\Repository\MessageReceivedRepo.py" />
     <Compile Include="DB\Repository\MessageSentRepo.py" />
@@ -60,6 +61,9 @@
     <Folder Include="Handler\" />
     <Folder Include="Kafka\" />
     <Folder Include="Utils\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

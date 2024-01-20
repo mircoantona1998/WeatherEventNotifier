@@ -524,6 +524,7 @@ services:
      - DATABASE_NAME=Weather
      - SLAMANAGER=sla-manager
      - HEARTBEAT_FREQUENCY=10
+     - DISTANCE_REUSE_WEATHER_KM=5
     networks:
       - microservices-network  
     depends_on:

@@ -70,6 +70,7 @@ class Schedule(Base):
     Id = Column(Integer, primary_key=True)
     NameConfiguration = Column(String(100))
     IdConfiguration = Column(Integer)
+    IdMetric = Column(Integer)
     DateTimeToSchedule = Column(DateTime)
     FieldMetric = Column(String(50))
     Symbol = Column(CHAR(2))

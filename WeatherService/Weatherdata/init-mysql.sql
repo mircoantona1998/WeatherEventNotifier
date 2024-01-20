@@ -16,8 +16,25 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 create database `Weather`;
 use `Weather`;
--- Table structure for table `HeartbeatSent`
+-- Table structure for table `Weather`
 --
+DROP TABLE IF EXISTS `Weather`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Weather` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `idMetric` int DEFAULT NULL,
+  `latitude` float DEFAULT NULL,
+  `longitude` float DEFAULT NULL,
+  `value` float DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `Weather` WRITE;
+/*!40000 ALTER TABLE `Weather` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Weather` ENABLE KEYS */;
+UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `HeartbeatSent`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

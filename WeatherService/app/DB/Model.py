@@ -7,7 +7,16 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 metadata = Base.metadata
 
+class Weather(Base):
+    __tablename__ = 'Weather'
 
+    id = Column(Integer, primary_key=True)
+    idMetric = Column(Integer)
+    value = Column(Float)
+    longitude = Column(Float)
+    latitude = Column(Float)
+    datetime = Column(DateTime)
+    
 class Key(Base):
     __tablename__ = 'Key'
 

@@ -15,6 +15,7 @@ class EventHandlers:
                 if  datetime_obj <= datetime.utcnow():
                       new_element_data = {
                       'IdConfiguration': data["Id"],
+                      'IdMetric': data["IdMetric"],
                       'NameConfiguration': data["NameConfiguration"],
                       'DateTimeToSchedule': data["DateTimeActivation"],
                       'Minutes':data["Minutes"],
@@ -44,6 +45,7 @@ class EventHandlers:
                     ScheduleRepo.delete_schedule(data["Id"]) 
                     new_element_data = {
                       'IdConfiguration': data["Id"],
+                      'IdMetric': data["IdMetric"],
                       'NameConfiguration': data["NameConfiguration"],
                       'DateTimeToSchedule': data["DateTimeActivation"],
                       'Minutes':data["Minutes"],
@@ -78,6 +80,7 @@ class EventHandlers:
                     if  datetime_obj <= datetime.utcnow():
                           new_element_data = {
                             'IdConfiguration': data["Id"],
+                            'IdMetric': data["IdMetric"],
                             'NameConfiguration': data["NameConfiguration"],
                             'DateTimeToSchedule': data["DateTimeActivation"],
                             'Minutes':data["Minutes"],

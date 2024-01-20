@@ -179,6 +179,7 @@ DROP TABLE IF EXISTS `Schedule`;
 CREATE TABLE `Schedule` (
   `Id` int NOT NULL AUTO_INCREMENT,
   `IdConfiguration` int DEFAULT NULL,
+  `IdMetric` int DEFAULT NULL,
   `DateTimeToSchedule` datetime DEFAULT NULL,
   `FieldMetric` varchar(50) DEFAULT NULL,
   `Symbol` char(2) DEFAULT NULL,

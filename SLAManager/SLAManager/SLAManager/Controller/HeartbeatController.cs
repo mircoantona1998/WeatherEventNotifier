@@ -20,7 +20,7 @@ namespace SLAManager.Controllers
             hearthbeatRepo = new HeartBeatRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("Userdata"));
         }
         [HttpPost]
-        [Route("Heartbeat")]
+        [Route("Send")]
         public async Task<ActionResult> Send(LoginServiceDTO loginDTO)
         {
             Logger log = new();
