@@ -1,8 +1,8 @@
 ﻿using SLAManagerdata.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using SLAManager.Utils;
-using SLAManager.Model;
 using Microsoft.AspNetCore.Authorization;
+using SLAManagerdata.Models;
 
 namespace ExposeAPI.Controllers
 {
@@ -10,6 +10,13 @@ namespace ExposeAPI.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
+        private readonly StatusRepository statusRepo;
+        private readonly IConfiguration _configuration;
+        public StatusController(IConfiguration configuration)
+        {
+            this._configuration = configuration;
+            statusRepo = new StatusRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("SLAManagerdata"));
+        }
         #region GET
         [HttpGet]
         [Route("Get")]
@@ -25,9 +32,7 @@ namespace ExposeAPI.Controllers
                 int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
-                    //var result = await Kafka.Kafka.producer.ProduceRequest<string>("", MessageType.Request, MessageTag.GetStatus, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
-                    //Statuss = await Kafka.Kafka.consumer.ConsumeResponse<List<Status>>((int)result.Offset);
-                    //return Statuss != null ? Ok(Statuss) : Problem(null, null, 401);
+                    Statuss = await statusRepo.Get();
                 }
             }
             else

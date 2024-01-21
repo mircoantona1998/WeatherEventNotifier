@@ -2,16 +2,7 @@
 using Userdata.Models;
 using Userdata.ViewModels;
 using ExposeAPI.Utils;
-using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Principal;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using System.Security.Claims;
-using System.Text;
 using ExposeAPI.Auth;
-using Confluent.Kafka;
 namespace ExposeAPI.Controllers
 {
 [Route("[controller]")]

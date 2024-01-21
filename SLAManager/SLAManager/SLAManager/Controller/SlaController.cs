@@ -1,8 +1,8 @@
 ﻿using SLAManagerdata.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using SLAManager.Utils;
-using SLAManager.Model;
 using Microsoft.AspNetCore.Authorization;
+using SLAManagerdata.Models;
 
 
 namespace SLAManager.Controllers
@@ -11,6 +11,13 @@ namespace SLAManager.Controllers
     [ApiController]
     public class SlaController : ControllerBase
     {
+        private readonly SlaRepository slaRepo;
+        private readonly IConfiguration _configuration;
+        public SlaController(IConfiguration configuration)
+        {
+            this._configuration = configuration;
+            slaRepo = new SlaRepository(Environment.GetEnvironmentVariable("ConnectionStrings") ?? configuration.GetConnectionString("SLAManagerdata"));
+        }
         #region GET
         [HttpGet]
         [Route("Get")]
@@ -19,7 +26,7 @@ namespace SLAManager.Controllers
         {
             Logger log = new();
             log.LogAction("Sla controller  Get");
-            List<Sla> Slas = null;
+            List<SLAManagerdata.Models.Sla> Slas = null;
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
@@ -30,8 +37,7 @@ namespace SLAManager.Controllers
                     {
                         IdUser = idUser
                     };
-                    //var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetSla, SLAManager.Slas.config.Sla["topic_to_Sla"], partition);
-                    //Slas = await Kafka.Kafka.consumer.ConsumeResponse<List<Sla>>((int)result.Offset);
+                    Slas = await slaRepo.Get();
                 }
             }
             else
@@ -50,7 +56,7 @@ namespace SLAManager.Controllers
         {
             Logger log = new();
             log.LogAction("SlaController  Create");
-            string res=null;
+            bool? res=false;
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
@@ -59,9 +65,7 @@ namespace SLAManager.Controllers
                 {
                     if (newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
                     {
-                        //var kafkaRequest = SlaCreateRequestKafka.ConvertSlaCreateToRequestKafka(newItemDTO, idUser);
-                        //var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddSla, SLAManager.Slas.config.Sla["topic_to_Sla"], partition);
-                        //res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
+                        res = await slaRepo.Create(newItemDTO, partition);
                     }else return Problem("Inserire un simbolo valido", null, 500);
                 }
             }
@@ -81,7 +85,7 @@ namespace SLAManager.Controllers
         {
             Logger log = new();
             log.LogAction("SlaController  Patch");
-            string res = null;
+            bool? res = false;
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
@@ -90,9 +94,7 @@ namespace SLAManager.Controllers
                 {
                     if (newItemDTO.Symbol==null || newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
                     {
-                        //var kafkaRequest = SlaPatchRequestKafka.ConvertSlaPatchToRequestKafka(newItemDTO, idUser);
-                        //var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchSla, SLAManager.Slas.config.Sla["topic_to_Sla"],partition);
-                        //res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
+                        res = await slaRepo.Patch(newItemDTO, partition);
                     }
                     else return Problem("Inserire un simbolo valido", null, 500);
                 }
@@ -113,20 +115,14 @@ namespace SLAManager.Controllers
         {
             Logger log = new();
             log.LogAction("SlaController  Delete");
-            string res = null;
+            bool res = false;
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
                 int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
-                    var deleteItemDTO = new
-                    {
-                        IdUser = idUser,
-                        IdSla = IdSla,
-                    };
-                    //var result = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteSla, SLAManager.Slas.config.Sla["topic_to_Sla"], partition);
-                    //res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
+                    res = await slaRepo.Delete(IdSla);
                 }
             }
             else

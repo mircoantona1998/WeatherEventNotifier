@@ -11,7 +11,7 @@ public partial class Sla
 
     public string? Symbol { get; set; }
 
-    public string? Value { get; set; }
+    public double? Value { get; set; }
 
     public DateTime? UpdateDatetime { get; set; }
 }

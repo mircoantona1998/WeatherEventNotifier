@@ -176,10 +176,7 @@ namespace Userdata.Models
 
             return isCreated;
         }
-        #endregion
 
-
-        #region PATCH
         public async Task<(IdentityUser,int?)> Login(LoginDTO loginDTO)
         {
             IdentityUser usr =new IdentityUser();

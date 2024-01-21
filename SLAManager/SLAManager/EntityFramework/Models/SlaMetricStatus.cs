@@ -7,7 +7,7 @@ public partial class SlaMetricStatus
 {
     public int Id { get; set; }
 
-    public byte? SlaMetricStatus1 { get; set; }
+    public int? IdStatus { get; set; }
 
     public DateTime? Datetime { get; set; }
 }
