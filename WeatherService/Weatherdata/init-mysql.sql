@@ -23,13 +23,12 @@ DROP TABLE IF EXISTS `Weather`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Weather` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `idMetric` int DEFAULT NULL,
   `latitude` float DEFAULT NULL,
   `longitude` float DEFAULT NULL,
-  `value` float DEFAULT NULL,
+  `json` JSON DEFAULT NULL,
   `datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 LOCK TABLES `Weather` WRITE;
 /*!40000 ALTER TABLE `Weather` DISABLE KEYS */;

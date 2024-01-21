@@ -21,10 +21,10 @@ class WeatherRepo:
             session.add(new_weather)
             session.commit()
   
-    def get_weather_db(input_latitude, input_longitude, id_metric, input_datetime):
+    def get_weather_db(input_latitude, input_longitude, input_datetime):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_latest_weather - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
-            results = session.query(Weather).filter_by(datetime=input_datetime, idMetric=id_metric)
+            results = session.query(Weather).filter_by(datetime=input_datetime)
             for row in results:
                 if great_circle((row.latitude, row.longitude), (input_latitude, input_longitude)).kilometers <= float(Configurations().distance_reuse_weather_km):
                     return row

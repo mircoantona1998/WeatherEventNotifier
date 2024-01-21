@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.mysql import LONGTEXT, TINYINT
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
@@ -11,8 +11,7 @@ class Weather(Base):
     __tablename__ = 'Weather'
 
     id = Column(Integer, primary_key=True)
-    idMetric = Column(Integer)
-    value = Column(Float)
+    json = Column(JSON)
     longitude = Column(Float)
     latitude = Column(Float)
     datetime = Column(DateTime)
