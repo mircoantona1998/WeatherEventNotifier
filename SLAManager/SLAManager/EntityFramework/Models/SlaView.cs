@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SLAManagerdata.Models;
 
-public partial class Sla
+public partial class SlaView
 {
     public int Id { get; set; }
 
@@ -16,4 +16,8 @@ public partial class Sla
     public double? Value { get; set; }
 
     public DateTime? UpdateDatetime { get; set; }
+
+    public string? Metric { get; set; }
+
+    public string? Description { get; set; }
 }

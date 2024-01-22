@@ -10,7 +10,6 @@ public partial class SlamanagerContext : DbContext
     public SlamanagerContext()
     {
     }
-
     public SlamanagerContext(DbContextOptions<SlamanagerContext> options)
    : base(options)
     {
@@ -42,14 +41,21 @@ public partial class SlamanagerContext : DbContext
 
     public virtual DbSet<SlaMetricStatus> SlaMetricStatuses { get; set; }
 
+    public virtual DbSet<SlaMetricStatusView> SlaMetricStatusViews { get; set; }
+
     public virtual DbSet<SlaMetricViolation> SlaMetricViolations { get; set; }
 
     public virtual DbSet<SlaMetricViolationForecast> SlaMetricViolationForecasts { get; set; }
 
+    public virtual DbSet<SlaMetricViolationForecastView> SlaMetricViolationForecastViews { get; set; }
+
+    public virtual DbSet<SlaMetricViolationView> SlaMetricViolationViews { get; set; }
+
+    public virtual DbSet<SlaView> SlaViews { get; set; }
+
     public virtual DbSet<Status> Statuses { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -78,7 +84,7 @@ public partial class SlamanagerContext : DbContext
 
         modelBuilder.Entity<MessageReceived>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83FF30671A2");
+            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83FD4FE506D");
 
             entity.ToTable("MessageReceived");
 
@@ -114,7 +120,7 @@ public partial class SlamanagerContext : DbContext
 
         modelBuilder.Entity<MessageSent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83F1882EA95");
+            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83F65B1833A");
 
             entity.ToTable("MessageSent");
 
@@ -207,7 +213,32 @@ public partial class SlamanagerContext : DbContext
             entity.ToTable("SlaMetricStatus");
 
             entity.Property(e => e.Datetime).HasColumnType("datetime");
-            entity.Property(e => e.IdStatus).HasColumnName("IdStatus");
+        });
+
+        modelBuilder.Entity<SlaMetricStatusView>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("Sla_metric_status_view");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Datetime)
+                .HasColumnType("datetime")
+                .HasColumnName("datetime");
+            entity.Property(e => e.Metric)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.MetricDescription)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.StatusDescription)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Symbol)
+                .HasMaxLength(2)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<SlaMetricViolation>(entity =>
@@ -216,7 +247,6 @@ public partial class SlamanagerContext : DbContext
 
             entity.ToTable("SlaMetricViolation");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Datetime).HasColumnType("datetime");
             entity.Property(e => e.Violation)
                 .HasMaxLength(255)
@@ -235,19 +265,76 @@ public partial class SlamanagerContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<Status>(entity =>
+        modelBuilder.Entity<SlaMetricViolationForecastView>(entity =>
         {
             entity
                 .HasNoKey()
-                .ToTable("Status");
+                .ToView("Sla_metric_violation_forecast_view");
+
+            entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.Metric)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.MetricDescription)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Symbol)
+                .HasMaxLength(2)
+                .IsUnicode(false);
+            entity.Property(e => e.Violation)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<SlaMetricViolationView>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("Sla_metric_violation_view");
+
+            entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.Metric)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.MetricDescription)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Symbol)
+                .HasMaxLength(2)
+                .IsUnicode(false);
+            entity.Property(e => e.Violation)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<SlaView>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("Sla_view");
 
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.Metric)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Symbol)
+                .HasMaxLength(2)
+                .IsUnicode(false);
+            entity.Property(e => e.UpdateDatetime).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<Status>(entity =>
+        {
+            entity.ToTable("Status");
+
             entity.Property(e => e.Code)
                 .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("Code");
+                .IsUnicode(false);
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<User>(entity =>

@@ -75,13 +75,13 @@ namespace SLAManagerdata.Models
 
 
         #region GET
-        public async Task<List<Sla>> Get()
+        public async Task<List<SlaView>> Get()
         {
-            List<Sla> list= new List<Sla>();
+            List<SlaView> list= new List<SlaView>();
             try
             {
                 using var context = new SlamanagerContext(DB.Options);
-                list = await context.Slas
+                list = await context.SlaViews
                     .AsNoTracking()
                     .ToListAsync();
                

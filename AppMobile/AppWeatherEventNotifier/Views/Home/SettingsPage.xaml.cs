@@ -136,4 +136,26 @@ public partial class SettingsPage : ContentPage
         }
         enableAll();
     }
+
+    private async void OnTelegramLinkClicked(object sender, EventArgs e)
+    {
+        var telegramChannel = "WeatherEventNotifierBot";
+        var uri = new Uri($"tg://resolve?domain={telegramChannel}");
+        try
+        {
+            await Launcher.OpenAsync(uri);
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                var telegramLink = "https://t.me/WeatherEventNotifierBot";
+                await Launcher.OpenAsync(telegramLink);
+            }
+            catch (Exception ex1)
+            {
+                await DisplayAlert("Attenzione","Impossibile aprire telegram","Ok");
+            }
+        }
+    }
 }

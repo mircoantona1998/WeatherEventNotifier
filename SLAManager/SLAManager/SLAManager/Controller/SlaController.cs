@@ -26,7 +26,7 @@ namespace SLAManager.Controllers
         {
             Logger log = new();
             log.LogAction("Sla controller  Get");
-            List<SLAManagerdata.Models.Sla> Slas = null;
+            List<SLAManagerdata.Models.SlaView> Slas = null;
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");

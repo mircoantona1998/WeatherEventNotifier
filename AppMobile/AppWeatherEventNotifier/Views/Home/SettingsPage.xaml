@@ -18,27 +18,6 @@
     <ContentPage.Content >
         <Grid HorizontalOptions="FillAndExpand" Margin="20">
             <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="20">
-
-                <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" FontAttributes="Bold" Text="Telegram:" HorizontalOptions="Start" VerticalOptions="Center" FontSize="Medium" />
-                    <Frame Grid.Column="1" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand" CornerRadius="10" Padding="0">
-                        <Editor x:Name="Telegram"  HorizontalOptions="Fill" Text="" BackgroundColor="White" FontSize="Medium" />
-                    </Frame>
-                    <Switch Grid.Column="2" x:Name="TelegramSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="End" IsEnabled="False" >
-                        <Switch.Resources>
-                            <Style TargetType="Switch">
-                                <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
-                                <Setter Property="OnColor" Value="{StaticResource Secondary}" />
-                            </Style>
-                        </Switch.Resources>
-                    </Switch>
-                </Grid>
-
                 <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -58,6 +37,26 @@
                         </Switch.Resources>
                     </Switch>
                 </Grid>
+                <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" FontAttributes="Bold" Text="Telegram:" HorizontalOptions="Start" VerticalOptions="Center" FontSize="Medium" />
+                    <Frame Grid.Column="1" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand" CornerRadius="10" Padding="0">
+                        <Editor x:Name="Telegram"  HorizontalOptions="Fill" Text="" BackgroundColor="White" FontSize="Medium" />
+                    </Frame>
+                    <Switch Grid.Column="2" x:Name="TelegramSwitch" IsToggled="true" VerticalOptions="Center" HorizontalOptions="End" IsEnabled="False" >
+                        <Switch.Resources>
+                            <Style TargetType="Switch">
+                                <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
+                                <Setter Property="OnColor" Value="{StaticResource Secondary}" />
+                            </Style>
+                        </Switch.Resources>
+                    </Switch>
+                </Grid>
+                <Button x:Name="linkButton" Text="Attiva le notifiche sul canale cliccando qui" FontAttributes="Italic" Clicked="OnTelegramLinkClicked" HorizontalOptions="Center" Margin="10"></Button>
                 <Button x:Name="modificaButton" Text="Modifica" Clicked="Button_Modifica" HorizontalOptions="Center" Margin="10"></Button>
             </StackLayout>
             <customControls:ActivityIndicatorControl x:Name="activityController" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></customControls:ActivityIndicatorControl>

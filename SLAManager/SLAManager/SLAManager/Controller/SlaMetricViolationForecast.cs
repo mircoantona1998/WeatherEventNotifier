@@ -25,7 +25,7 @@ namespace ExposeAPI.Controllers
         {
             Logger log = new();
             log.LogAction("SlaMetricViolationForecastController  Get");
-            List<SlaMetricViolationForecast> SlaMetricViolationForecasts = new List<SlaMetricViolationForecast>();
+            List<SlaMetricViolationForecastView> SlaMetricViolationForecasts = new List<SlaMetricViolationForecastView>();
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");

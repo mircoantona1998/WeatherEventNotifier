@@ -20,14 +20,14 @@ namespace SLAManagerdata.Models
         #region GET
         /// <summary>
         /// Get SlaMetricViolation
-        public async Task<List<SlaMetricViolation>> Get()
+        public async Task<List<SlaMetricViolationView>> Get()
         {
-            List<SlaMetricViolation> mess = null;
+            List<SlaMetricViolationView> mess = null;
             try
             {
                 using var context = new SlamanagerContext(DB.Options);
 
-                mess = await context.SlaMetricViolations
+                mess = await context.SlaMetricViolationViews
                     .AsNoTracking()
                     .ToListAsync();
             }

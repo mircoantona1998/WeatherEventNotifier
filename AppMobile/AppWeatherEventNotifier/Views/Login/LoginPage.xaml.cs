@@ -22,23 +22,17 @@ public partial class LoginPage : ContentPage
         base.OnAppearing();
         Globals.page_current = "Login";
         serverEntry.Text = Globals.server.Replace("http://","").Replace(":8080","");
-        if (Globals.first == false)
+        AppWeatherEventNotifier.Helper.Data.TodoItemDatabase database = await AppWeatherEventNotifier.Helper.Data.TodoItemDatabase.Instance;
+        var x = await database.GetItemsAsync();
+        foreach (TodoItem z in x)
         {
-
+            if (z.Username != null)
+                UsernameEntry.Text = z.Username;
+            if (z.Password != null)
+                PasswordEntry.Text = z.Password;
+            if (z.Server != null)
+                serverEntry.Text = z.Server.Replace("http://", "").Replace(":8080", "");
         }
-        else
-        {
-            AppWeatherEventNotifier.Helper.Data.TodoItemDatabase database = await AppWeatherEventNotifier.Helper.Data.TodoItemDatabase.Instance;
-            var x = await database.GetItemsAsync();
-            foreach (TodoItem z in x)
-            {
-                if (z.Username != null)
-                    UsernameEntry.Text = z.Username;
-                if (z.Password != null)
-                    PasswordEntry.Text = z.Password;
-            }
-        }
-        
         if (Connectivity.NetworkAccess == NetworkAccess.None)
         {
             await DisplayAlert("Attenzione", "Non sei connesso a internet", "OK");     
@@ -57,12 +51,23 @@ public partial class LoginPage : ContentPage
         activityController.turnOn();
         disabledAllButton();
         Globals.server = "http://" + serverEntry.Text.Replace("http://", "").Replace(":8080", "") + ":8080";
+        AppWeatherEventNotifier.Helper.Data.TodoItemDatabase database = await AppWeatherEventNotifier.Helper.Data.TodoItemDatabase.Instance;
+        var x11 = await database.GetItemsAsync();
+        foreach (TodoItem z in x11)
+        {
+            if (z.Server != null)
+                await database.DeleteItemAsync(z);
+        }
+
+        var todoItem1 = new TodoItem();
+        todoItem1.Server = Globals.server;
+        Helper.Data.TodoItemDatabase database11 = await Helper.Data.TodoItemDatabase.Instance;
+        await database11.SaveItemAsync(todoItem1);
         var x = await _model.OnLoginClicked();
         if (x == true)
         {
             if (check.IsChecked == true)
             {
-                AppWeatherEventNotifier.Helper.Data.TodoItemDatabase database = await AppWeatherEventNotifier.Helper.Data.TodoItemDatabase.Instance;
                 var x1 = await database.GetItemsAsync();
                 foreach (TodoItem z in x1)
                 {
@@ -104,6 +109,18 @@ public partial class LoginPage : ContentPage
     private async void RegisterClicked(object sender, EventArgs e)
     {
         Globals.server = "http://" + serverEntry.Text.Replace("http://", "").Replace(":8080", "") + ":8080";
+        AppWeatherEventNotifier.Helper.Data.TodoItemDatabase database = await AppWeatherEventNotifier.Helper.Data.TodoItemDatabase.Instance;
+        var x1 = await database.GetItemsAsync();
+        foreach (TodoItem z in x1)
+        {
+            if (z.Server != null)
+                await database.DeleteItemAsync(z);
+        }
+
+        var todoItem = new TodoItem();
+        todoItem.Server = Globals.server;
+        Helper.Data.TodoItemDatabase database1 = await Helper.Data.TodoItemDatabase.Instance;
+        await database1.SaveItemAsync(todoItem);
         await Navigation.PushAsync(new RegisterPage());
     }
 

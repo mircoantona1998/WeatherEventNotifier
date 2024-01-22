@@ -5,7 +5,7 @@ namespace SLAManagerdata.Models;
 
 public partial class Status
 {
-    public int? Id { get; set; }
+    public int Id { get; set; }
 
     public string? Code { get; set; }
 

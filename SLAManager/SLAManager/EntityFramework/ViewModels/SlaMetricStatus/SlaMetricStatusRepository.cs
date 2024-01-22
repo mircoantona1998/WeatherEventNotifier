@@ -20,14 +20,14 @@ namespace SLAManagerdata.Models
         #region GET
         /// <summary>
         /// Get SlaMetricStatus
-        public async Task<List<SlaMetricStatus>> Get()
+        public async Task<List<SlaMetricStatusView>> Get()
         {
-            List<SlaMetricStatus> mess = null;
+            List<SlaMetricStatusView> mess = null;
             try
             {
                 using var context = new SlamanagerContext(DB.Options);
 
-                mess = await context.SlaMetricStatuses
+                mess = await context.SlaMetricStatusViews
                     .AsNoTracking()
                     .ToListAsync();
             }

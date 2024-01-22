@@ -25,7 +25,7 @@ namespace ExposeAPI.Controllers
         {
             Logger log = new();
             log.LogAction("SlaMetricStatusController  Get");
-            List<SlaMetricStatus> SlaMetricStatuss = new List<SlaMetricStatus>();
+            List<SlaMetricStatusView> SlaMetricStatuss = new List<SlaMetricStatusView>();
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");

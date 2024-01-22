@@ -11,6 +11,7 @@ namespace AppWeatherEventNotifier.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public string Notes { get; set; }
+        public string Server { get; set; }
         public bool Done { get; set; }
     }
 }
