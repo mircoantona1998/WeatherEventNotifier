@@ -164,7 +164,6 @@ class SlaView(Base):
 
     Id = Column(INTEGER, primary_key=True)
     IdMonitoringMetric = Column(INTEGER)
-    Partition = Column(INTEGER)
     Symbol = Column(VARCHAR(255))
     DesiredValue = Column(FLOAT)
     UpdateDatetime = Column(DATETIME)

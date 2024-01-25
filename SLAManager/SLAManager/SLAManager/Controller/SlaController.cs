@@ -30,7 +30,7 @@ namespace SLAManager.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
-                int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+               // int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var dto = new
@@ -90,12 +90,12 @@ namespace SLAManager.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
-                int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+              //  int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     if (newItemDTO.Symbol==null || newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
                     {
-                        res = await slaRepo.Patch(newItemDTO, partition);
+                        res = await slaRepo.Patch(newItemDTO);//, partition);
                     }
                     else return Problem("Inserire un simbolo valido", null, 500);
                 }
@@ -120,7 +120,7 @@ namespace SLAManager.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
-                int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+               // int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     res = await slaRepo.Delete(IdSla);

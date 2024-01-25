@@ -8,7 +8,6 @@ namespace SLAManagerdata.ViewModels
         public int IdMonitoringMetric { get; set; }
         public string Symbol { get; set; }
         public float DesiredValue { get; set; }
-        public int Partition { get; set; }   
    
     }
 
@@ -19,7 +18,6 @@ namespace SLAManagerdata.ViewModels
         public int IdMonitoringMetric { get; set; }
         public string Symbol { get; set; }
         public float DesiredValue { get; set; }
-        public int Partition { get; set; }
 
     }
 

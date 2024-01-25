@@ -95,7 +95,7 @@ namespace SLAManagerdata.Models
         #endregion
 
         #region PATCH
-        public async Task<bool?> Patch(SlaPatchDTO newItemDTO, int partition)
+        public async Task<bool?> Patch(SlaPatchDTO newItemDTO)//, int partition)
         {
             bool? isPatched = false;
             using var context = new SlamanagerContext(DB.Options);
@@ -109,7 +109,7 @@ namespace SLAManagerdata.Models
                     IdMonitoringMetric = newItemDTO.IdMonitoringMetric,
                     Symbol = newItemDTO.Symbol,
                     DesiredValue = newItemDTO.DesiredValue,
-                    Partition=partition
+                   // Partition=partition
                 };
 
                 var newItem = mapper.Map(insertDTO, new Sla

@@ -134,6 +134,6 @@ if __name__ == "__main__":
                                 slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
                                 SlaMetricStatusRepo.patch_element(slaMetricStatus)
                                 SlaMetricViolationRepo.add_element(slaMetricViolation)
-        sleep(60)
+        sleep(10)
     
 

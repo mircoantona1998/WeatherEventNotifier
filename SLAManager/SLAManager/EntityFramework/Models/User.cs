@@ -29,5 +29,5 @@ public partial class User
 
     public int? IsBlocked { get; set; }
 
-    public int? Partition { get; set; }
+   
 }

@@ -29,7 +29,7 @@ namespace ExposeAPI.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
-                int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+               // int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     SlaMetricViolationForecasts = await slaMetricViolationForecastRepo.Get();
