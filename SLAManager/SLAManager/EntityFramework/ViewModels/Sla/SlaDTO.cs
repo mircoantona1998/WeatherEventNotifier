@@ -6,9 +6,9 @@ namespace SLAManagerdata.ViewModels
     public class SlaAddDTO
     {
         public int IdMonitoringMetric { get; set; }
-        public string Symbol { get; set; }
-        public float DesiredValue { get; set; }
-   
+        public float? FromDesiredValue { get; set; }
+        public float? ToDesiredValue { get; set; }
+
     }
 
     
@@ -16,8 +16,8 @@ namespace SLAManagerdata.ViewModels
     {
         public int Id { get; set; }
         public int IdMonitoringMetric { get; set; }
-        public string Symbol { get; set; }
-        public float DesiredValue { get; set; }
+        public float? FromDesiredValue { get; set; }
+        public float? ToDesiredValue { get; set; }
 
     }
 

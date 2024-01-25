@@ -235,9 +235,6 @@ public partial class SlamanagerContext : DbContext
 
             entity.ToTable("Sla");
 
-            entity.Property(e => e.Symbol)
-                .HasMaxLength(2)
-                .IsUnicode(false);
             entity.Property(e => e.UpdateDatetime).HasColumnType("datetime");
         });
 
@@ -313,9 +310,7 @@ public partial class SlamanagerContext : DbContext
             entity.Property(e => e.StatusDescription)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.Symbol)
-                .HasMaxLength(2)
-                .IsUnicode(false);
+
         });
 
         modelBuilder.Entity<SlaMetricViolation>(entity =>
@@ -418,9 +413,7 @@ public partial class SlamanagerContext : DbContext
             entity.Property(e => e.MetricDescription)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.Symbol)
-                .HasMaxLength(2)
-                .IsUnicode(false);
+
             entity.Property(e => e.Violation)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -460,9 +453,7 @@ public partial class SlamanagerContext : DbContext
             entity.Property(e => e.MetricDescription)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.Symbol)
-                .HasMaxLength(2)
-                .IsUnicode(false);
+
             entity.Property(e => e.Violation)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -480,9 +471,7 @@ public partial class SlamanagerContext : DbContext
             entity.Property(e => e.Metric)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.Symbol)
-                .HasMaxLength(2)
-                .IsUnicode(false);
+
             entity.Property(e => e.UpdateDatetime).HasColumnType("datetime");
         });
 

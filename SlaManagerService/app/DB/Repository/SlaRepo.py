@@ -16,8 +16,8 @@ class SlaRepo:
                 result_dict = {
                     "Id": result.Id,
                     "IdMonitoringMetric": int(result.IdMonitoringMetric) if result.IdMonitoringMetric is not None else None,
-                    "Symbol": result.Symbol,
-                    "DesiredValue": float(result.DesiredValue) if result.DesiredValue is not None else None,
+                    "FromDesiredValue": float(result.FromDesiredValue) if result.FromDesiredValue is not None else None,
+                    "ToDesiredValue": float(result.ToDesiredValue) if result.ToDesiredValue is not None else None,
                     "UpdateDatetime": result.UpdateDatetime.strftime('%Y-%m-%d %H:%M:%S') if result.UpdateDatetime is not None else None,
                     "Metric": result.Metric,
                     "Description": result.Description,
@@ -33,8 +33,8 @@ class SlaRepo:
                 result_dict = {
                     "Id": result.Id,
                     "IdMonitoringMetric": int(result.IdMonitoringMetric) if result.IdMonitoringMetric is not None else None,
-                    "Symbol": result.Symbol,
-                    "DesiredValue": float(result.DesiredValue) if result.DesiredValue is not None else None,
+                    "FromDesiredValue": float(result.FromDesiredValue) if result.FromDesiredValue is not None else None,
+                    "ToDesiredValue": float(result.ToDesiredValue) if result.ToDesiredValue is not None else None,        
                     "UpdateDatetime": result.UpdateDatetime.strftime('%Y-%m-%d %H:%M:%S') if result.UpdateDatetime is not None else None,
                     "Metric": result.Metric,
                     "Description": result.Description,

@@ -5,6 +5,7 @@ using SLAManagerdata.ViewModels;
 using SLAManagerdata.Utils;
 using EntityFramework.Utils;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace SLAManagerdata.Models
 {
@@ -37,9 +38,9 @@ namespace SLAManagerdata.Models
                 SlaAddDTO insertDTO = new SlaAddDTO
                 {
                     IdMonitoringMetric= newItemDTO.IdMonitoringMetric,
-                    Symbol =newItemDTO.Symbol,
-                    DesiredValue = newItemDTO.DesiredValue,
-                   // Partition=partition
+                    FromDesiredValue = newItemDTO.FromDesiredValue,
+                    ToDesiredValue = newItemDTO.ToDesiredValue,
+                    // Partition=partition
                 };
 
                 var newItem = mapper.Map(insertDTO, new Sla
@@ -107,8 +108,8 @@ namespace SLAManagerdata.Models
                 {
                     Id = newItemDTO.Id,
                     IdMonitoringMetric = newItemDTO.IdMonitoringMetric,
-                    Symbol = newItemDTO.Symbol,
-                    DesiredValue = newItemDTO.DesiredValue,
+                    FromDesiredValue = newItemDTO.FromDesiredValue,
+                    ToDesiredValue = newItemDTO.ToDesiredValue,
                    // Partition=partition
                 };
 
@@ -127,18 +128,32 @@ namespace SLAManagerdata.Models
 
                 if (!slasExists && metricExists == true)
                 {
-                    var sla=await context.Slas
-                    .AsNoTracking()
-                    .Where(sl => sl.Id== newItemDTO.Id).FirstOrDefaultAsync();
-                    if(sla!=null) { 
-                        sla.DesiredValue = newItemDTO.DesiredValue;
-                        sla.IdMonitoringMetric= newItemDTO.IdMonitoringMetric;
-                        sla.Symbol=newItemDTO.Symbol;
-                        sla.UpdateDatetime= DateTime.UtcNow;
-                        context.Entry(sla).State = EntityState.Modified;
-                        await context.SaveChangesAsync();
-                        await transaction.CommitAsync().ConfigureAwait(false);
-                        isPatched = true;
+                    var recordsToDelete = await context.SlaMetricStatuses
+                    .Where(rec => rec.IdSla == newItemDTO.Id)
+                    .ToListAsync();
+                    context.SlaMetricStatuses.RemoveRange(recordsToDelete);
+                    int deleteN = await context.SaveChangesAsync();
+                    var recordsToDelete2 = await context.SlaMetricViolations
+                    .Where(rec => rec.IdSla == newItemDTO.Id)
+                    .ToListAsync();
+                    context.SlaMetricViolations.RemoveRange(recordsToDelete2);
+                    int deleteN2 = await context.SaveChangesAsync();
+                    if (deleteN >= 0 && deleteN2 >= 0)
+                    {
+                        var sla = await context.Slas
+                        .AsNoTracking()
+                        .Where(sl => sl.Id == newItemDTO.Id).FirstOrDefaultAsync();
+                        if (sla != null)
+                        {
+                            sla.FromDesiredValue = newItemDTO.FromDesiredValue;
+                            sla.IdMonitoringMetric = newItemDTO.IdMonitoringMetric;
+                            sla.ToDesiredValue = newItemDTO.ToDesiredValue;
+                            sla.UpdateDatetime = DateTime.UtcNow;
+                            context.Entry(sla).State = EntityState.Modified;
+                            await context.SaveChangesAsync();
+                            await transaction.CommitAsync().ConfigureAwait(false);
+                            isPatched = true;
+                        }
                     }
                 }
             }
@@ -160,12 +175,27 @@ namespace SLAManagerdata.Models
             try
             {
                 using var context = new SlamanagerContext(DB.Options);
-                var recordsToDelete = await context.Slas
-                 .Where(rec => rec.Id==idSla)
+                var recordsToDelete = await context.SlaMetricStatuses
+                .Where(rec => rec.IdSla == idSla)
+                .ToListAsync();
+                context.SlaMetricStatuses.RemoveRange(recordsToDelete);
+                int deleteN = await context.SaveChangesAsync();
+
+                var recordsToDelete2 = await context.SlaMetricViolations
+                .Where(rec => rec.IdSla == idSla)
+                .ToListAsync();
+                context.SlaMetricViolations.RemoveRange(recordsToDelete2);
+                int deleteN2 = await context.SaveChangesAsync();
+
+                if (deleteN >= 0 && deleteN2 >= 0)
+                {
+                    var recordsToDelete1 = await context.Slas
+                 .Where(rec => rec.Id == idSla)
                  .ToListAsync();
-                context.Slas.RemoveRange(recordsToDelete);
-               int deleteN= await context.SaveChangesAsync();
-                if (deleteN > 0) return true;
+                    context.Slas.RemoveRange(recordsToDelete1);
+                    int deleteN1 = await context.SaveChangesAsync();
+                    if (deleteN1 > 0) return true;
+                }
             }
             catch (Exception ex)
             {

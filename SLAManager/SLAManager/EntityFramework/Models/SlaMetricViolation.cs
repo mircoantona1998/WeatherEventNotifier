@@ -29,5 +29,7 @@ public partial class SlaMetricViolation
 
     public double? MisuredValue { get; set; }
 
-    public double? DesiredValue { get; set; }
+    public double? FromDesiredValue { get; set; }
+
+    public double? ToDesiredValue { get; set; }
 }

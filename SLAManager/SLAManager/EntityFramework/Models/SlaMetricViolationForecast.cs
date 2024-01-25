@@ -29,5 +29,7 @@ public partial class SlaMetricViolationForecast
 
     public double? MisuredValue { get; set; }
 
-    public double? DesiredValue { get; set; }
+    public double? FromDesiredValue { get; set; }
+
+    public double? ToDesiredValue { get; set; }
 }

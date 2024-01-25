@@ -20,16 +20,25 @@ namespace SLAManagerdata.Models
         #region GET
         /// <summary>
         /// Get SlaMetricViolation
-        public async Task<List<SlaMetricViolationView>> Get()
+        public async Task<List<SlaMetricViolationView>> Get(int? hours)
         {
             List<SlaMetricViolationView> mess = null;
             try
             {
                 using var context = new SlamanagerContext(DB.Options);
-
+                if (hours == null) { 
                 mess = await context.SlaMetricViolationViews
                     .AsNoTracking()
                     .ToListAsync();
+                }else
+                {
+                    DateTime thresholdDateTime = DateTime.UtcNow.AddHours(-hours.Value);
+
+                    mess = await context.SlaMetricViolationViews
+                                   .Where(x => x.Datetime > thresholdDateTime)
+                                   .AsNoTracking()
+                                   .ToListAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -37,8 +46,36 @@ namespace SLAManagerdata.Models
 
             return mess;
         }
+        public async Task<int> GetCount(int? hours)
+        {
+            List<SlaMetricViolationView> mess = null;
+            try
+            {
+                using var context = new SlamanagerContext(DB.Options);
+                if (hours == null)
+                {
+                    mess = await context.SlaMetricViolationViews
+                        .AsNoTracking()
+                        .ToListAsync();
+                }
+                else
+                {
+                    DateTime thresholdDateTime = DateTime.UtcNow.AddHours(-hours.Value);
+
+                    mess = await context.SlaMetricViolationViews
+                                   .Where(x => x.Datetime > thresholdDateTime)
+                                   .AsNoTracking()
+                                   .ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return mess.Count;
+        }
         #endregion
-  
+
 
     }
 }

@@ -1,3 +1,4 @@
+from cmath import inf
 from time import sleep
 from Configurations.Configurations import Configurations
 from DB.Repository.MonitoringMetricRepo import MonitoringMetricRepo
@@ -67,73 +68,28 @@ if __name__ == "__main__":
                 MetricDataRepo.add_element(metric_data)
                 sla=SlaRepo.get_by_id_metric(metric["Id"])
                 if sla is not None:
+                    if sla["FromDesiredValue"] is None:
+                        confrontoFrom=float(-inf)
+                    else:
+                        confrontoFrom=sla["FromDesiredValue"]
+                        sla["FromDesiredValue"]=float(sla["FromDesiredValue"])
+                    if sla["ToDesiredValue"] is None:
+                        confrontoTo=float(inf)
+                    else:
+                        confrontoTo=sla["ToDesiredValue"]
+                        sla["ToDesiredValue"]=float(sla["ToDesiredValue"])
                     if value2 is not None:
-                        if sla["Symbol"]==">":
-                            if float(value2)>float(sla["DesiredValue"]):
-                                statusOk=StatusRepo.get_by_code("OK")
-                                slaMetricStatus=SlaMetricStatus(sla["Id"],statusOk["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                            else:
-                                statusError=StatusRepo.get_by_code("KO")
-                                slaMetricStatus= SlaMetricStatus(sla["Id"],statusError["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                                SlaMetricViolationRepo.add_element(slaMetricViolation)
-                        elif sla["Symbol"]=="<" :
-                            if float(value2)<float(sla["DesiredValue"]):
-                                statusOk=StatusRepo.get_by_code("OK")
-                                slaMetricStatus=SlaMetricStatus(sla["Id"],statusOk["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                            else:
-                                statusError=StatusRepo.get_by_code("KO")
-                                slaMetricStatus= SlaMetricStatus(sla["Id"],statusError["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                                SlaMetricViolationRepo.add_element(slaMetricViolation)
-                        elif sla["Symbol"]=="<=" :
-                            if float(value2)<=float(sla["DesiredValue"]):
-                                statusOk=StatusRepo.get_by_code("OK")
-                                slaMetricStatus=SlaMetricStatus(sla["Id"],statusOk["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                            else:
-                                statusError=StatusRepo.get_by_code("KO")
-                                slaMetricStatus= SlaMetricStatus(sla["Id"],statusError["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                                SlaMetricViolationRepo.add_element(slaMetricViolation)
-                        elif sla["Symbol"]==">" :
-                            if float(value2)>float(sla["DesiredValue"]):
-                                statusOk=StatusRepo.get_by_code("OK")
-                                slaMetricStatus=SlaMetricStatus(sla["Id"],statusOk["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                            else:
-                                statusError=StatusRepo.get_by_code("KO")
-                                slaMetricStatus= SlaMetricStatus(sla["Id"],statusError["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                                SlaMetricViolationRepo.add_element(slaMetricViolation)
-                        elif sla["Symbol"]==">=" :
-                            if float(value2)>=float(sla["DesiredValue"]):
-                                statusOk=StatusRepo.get_by_code("OK")
-                                slaMetricStatus=SlaMetricStatus(sla["Id"],statusOk["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                            else:
-                                statusError=StatusRepo.get_by_code("KO")
-                                slaMetricStatus= SlaMetricStatus(sla["Id"],statusError["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                                SlaMetricViolationRepo.add_element(slaMetricViolation)
-                        elif sla["Symbol"]=="==" :
-                            if float(value2)==float(sla["DesiredValue"]):
-                                statusOk=StatusRepo.get_by_code("OK")
-                                slaMetricStatus=SlaMetricStatus(sla["Id"],statusOk["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                            else:
-                                statusError=StatusRepo.get_by_code("KO")
-                                slaMetricStatus= SlaMetricStatus(sla["Id"],statusError["Id"],action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,float(sla["DesiredValue"]),float(value2))
-                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                                SlaMetricViolationRepo.add_element(slaMetricViolation)
-        sleep(10)
+                        if float(value2)>=confrontoFrom and float(value2)<=confrontoTo:
+                            statusOk=StatusRepo.get_by_code("OK")
+                            slaMetricStatus=SlaMetricStatus(sla["Id"],statusOk["Id"],action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2))
+                            SlaMetricStatusRepo.patch_element(slaMetricStatus)
+                        else:
+                            statusError=StatusRepo.get_by_code("KO")
+                            slaMetricStatus= SlaMetricStatus(sla["Id"],statusError["Id"],action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2))
+                            slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2))
+                            SlaMetricStatusRepo.patch_element(slaMetricStatus)
+                            SlaMetricViolationRepo.add_element(slaMetricViolation)
+
+        sleep(60)
     
 

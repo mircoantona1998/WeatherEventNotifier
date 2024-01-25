@@ -63,11 +63,10 @@ namespace SLAManager.Controllers
                // int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
-                    if ( newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
+                    if ( newItemDTO.FromDesiredValue != null || newItemDTO.ToDesiredValue != null)
                     {
-
                         res = await slaRepo.Create(newItemDTO);//, partition);
-                    }else return Problem("Inserire un simbolo valido", null, 500);
+                    }else return Problem("Inserire un valore valido", null, 500);
                 }
             }
             else
@@ -93,11 +92,13 @@ namespace SLAManager.Controllers
               //  int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
-                    if (newItemDTO.Symbol==null || newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
+                  if ( newItemDTO.FromDesiredValue != null || newItemDTO.ToDesiredValue != null)
                     {
                         res = await slaRepo.Patch(newItemDTO);//, partition);
                     }
-                    else return Problem("Inserire un simbolo valido", null, 500);
+                    else return Problem("Inserire un valore valido", null, 500);
+                   
+                  
                 }
             }
             else

@@ -9,9 +9,9 @@ public partial class Sla
 
     public int? IdMonitoringMetric { get; set; }
 
-    public string? Symbol { get; set; }
+    public double? FromDesiredValue { get; set; }
 
-    public double? DesiredValue { get; set; }
+    public double? ToDesiredValue { get; set; }
 
     public DateTime? UpdateDatetime { get; set; }
 }

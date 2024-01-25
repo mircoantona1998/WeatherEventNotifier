@@ -80,8 +80,8 @@ class Sla(Base):
     __tablename__ = "Sla"
     Id = Column(INTEGER, primary_key=True)
     IdMonitoringMetric = Column(INTEGER, nullable=True)
-    Symbol = Column(VARCHAR(2), nullable=True)
-    DesiredValue = Column(FLOAT)
+    FromDesiredValue = Column(FLOAT)
+    ToDesiredValue = Column(FLOAT)
     UpdateDatetime = Column(DATETIME, nullable=True)
 
 
@@ -90,7 +90,8 @@ class Slametricstatus(Base):
     Id = Column(INTEGER, primary_key=True)
     IdSla = Column(INTEGER, nullable=True)
     IdStatus = Column(INTEGER, nullable=True)
-    DesiredValue = Column(FLOAT)
+    FromDesiredValue = Column(FLOAT)
+    ToDesiredValue = Column(FLOAT)
     MisuredValue = Column(FLOAT)
     Datetime = Column(DATETIME, nullable=True)
     Action = Column(VARCHAR(255), nullable=True)
@@ -107,7 +108,8 @@ class Slametricviolation(Base):
     Id = Column(INTEGER, primary_key=True)
     IdSla = Column(INTEGER, nullable=True)
     Violation = Column(VARCHAR(255), nullable=True)
-    DesiredValue = Column(FLOAT)
+    FromDesiredValue = Column(FLOAT)
+    ToDesiredValue = Column(FLOAT)
     MisuredValue = Column(FLOAT)
     Datetime = Column(DATETIME, nullable=True)
     Action = Column(VARCHAR(255), nullable=True)
@@ -124,7 +126,8 @@ class Slametricviolationforecast(Base):
     Id = Column(INTEGER, primary_key=True)
     IdSla = Column(INTEGER, nullable=True)
     Violation = Column(VARCHAR(255), nullable=True)
-    DesiredValue = Column(FLOAT)
+    FromDesiredValue = Column(FLOAT)
+    ToDesiredValue = Column(FLOAT)
     MisuredValue = Column(FLOAT)
     Datetime = Column(DATETIME, nullable=True)
     Action = Column(VARCHAR(255), nullable=True)
@@ -164,8 +167,8 @@ class SlaView(Base):
 
     Id = Column(INTEGER, primary_key=True)
     IdMonitoringMetric = Column(INTEGER)
-    Symbol = Column(VARCHAR(255))
-    DesiredValue = Column(FLOAT)
+    FromDesiredValue = Column(FLOAT)
+    ToDesiredValue = Column(FLOAT)
     UpdateDatetime = Column(DATETIME)
     Metric = Column(VARCHAR(255))
     Description = Column(VARCHAR(255))
@@ -175,8 +178,8 @@ class SlaMetricStatusView(Base):
     __tablename__ = 'Sla_metric_status_view'
 
     IdSla = Column(INTEGER, primary_key=True)
-    Symbol = Column(VARCHAR(255))
-    DesiredValue = Column(FLOAT)
+    FromDesiredValue = Column(FLOAT)
+    ToDesiredValue = Column(FLOAT)
     MisuredValue = Column(FLOAT)
     Metric = Column(VARCHAR(255))
     MetricDescription = Column(VARCHAR(255))
@@ -196,8 +199,8 @@ class SlaMetricViolationView(Base):
     __tablename__ = 'Sla_metric_violation_view'
 
     IdSla = Column(INTEGER, primary_key=True)
-    Symbol = Column(VARCHAR(255))
-    DesiredValue = Column(FLOAT)
+    FromDesiredValue = Column(FLOAT)
+    ToDesiredValue = Column(FLOAT)
     MisuredValue = Column(FLOAT)
     Violation = Column(VARCHAR(255))
     Datetime = Column(DATETIME)
@@ -209,8 +212,8 @@ class SlaMetricViolationForecastView(Base):
     __tablename__ = 'Sla_metric_violation_forecast_view'
 
     IdSla = Column(INTEGER, primary_key=True)
-    Symbol = Column(VARCHAR(255))
-    DesiredValue = Column(FLOAT)
+    FromDesiredValue = Column(FLOAT)
+    ToDesiredValue = Column(FLOAT)
     MisuredValue = Column(FLOAT)
     Violation = Column(VARCHAR(255))
     Datetime = Column(DATETIME)

@@ -7,9 +7,9 @@ public partial class SlaMetricViolationView
 {
     public int IdSla { get; set; }
 
-    public string? Symbol { get; set; }
+    public double? FromDesiredValue { get; set; }
 
-    public double? DesiredValue { get; set; }
+    public double? ToDesiredValue { get; set; }
 
     public double? MisuredValue { get; set; }
 

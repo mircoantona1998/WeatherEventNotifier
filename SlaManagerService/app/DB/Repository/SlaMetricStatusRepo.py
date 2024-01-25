@@ -16,8 +16,8 @@ class SlaMetricStatusRepo:
             for result in resultList:
                 result_dict = {
                     "IdSla": result.IdSla,
-                    "Symbol": result.Symbol,
-                    "DesiredValue": float(result.DesiredValue) if result.DesiredValue is not None else None,
+                    "FromDesiredValue": float(result.FromDesiredValue) if result.FromDesiredValue is not None else None,
+                    "ToDesiredValue": float(result.ToDesiredValue) if result.ToDesiredValue is not None else None,
                     "MisuredValue": float(result.MisuredValue) if result.MisuredValue is not None else None,
                     "datetime": result.datetime.strftime('%Y-%m-%d %H:%M:%S') if result.datetime is not None else None,
                     "Metric": result.Metric,
@@ -32,6 +32,8 @@ class SlaMetricStatusRepo:
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - add_element  - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
             existing_element = session.query(Slametricstatus).filter_by(
+                FromDesiredValue = new_element_data.FromDesiredValue,
+                ToDesiredValue = new_element_data.ToDesiredValue,
                 IdSla=new_element_data.IdSla,
                 Action=new_element_data.Action,
                 Code=new_element_data.Code,

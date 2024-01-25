@@ -15,9 +15,8 @@ class SlaMetricViolationForecastRepo:
             for result in resultList:
                 result_dict = {
                     "IdSla": result.IdSla,
-                    "Symbol": result.Symbol,
-                    "DesiredValue": float(result.DesiredValue) if result.DesiredValue is not None else None,
-                    "MisuredValue": float(result.MisuredValue) if result.MisuredValue is not None else None,                   
+                    "FromDesiredValue": float(result.FromDesiredValue) if result.FromDesiredValue is not None else None,
+                    "ToDesiredValue": float(result.ToDesiredValue) if result.ToDesiredValue is not None else None,                    "MisuredValue": float(result.MisuredValue) if result.MisuredValue is not None else None,                   
                     "Datetime": result.Datetime.strftime('%Y-%m-%d %H:%M:%S') if result.Datetime is not None else None,
                     "Metric": result.Metric,
                     "MetricDescription": result.MetricDescription,
