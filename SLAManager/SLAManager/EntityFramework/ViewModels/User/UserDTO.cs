@@ -17,10 +17,7 @@ namespace SLAManagerdata.ViewModels
         public string? Nome { get; set; }
 
     }
-    public class UserInsertDTO:UserCreateDTO
-    {
-        public int Partition { get; set; }
-    }
+
     public class LoginUserDTO
     {
         public string Username { get; set; } = string.Empty;

@@ -9,11 +9,9 @@ public partial class SlaView
 
     public int? IdMonitoringMetric { get; set; }
 
-    public int? Partition { get; set; }
-
     public string? Symbol { get; set; }
 
-    public double? Value { get; set; }
+    public double? DesiredValue { get; set; }
 
     public DateTime? UpdateDatetime { get; set; }
 

@@ -26,7 +26,7 @@ namespace SLAManagerdata.Models
 
 
         #region POST
-        public async Task<bool?> Create(SlaAddDTO newItemDTO,int partition)
+        public async Task<bool?> Create(SlaAddDTO newItemDTO)//,int partition)
         {
             bool? isCreated = false;
             using var context = new SlamanagerContext(DB.Options);
@@ -38,7 +38,8 @@ namespace SLAManagerdata.Models
                 {
                     IdMonitoringMetric= newItemDTO.IdMonitoringMetric,
                     Symbol =newItemDTO.Symbol,
-                    Value =newItemDTO.Value,
+                    DesiredValue = newItemDTO.DesiredValue,
+                   // Partition=partition
                 };
 
                 var newItem = mapper.Map(insertDTO, new Sla
@@ -59,7 +60,7 @@ namespace SLAManagerdata.Models
                     await context.Slas.AddAsync(newItem);
                     isCreated = !UserdataLib.IsNullOrZero(await context.SaveChangesAsync().ConfigureAwait(false));
                     await transaction.CommitAsync().ConfigureAwait(false);
-                }               
+                }            
             }
             catch (Exception ex)
             {
@@ -107,7 +108,8 @@ namespace SLAManagerdata.Models
                     Id = newItemDTO.Id,
                     IdMonitoringMetric = newItemDTO.IdMonitoringMetric,
                     Symbol = newItemDTO.Symbol,
-                    Value = newItemDTO.Value,
+                    DesiredValue = newItemDTO.DesiredValue,
+                    Partition=partition
                 };
 
                 var newItem = mapper.Map(insertDTO, new Sla
@@ -116,7 +118,7 @@ namespace SLAManagerdata.Models
                 });
                 bool slasExists = await context.Slas
                     .AsNoTracking()
-                    .AnyAsync(sl => sl.IdMonitoringMetric == newItemDTO.IdMonitoringMetric)
+                    .AnyAsync(sl => sl.IdMonitoringMetric == newItemDTO.IdMonitoringMetric && sl.Id != newItemDTO.Id)
                     .ConfigureAwait(false);
                 bool metricExists = await context.MonitoringMetrics
                     .AsNoTracking()
@@ -129,7 +131,7 @@ namespace SLAManagerdata.Models
                     .AsNoTracking()
                     .Where(sl => sl.Id== newItemDTO.Id).FirstOrDefaultAsync();
                     if(sla!=null) { 
-                        sla.Value = newItemDTO.Value;
+                        sla.DesiredValue = newItemDTO.DesiredValue;
                         sla.IdMonitoringMetric= newItemDTO.IdMonitoringMetric;
                         sla.Symbol=newItemDTO.Symbol;
                         sla.UpdateDatetime= DateTime.UtcNow;

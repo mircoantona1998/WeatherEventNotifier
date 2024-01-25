@@ -60,12 +60,13 @@ namespace SLAManager.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
-                int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+               // int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
-                    if (newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
+                    if ( newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
                     {
-                        res = await slaRepo.Create(newItemDTO, partition);
+
+                        res = await slaRepo.Create(newItemDTO);//, partition);
                     }else return Problem("Inserire un simbolo valido", null, 500);
                 }
             }

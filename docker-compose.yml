@@ -31,24 +31,6 @@ services:
     networks:
       - microservices-network
       
-  sla-manager:
-    extends:
-      file: SLAManager/docker-compose.yml
-      service: sla-manager
-    environment:
-      - HowManyPartition=1
-      - groupID=SLAManager
-      - bootstrapServers=kafka:9093
-    networks:
-      - microservices-network  
-    depends_on:
-      - kafka
-     
-  sla-manager-db:
-    extends:
-      file: SLAManager/docker-compose.yml
-      service: sla-manager-db
-
   expose-api:
     extends:
       file: API/docker-compose.yml
@@ -67,6 +49,51 @@ services:
       file: API/docker-compose.yml
       service: expose-api-db
       
+      
+  sla-manager:
+    extends:
+      file: SLAManager/docker-compose.yml
+      service: sla-manager
+    environment:
+      - HowManyPartition=1
+      - groupID=SLAManager
+      - bootstrapServers=kafka:9093
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka
+     
+  sla-manager-db:
+    extends:
+      file: SLAManager/docker-compose.yml
+      service: sla-manager-db
+      
+  sla-manager-service:
+    container_name: sla-manager-service
+    build:
+      context: ./SlaManagerService/app
+      dockerfile: Dockerfile
+    environment:
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=sa
+     - DATABASE_PASSWORD=RootRoot.1
+     - DATABASE_PORTA=1433
+     - DATABASE_IP=sla-manager-db
+     - DATABASE_NAME=SLAManager
+     - PROMETHEUS_IP=prometheus
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka
+      - sla-manager-db
+      - sla-manager
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'  
+          memory: '216M'  
+
   prometheus:
       image: prom/prometheus
       container_name: prometheus-service

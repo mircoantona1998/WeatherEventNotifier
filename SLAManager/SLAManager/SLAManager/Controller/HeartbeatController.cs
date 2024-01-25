@@ -26,10 +26,10 @@ namespace SLAManager.Controllers
             Logger log = new();
             log.LogAction("HeartbeatController");
             AuthenticationResponse authResponse = null;
-            var res = await serviceRepo.Login(loginDTO);
+            var res = await serviceRepo.LoginHeartbeat(loginDTO);
             if (res.Item1 != null)
             {
-                authResponse = await AuthResponse.GenerateAuthResponse(res.Item1, _configuration, res.Item2);
+                authResponse = await AuthResponse.GenerateAuthResponseHeartbeat(res.Item1, _configuration, res.Item2);
                 await hearthbeatRepo.Add(Convert.ToInt32(res.Item1.Id));
             }
             return authResponse != null ? Ok(authResponse) : Unauthorized();

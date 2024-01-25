@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+      
+  slamanager-service:
+    container_name: slamanager-service
+    build:
+     context: ./app
+     dockerfile: Dockerfile
+
+

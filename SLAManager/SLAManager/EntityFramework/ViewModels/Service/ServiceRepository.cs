@@ -177,7 +177,7 @@ namespace SLAManagerdata.Models
 
 
         #region PATCH
-        public async Task<(IdentityUser,int?)> Login(LoginServiceDTO loginDTO)
+        public async Task<(IdentityUser,int?)> LoginHeartbeat(LoginServiceDTO loginDTO)
         {
             IdentityUser usr =new IdentityUser();
             try
@@ -203,7 +203,32 @@ namespace SLAManagerdata.Models
             }
             return (null,null);
         }
-
+        public async Task<IdentityUser> Login(LoginServiceDTO loginDTO)
+        {
+            IdentityUser usr = new IdentityUser();
+            try
+            {
+                using var context = new SlamanagerContext(DB.Options);
+                var mapper = mapperConfig.CreateMapper();
+                var usr1 = await context.Services
+                    .Where(user => user.Servicename == loginDTO.Servicename && user.Password == loginDTO.Password)
+                    .SingleOrDefaultAsync();
+                if (usr1 != null)
+                {
+                    usr = new IdentityUser
+                    {
+                        Id = usr1.Id.ToString(),
+                        UserName = usr1.Servicename,
+                    };
+                    return usr;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+            }
+            return null;
+        }
         public async Task<IdentityUser> Get_user_Login(string Username)
         {
             IdentityUser usr = new IdentityUser();

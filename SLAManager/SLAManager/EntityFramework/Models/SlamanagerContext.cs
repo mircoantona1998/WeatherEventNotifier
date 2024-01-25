@@ -10,8 +10,9 @@ public partial class SlamanagerContext : DbContext
     public SlamanagerContext()
     {
     }
+
     public SlamanagerContext(DbContextOptions<SlamanagerContext> options)
-   : base(options)
+     : base(options)
     {
         if (config.configuration == null)
             config.configuration = new ConfigurationBuilder()
@@ -24,7 +25,6 @@ public partial class SlamanagerContext : DbContext
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:SLAManager"]);
 
-
     public virtual DbSet<Heartbeat> Heartbeats { get; set; }
 
     public virtual DbSet<HeartbeatView> HeartbeatViews { get; set; }
@@ -32,6 +32,8 @@ public partial class SlamanagerContext : DbContext
     public virtual DbSet<MessageReceived> MessageReceiveds { get; set; }
 
     public virtual DbSet<MessageSent> MessageSents { get; set; }
+
+    public virtual DbSet<MetricDatum> MetricData { get; set; }
 
     public virtual DbSet<MonitoringMetric> MonitoringMetrics { get; set; }
 
@@ -84,7 +86,7 @@ public partial class SlamanagerContext : DbContext
 
         modelBuilder.Entity<MessageReceived>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83FD4FE506D");
+            entity.HasKey(e => e.Id).HasName("PK__MessageR__3213E83FD870A341");
 
             entity.ToTable("MessageReceived");
 
@@ -120,7 +122,7 @@ public partial class SlamanagerContext : DbContext
 
         modelBuilder.Entity<MessageSent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83F65B1833A");
+            entity.HasKey(e => e.Id).HasName("PK__MessageS__3213E83F59B218A9");
 
             entity.ToTable("MessageSent");
 
@@ -152,6 +154,39 @@ public partial class SlamanagerContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("type");
+        });
+
+        modelBuilder.Entity<MetricDatum>(entity =>
+        {
+            entity.Property(e => e.Action)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Controller)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Endpoint)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Instance)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Job)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Method)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.MetricName)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("Metric_name");
+            entity.Property(e => e.Timestamp).HasColumnType("datetime");
+            entity.Property(e => e.Value2)
+                .HasMaxLength(255)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<MonitoringMetric>(entity =>
@@ -212,7 +247,28 @@ public partial class SlamanagerContext : DbContext
 
             entity.ToTable("SlaMetricStatus");
 
+            entity.Property(e => e.Action)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Controller)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.Endpoint)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Instance)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Job)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Method)
+                .HasMaxLength(255)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<SlaMetricStatusView>(entity =>
@@ -221,17 +277,38 @@ public partial class SlamanagerContext : DbContext
                 .HasNoKey()
                 .ToView("Sla_metric_status_view");
 
+            entity.Property(e => e.Action)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Code)
-                .HasMaxLength(50)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Controller)
+                .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.Datetime)
                 .HasColumnType("datetime")
                 .HasColumnName("datetime");
+            entity.Property(e => e.Endpoint)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Instance)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Job)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Method)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Metric)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.MetricDescription)
                 .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.StatusCode)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.StatusDescription)
                 .HasMaxLength(255)
@@ -247,7 +324,28 @@ public partial class SlamanagerContext : DbContext
 
             entity.ToTable("SlaMetricViolation");
 
+            entity.Property(e => e.Action)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Controller)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.Endpoint)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Instance)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Job)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Method)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Violation)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -259,7 +357,28 @@ public partial class SlamanagerContext : DbContext
 
             entity.ToTable("SlaMetricViolationForecast");
 
+            entity.Property(e => e.Action)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Controller)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.Endpoint)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Instance)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Job)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Method)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Violation)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -271,7 +390,28 @@ public partial class SlamanagerContext : DbContext
                 .HasNoKey()
                 .ToView("Sla_metric_violation_forecast_view");
 
+            entity.Property(e => e.Action)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Controller)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.Endpoint)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Instance)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Job)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Method)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Metric)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -292,7 +432,28 @@ public partial class SlamanagerContext : DbContext
                 .HasNoKey()
                 .ToView("Sla_metric_violation_view");
 
+            entity.Property(e => e.Action)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Controller)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.Endpoint)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Instance)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Job)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Method)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Metric)
                 .HasMaxLength(100)
                 .IsUnicode(false);
