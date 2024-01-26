@@ -29,6 +29,8 @@ namespace SLAManagerdata.Models
                 if (hours == null) { 
                 mess = await context.SlaMetricViolations
                     .AsNoTracking()
+                    .OrderByDescending(mes => mes.Id)
+                    .Take(100)
                     .ToListAsync();
                 }else
                 {
@@ -36,7 +38,9 @@ namespace SLAManagerdata.Models
 
                     mess = await context.SlaMetricViolations
                                    .Where(x => x.Datetime > thresholdDateTime)
+                                   .OrderByDescending(mes => mes.Id)
                                    .AsNoTracking()
+                                   .Take(100)
                                    .ToListAsync();
                 }
             }

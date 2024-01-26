@@ -29,7 +29,7 @@ namespace SLAManagerdata.Models
 
                 mess = await context.SlaMetricStatusViews
                     .AsNoTracking()
-                    .OrderByDescending(mes => mes.IdSla)
+                    .OrderByDescending(mes => mes.Datetime)
                     .ToListAsync();
             }
             catch (Exception ex)

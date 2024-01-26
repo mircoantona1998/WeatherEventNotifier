@@ -21,7 +21,7 @@ namespace SLAManager.Controllers
         [HttpGet]
         [Route("Get")]
         [Authorize]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> Get(int? hours)
         {
             Logger log = new();
             log.LogAction("MonitoringMetricController  Get");
@@ -30,7 +30,7 @@ namespace SLAManager.Controllers
             {
                 var idUserClaim = User.FindFirst("Id");
                 //int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
-                if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
+                if (idUserClaim != null )
                 {
                     MonitoringMetrics = await monitoringMetricRepo.Get();
                 }

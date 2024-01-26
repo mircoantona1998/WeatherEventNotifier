@@ -20,16 +20,30 @@ namespace SLAManagerdata.Models
         #region GET
         /// <summary>
         /// Get MetricData
-        public async Task<List<MetricDatum>> Get()
+        public async Task<List<MetricDatum>> Get(int? hours)
         {
             List<MetricDatum> mess = null;
             try
             {
                 using var context = new SlamanagerContext(DB.Options);
-
-                mess = await context.MetricData
-                    .AsNoTracking()
-                    .ToListAsync();
+                if (hours == null)
+                {
+                    mess = await context.MetricData
+                        .AsNoTracking()
+                        .OrderByDescending(mes => mes.Id)
+                        .Take(100)
+                        .ToListAsync();
+                }
+                else
+                {
+                    DateTime thresholdDateTime = DateTime.UtcNow.AddHours(-hours.Value);
+                    mess = await context.MetricData
+                        .AsNoTracking()
+                        .Where(x => x.Timestamp > thresholdDateTime)
+                        .OrderByDescending(mes => mes.Id)
+                        .Take(100)
+                        .ToListAsync();
+                }
             }
             catch (Exception ex)
             {

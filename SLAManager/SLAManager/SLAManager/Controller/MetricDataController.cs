@@ -21,7 +21,7 @@ namespace SLAManager.Controllers
         [HttpGet]
         [Route("Get")]
         [Authorize]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> Get(int? hours)
         {
             Logger log = new();
             log.LogAction("MetricDataController  Get");
@@ -29,10 +29,10 @@ namespace SLAManager.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
-               // int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
-                if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
+                // int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+                if (idUserClaim != null)
                 {
-                    MetricDatas = await MetricDataRepo.Get();
+                    MetricDatas = await MetricDataRepo.Get(hours);
                 }
             }
             else
