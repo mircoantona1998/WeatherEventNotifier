@@ -112,6 +112,8 @@ class Slametricviolation(Base):
     ToDesiredValue = Column(FLOAT)
     MisuredValue = Column(FLOAT)
     Datetime = Column(DATETIME, nullable=True)
+    Metric = Column(VARCHAR(100))
+    MetricDescription = Column(VARCHAR(255))
     Action = Column(VARCHAR(255), nullable=True)
     Code = Column(VARCHAR(255), nullable=True)
     Controller = Column(VARCHAR(255), nullable=True)
@@ -120,23 +122,6 @@ class Slametricviolation(Base):
     Job = Column(VARCHAR(255), nullable=True)
     Method = Column(VARCHAR(255), nullable=True)
 
-
-class Slametricviolationforecast(Base):
-    __tablename__ = "SlaMetricViolationForecast"
-    Id = Column(INTEGER, primary_key=True)
-    IdSla = Column(INTEGER, nullable=True)
-    Violation = Column(VARCHAR(255), nullable=True)
-    FromDesiredValue = Column(FLOAT)
-    ToDesiredValue = Column(FLOAT)
-    MisuredValue = Column(FLOAT)
-    Datetime = Column(DATETIME, nullable=True)
-    Action = Column(VARCHAR(255), nullable=True)
-    Code = Column(VARCHAR(255), nullable=True)
-    Controller = Column(VARCHAR(255), nullable=True)
-    Endpoint = Column(VARCHAR(255), nullable=True)
-    Instance = Column(VARCHAR(255), nullable=True)
-    Job = Column(VARCHAR(255), nullable=True)
-    Method = Column(VARCHAR(255), nullable=True)
 
 
 class Status(Base):
@@ -193,29 +178,3 @@ class SlaMetricStatusView(Base):
     Instance = Column(VARCHAR(255))
     Job = Column(VARCHAR(255))
     Method = Column(VARCHAR(255))
-
-
-class SlaMetricViolationView(Base):
-    __tablename__ = 'Sla_metric_violation_view'
-
-    IdSla = Column(INTEGER, primary_key=True)
-    FromDesiredValue = Column(FLOAT)
-    ToDesiredValue = Column(FLOAT)
-    MisuredValue = Column(FLOAT)
-    Violation = Column(VARCHAR(255))
-    Datetime = Column(DATETIME)
-    Metric = Column(VARCHAR(255))
-    MetricDescription = Column(VARCHAR(255))
-
-
-class SlaMetricViolationForecastView(Base):
-    __tablename__ = 'Sla_metric_violation_forecast_view'
-
-    IdSla = Column(INTEGER, primary_key=True)
-    FromDesiredValue = Column(FLOAT)
-    ToDesiredValue = Column(FLOAT)
-    MisuredValue = Column(FLOAT)
-    Violation = Column(VARCHAR(255))
-    Datetime = Column(DATETIME)
-    Metric = Column(VARCHAR(255))
-    MetricDescription = Column(VARCHAR(255))

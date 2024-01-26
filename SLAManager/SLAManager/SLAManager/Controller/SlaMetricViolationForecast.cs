@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using SLAManager.Utils;
 using Microsoft.AspNetCore.Authorization;
 using SLAManagerdata.Models;
+using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
+using SLAManager.Kafka;
 
 namespace ExposeAPI.Controllers
 {
@@ -21,25 +24,31 @@ namespace ExposeAPI.Controllers
         [HttpGet]
         [Route("Get")]
         [Authorize]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> Get(int? minutes,int? IdSla)
         {
             Logger log = new();
             log.LogAction("SlaMetricViolationForecastController  Get");
-            List<SlaMetricViolationForecastView> SlaMetricViolationForecasts = new List<SlaMetricViolationForecastView>();
+            string probability=null;
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");
                // int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
-                if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
+                if (idUserClaim != null)
                 {
-                    SlaMetricViolationForecasts = await slaMetricViolationForecastRepo.Get();
+                    var dto = new
+                    {
+                       Minutes = minutes,
+                       IdSla = IdSla
+                    };
+                    var result = await Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetForecast, SLAManager.Configurations.config.configuration["topic_to_forecast"], 0);
+                    probability = await Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
                 }
             }
             else
             {
                 return Problem(null, null, 401);
             }
-            return SlaMetricViolationForecasts != null ? Ok(SlaMetricViolationForecasts) : Problem(null, null, 500);
+            return probability != null ? Ok(probability) : Problem(null, null, 500);
         }
         #endregion
 

@@ -3,7 +3,6 @@ from time import sleep
 from Configurations.Configurations import Configurations
 from DB.Repository.MonitoringMetricRepo import MonitoringMetricRepo
 from DB.Repository.SlaMetricStatusRepo import SlaMetricStatusRepo
-from DB.Repository.SlaMetricViolationForecastRepo import SlaMetricViolationForecastRepo
 from DB.Repository.SlaMetricViolationRepo import SlaMetricViolationRepo
 from DB.Repository.MetricDataRepo import MetricDataRepo
 from DB.Repository.SlaRepo import SlaRepo
@@ -86,7 +85,7 @@ if __name__ == "__main__":
                         else:
                             statusError=StatusRepo.get_by_code("KO")
                             slaMetricStatus= SlaMetricStatus(sla["Id"],statusError["Id"],action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2))
-                            slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2))
+                            slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2),sla["Metric"],sla["Description"])
                             SlaMetricStatusRepo.patch_element(slaMetricStatus)
                             SlaMetricViolationRepo.add_element(slaMetricViolation)
 

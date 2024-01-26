@@ -22,7 +22,7 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "topic_to_scheduler:1:1,topic_to_weather:1:1,topic_to_mail:1:1,topic_to_telegram:1:1,topic_to_notifier:1:1,topic_to_configuration:1:1,topic_to_userdata:1:1,topic_to_manager:1:1"  
+      KAFKA_CREATE_TOPICS: "topic_to_scheduler:1:1,topic_to_weather:1:1,topic_to_mail:1:1,topic_to_telegram:1:1,topic_to_notifier:1:1,topic_to_configuration:1:1,topic_to_userdata:1:1,topic_to_manager:1:1,topic_to_forecast:1:1"  
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - kafka-data:/var/lib/kafka/data 
@@ -88,6 +88,36 @@ services:
       - sla-manager-db
       - sla-manager
       - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'  
+          memory: '216M' 
+          
+  forecast-service:
+    container_name: forecast-service
+    build:
+      context: ./ForecastService/app
+      dockerfile: Dockerfile
+    environment:
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=sa
+     - DATABASE_PASSWORD=RootRoot.1
+     - DATABASE_PORTA=1433
+     - DATABASE_IP=sla-manager-db
+     - DATABASE_NAME=SLAManager
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+     - CONSUMER_GROUP_ID=ForecastService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
+     - PRODUCER_CLIENT_ID=ForecastService
+     - GROUP_ID=ForecastService
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka
+      - sla-manager-db
+      - sla-manager
     deploy:
       resources:
         limits:

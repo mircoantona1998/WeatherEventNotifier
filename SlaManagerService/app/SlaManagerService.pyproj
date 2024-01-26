@@ -27,7 +27,6 @@
     <Compile Include="Configurations\Configurations.py" />
     <Compile Include="DB\Generate_models.py" />
     <Compile Include="DB\Model.py" />
-    <Compile Include="DB\Repository\SlaMetricViolationForecastRepo.py" />
     <Compile Include="DB\Repository\SlaMetricViolationRepo.py" />
     <Compile Include="DB\Repository\SlaMetricStatusRepo.py" />
     <Compile Include="DB\Repository\MetricDataRepo.py" />

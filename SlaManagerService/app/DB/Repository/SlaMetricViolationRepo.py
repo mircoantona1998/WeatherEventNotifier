@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from DB.Session import Session
-from DB.Model import   SlaMetricViolationView, Slametricviolation
+from DB.Model import   Slametricviolation
 from sqlalchemy import text
 from Utils.Logger import Logger
 import inspect
@@ -10,7 +10,7 @@ class SlaMetricViolationRepo:
     def get_all():
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all  - {inspect.currentframe().f_globals['__file__']}")
         with Session.get_database_session() as session:
-            resultList = session.query(SlaMetricViolationView).all()
+            resultList = session.query(Slametricviolation).all()
             result_dicts = []
             for result in resultList:
                 result_dict = {

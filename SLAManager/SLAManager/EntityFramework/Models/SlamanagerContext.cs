@@ -49,10 +49,6 @@ public partial class SlamanagerContext : DbContext
 
     public virtual DbSet<SlaMetricViolationForecast> SlaMetricViolationForecasts { get; set; }
 
-    public virtual DbSet<SlaMetricViolationForecastView> SlaMetricViolationForecastViews { get; set; }
-
-    public virtual DbSet<SlaMetricViolationView> SlaMetricViolationViews { get; set; }
-
     public virtual DbSet<SlaView> SlaViews { get; set; }
 
     public virtual DbSet<Status> Statuses { get; set; }
@@ -379,85 +375,6 @@ public partial class SlamanagerContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<SlaMetricViolationForecastView>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("Sla_metric_violation_forecast_view");
-
-            entity.Property(e => e.Action)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Code)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Controller)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Datetime).HasColumnType("datetime");
-            entity.Property(e => e.Endpoint)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Instance)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Job)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Method)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Metric)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.MetricDescription)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-
-            entity.Property(e => e.Violation)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-        });
-
-        modelBuilder.Entity<SlaMetricViolationView>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("Sla_metric_violation_view");
-
-            entity.Property(e => e.Action)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Code)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Controller)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Datetime).HasColumnType("datetime");
-            entity.Property(e => e.Endpoint)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Instance)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Job)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Method)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Metric)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.MetricDescription)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-
-            entity.Property(e => e.Violation)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-        });
 
         modelBuilder.Entity<SlaView>(entity =>
         {

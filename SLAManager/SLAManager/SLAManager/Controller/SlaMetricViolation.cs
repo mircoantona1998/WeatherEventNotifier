@@ -30,7 +30,7 @@ namespace ExposeAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            List<SlaMetricViolationView> SlaMetricViolations = new List<SlaMetricViolationView>();
+            List<SlaMetricViolation> SlaMetricViolations = new List<SlaMetricViolation>();
             if (User.Identity.IsAuthenticated)
             {
                 var idUserClaim = User.FindFirst("Id");

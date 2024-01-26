@@ -20,21 +20,21 @@ namespace SLAManagerdata.Models
         #region GET
         /// <summary>
         /// Get SlaMetricViolation
-        public async Task<List<SlaMetricViolationView>> Get(int? hours)
+        public async Task<List<SlaMetricViolation>> Get(int? hours)
         {
-            List<SlaMetricViolationView> mess = null;
+            List<SlaMetricViolation> mess = null;
             try
             {
                 using var context = new SlamanagerContext(DB.Options);
                 if (hours == null) { 
-                mess = await context.SlaMetricViolationViews
+                mess = await context.SlaMetricViolations
                     .AsNoTracking()
                     .ToListAsync();
                 }else
                 {
                     DateTime thresholdDateTime = DateTime.UtcNow.AddHours(-hours.Value);
 
-                    mess = await context.SlaMetricViolationViews
+                    mess = await context.SlaMetricViolations
                                    .Where(x => x.Datetime > thresholdDateTime)
                                    .AsNoTracking()
                                    .ToListAsync();
@@ -48,13 +48,13 @@ namespace SLAManagerdata.Models
         }
         public async Task<int> GetCount(int? hours)
         {
-            List<SlaMetricViolationView> mess = null;
+            List<SlaMetricViolation> mess = null;
             try
             {
                 using var context = new SlamanagerContext(DB.Options);
                 if (hours == null)
                 {
-                    mess = await context.SlaMetricViolationViews
+                    mess = await context.SlaMetricViolations
                         .AsNoTracking()
                         .ToListAsync();
                 }
@@ -62,7 +62,7 @@ namespace SLAManagerdata.Models
                 {
                     DateTime thresholdDateTime = DateTime.UtcNow.AddHours(-hours.Value);
 
-                    mess = await context.SlaMetricViolationViews
+                    mess = await context.SlaMetricViolations
                                    .Where(x => x.Datetime > thresholdDateTime)
                                    .AsNoTracking()
                                    .ToListAsync();

@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+        
+  forecast-service:
+    container_name: forecast-service
+    build:
+     context: ./app
+     dockerfile: Dockerfile
+
+
