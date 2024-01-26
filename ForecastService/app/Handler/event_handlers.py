@@ -56,14 +56,10 @@ class EventHandlers:
 
         X['Datetime'] = X['Datetime'].astype('int64')
 
-        # Check if the target variable has more than one class
-        if len(y.unique()) > 1:
+        try:
             # Split data into training and testing sets
             test_size = 0.2
-            if len(df_clean) > 1 / (1 - test_size):
-                X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42, stratify=y)
-            else:
-                X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1 - 1 / len(df_clean), random_state=42, stratify=y)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42, stratify=y)
 
             # Train a RandomForestClassifier
             model = RandomForestClassifier(random_state=42)
@@ -80,6 +76,33 @@ class EventHandlers:
             cv_scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
             print(f"Cross-validated Accuracy: {cv_scores.mean():.2%} (std: {cv_scores.std():.2%})")
 
+            # Make predictions only if there is at least one sample in the testing set
+            if len(X_test) > 0:
+                # Make a prediction for the current time
+                current_datetime = datetime.utcnow()
+                current_features = pd.DataFrame([[current_datetime, df['Violation'].iloc[-1]]], columns=['Datetime', 'PreviousViolation'])
+                # Convert Datetime to numeric for the prediction
+                current_features['Datetime'] = current_features['Datetime'].astype('int64')
+                prediction = model.predict(current_features)[0]
+                probability = model.predict_proba(current_features)[0][1]
+
+                print(f"Current DateTime: {current_datetime}")
+                print(f"Prediction: {prediction}")
+                print(f"Probability of Violation in the next {data['Minutes']} minutes: {probability:.2%}")
+
+                return f"{probability:.2%}"
+            else:
+                print("Not enough samples in the testing set.")
+                return "Not enough samples in the testing set."
+        except Exception as e:
+            # Handle exceptions, such as when there's only one class in the target variable
+            print(f"Error: {e}")
+            print("Not enough classes in the target variable.")
+            # Use all data for training
+            X_train, y_train = X, y
+            model = RandomForestClassifier(random_state=42)
+            model.fit(X_train, y_train)
+
             # Make a prediction for the current time
             current_datetime = datetime.utcnow()
             current_features = pd.DataFrame([[current_datetime, df['Violation'].iloc[-1]]], columns=['Datetime', 'PreviousViolation'])
@@ -93,9 +116,7 @@ class EventHandlers:
             print(f"Probability of Violation in the next {data['Minutes']} minutes: {probability:.2%}")
 
             return f"{probability:.2%}"
-        else:
-            # Handle the case when there's only one class in the target variable
-            return "Not enough classes in the target variable."
+
 
     tag_handlers = {
     "GetForecast": handle_tag_GetForecast,
