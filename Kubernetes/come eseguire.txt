@@ -1,0 +1,6 @@
+su linux o mac:
+chmod +x ApplyAll(LINUXorMAC).sh
+./ApplyAll(LINUXorMAC).sh
+
+su windows: 
+./ApplyAll.ps1
