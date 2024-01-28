@@ -21,7 +21,7 @@ namespace SLAManager.Controllers
         [HttpGet]
         [Route("Get")]
         [Authorize]
-        public async Task<ActionResult> Get(int? hours)
+        public async Task<ActionResult> Get()
         {
             Logger log = new();
             log.LogAction("MonitoringMetricController  Get");

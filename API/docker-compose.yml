@@ -24,8 +24,6 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - Logging:LogLevel:Default=Information
-      - Logging:LogLevel:Microsoft.AspNetCore=Warning
       - ConnectionStrings=Data Source=expose-api-db,1433;Initial Catalog=Userdata;User ID=sa;Password=RootRoot.1; Encrypt=False;
       - ConnectionStringsMaster=Data Source=expose-api-db,1433;User ID=sa;Password=RootRoot.1;Encrypt=False;
       - Jwt=c5eKUcbKfkzGq6HfpnFhP7/G2pgS3S++YH33ue/A5uc=

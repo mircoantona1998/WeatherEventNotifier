@@ -60,6 +60,7 @@ namespace SLAManagerdata.Models
                 {
                     await context.Slas.AddAsync(newItem);
                     isCreated = !UserdataLib.IsNullOrZero(await context.SaveChangesAsync().ConfigureAwait(false));
+                    //qua aggiungere codice che aggiorna la tabella delle violazioni con i dati della metricdata che salvati
                     await transaction.CommitAsync().ConfigureAwait(false);
                 }            
             }
@@ -151,6 +152,8 @@ namespace SLAManagerdata.Models
                             sla.UpdateDatetime = DateTime.UtcNow;
                             context.Entry(sla).State = EntityState.Modified;
                             await context.SaveChangesAsync();
+                            //qua aggiungere codice che aggiorna la tabella delle violazioni con i dati della metricdata che salvati
+                            
                             await transaction.CommitAsync().ConfigureAwait(false);
                             isPatched = true;
                         }

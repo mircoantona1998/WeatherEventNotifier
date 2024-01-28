@@ -1100,15 +1100,35 @@ spec:
               protocol: TCP
           resources: {}
           volumeMounts:
+            - mountPath: /etc/prometheus/prometheus.yml
+              name: prometheus-claim0
             - mountPath: /etc/prometheus/data
               name: prometheus-data
       restartPolicy: Always
       volumes:
+        - name: prometheus-claim0
+          persistentVolumeClaim:
+            claimName: prometheus-claim0
         - name: prometheus-data
           persistentVolumeClaim:
             claimName: prometheus-data
 status: {}
 
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: prometheus-claim0
+  name: prometheus-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
 
 ---
 apiVersion: v1

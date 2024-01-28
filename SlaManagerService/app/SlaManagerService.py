@@ -21,6 +21,7 @@ if __name__ == "__main__":
     Configurations()
     Session.wait_for_sql_server()
     while True:
+        timestamp1=datetime.utcnow()
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - repeat start  - {inspect.currentframe().f_globals['__file__']}")
         metrics=MonitoringMetricRepo.get_all()
         for metric in metrics:
@@ -88,7 +89,9 @@ if __name__ == "__main__":
                             slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2),sla["Metric"],sla["Description"])
                             SlaMetricStatusRepo.patch_element(slaMetricStatus)
                             SlaMetricViolationRepo.add_element(slaMetricViolation)
-
-        sleep(60)
+        timestamp2=datetime.utcnow()
+        if 60-(timestamp2 - timestamp1).total_seconds() > 0:
+                sleep(60-(timestamp2 - timestamp1).total_seconds())         
+       
     
 

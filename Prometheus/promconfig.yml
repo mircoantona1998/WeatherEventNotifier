@@ -8,4 +8,7 @@ scrape_configs:
       - targets: ['expose-api:8080']
     tls_config:
       insecure_skip_verify: true  
-      
+
+  # - job_name: 'kafka'
+    # static_configs:
+      # - targets: ['kafka-exporter:9094']

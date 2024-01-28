@@ -12,14 +12,16 @@ services:
   kafka:
     image: wurstmeister/kafka:latest
     container_name: kafka-service
-    ports:
-      - "9092:9092"
+   # ports:
+   #   - "9092:9092"
     expose:
       - "9093"
     environment:
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+   #   KAFKA_JMX_OPTS: "-javaagent:/JMX/jmx_prometheus_javaagent-0.20.0.jar=7071:/JMX/config.yml"
+      KAFKA_PORT: 9093
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093 #,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT #,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093 #,OUTSIDE://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "topic_to_scheduler:1:1,topic_to_weather:1:1,topic_to_mail:1:1,topic_to_telegram:1:1,topic_to_notifier:1:1,topic_to_configuration:1:1,topic_to_userdata:1:1,topic_to_manager:1:1,topic_to_forecast:1:1"  
@@ -30,6 +32,17 @@ services:
       - zookeeper
     networks:
       - microservices-network
+      
+  # kafka-exporter:
+    # image: danielqsj/kafka-exporter:v0.2.0
+    # ports:
+       # - "9094:9094"
+    # environment:
+      # KAFKA_BROKER: kafka:9093
+    # depends_on:
+      # - kafka
+    # networks:
+      # - microservices-network
       
   expose-api:
     extends:
@@ -70,6 +83,8 @@ services:
       
   sla-manager-service:
     container_name: sla-manager-service
+    ports:
+    - "8082:8082"
     build:
       context: ./SlaManagerService/app
       dockerfile: Dockerfile
@@ -96,6 +111,8 @@ services:
           
   forecast-service:
     container_name: forecast-service
+    ports:
+    - "8083:8083"  
     build:
       context: ./ForecastService/app
       dockerfile: Dockerfile
@@ -122,7 +139,7 @@ services:
       resources:
         limits:
           cpus: '0.2'  
-          memory: '216M'  
+          memory: '216M'          
 
   prometheus:
       image: prom/prometheus
@@ -138,14 +155,15 @@ services:
         - '--config.file=/etc/prometheus/prometheus.yml'
         - '--web.enable-lifecycle'
       depends_on:
-        - expose-api   
+        - expose-api  
+        #- kafka-exporter
  
   grafana:
     image: grafana/grafana
     container_name: grafana-service
     ports:
       - "3000:3000"
-    restart: unless-stopped
+    restart: always 
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
@@ -160,8 +178,10 @@ services:
       - sla-manager-db
         
 #to add a partition duplicate from this and change the PARTITION= last partition+1 and change the names
-  configurator-service-part0-rep0:
-    container_name: configurator-service-part0-rep0
+  configurator-service-part0:
+    container_name: configurator-service-part0
+    ports:
+    - "8084:8084"  
     build:
       context: ./ConfiguratorService/app
       dockerfile: Dockerfile
@@ -192,39 +212,7 @@ services:
         limits:
           cpus: '0.2'  
           memory: '216M'  
-          
-  # configurator-service-part0-rep1:
-    # container_name: configurator-service-part0-rep1
-    # build:
-      # context: ./ConfiguratorService/app
-      # dockerfile: Dockerfile
-    # environment:
-     # - PARTITION=0
-     # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # - CONSUMER_GROUP_ID=ConfiguratorService
-     # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # - PRODUCER_CLIENT_ID=ConfiguratorService
-     # - GROUP_ID=ConfiguratorService
-     # - DOCKER_ENVIRONMENT=True
-     # - DATABASE_USERNAME=root
-     # - DATABASE_PASSWORD=root
-     # - DATABASE_PORTA=3306
-     # - DATABASE_IP=configurator-db-part0
-     # - DATABASE_NAME=ConfigurationAlert
-     # - SLAMANAGER=sla-manager
-     # - HEARTBEAT_FREQUENCY=10
-    # networks:
-      # - microservices-network  
-    # depends_on:
-      # - kafka
-      # - configurator-db-part0
-      # - sla-manager
-    # deploy:
-      # resources:
-        # limits:
-          # cpus: '0.2'  
-          # memory: '216M'   
+             
           
   configurator-db-part0:
     container_name: configurator-db-part0
@@ -240,8 +228,10 @@ services:
     networks:
       - microservices-network
     
-  mail-service-part0-rep0:
-    container_name: mail-service-part0-rep0
+  mail-service-part0:
+    container_name: mail-service-part0
+    ports:
+    - "8085:8085"  
     build:
       context: ./MailService/app
       dockerfile: Dockerfile
@@ -273,38 +263,6 @@ services:
           cpus: '0.2'  
           memory: '216M'   
           
-  # mail-service-part0-rep1:
-    # container_name: mail-service-part0-rep1
-    # build:
-      # context: ./MailService/app
-      # dockerfile: Dockerfile
-    # environment:
-     # - PARTITION=0
-     # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # - CONSUMER_GROUP_ID=MailService
-     # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # - PRODUCER_CLIENT_ID=MailService
-     # - GROUP_ID=MailService
-     # - DOCKER_ENVIRONMENT=True
-     # - DATABASE_USERNAME=root
-     # - DATABASE_PASSWORD=root
-     # - DATABASE_PORTA=3306
-     # - DATABASE_IP=mail-db-part0
-     # - DATABASE_NAME=Mail
-     # - SLAMANAGER=sla-manager
-     # - HEARTBEAT_FREQUENCY=10
-    # networks:
-      # - microservices-network  
-    # depends_on:
-      # - kafka
-      # - mail-db-part0
-      # - sla-manager
-    # deploy:
-      # resources:
-        # limits:
-          # cpus: '0.2'  
-          # memory: '216M'
        
   mail-db-part0:
     container_name: mail-db-part0
@@ -320,8 +278,10 @@ services:
     networks:
       - microservices-network  
        
-  notifier-service-part0-rep0:
-    container_name: notifier-service-part0-rep0
+  notifier-service-part0:
+    container_name: notifier-service-part0
+    ports:
+    - "8086:8086"  
     build:
       context: ./NotifierService/app
       dockerfile: Dockerfile
@@ -353,38 +313,6 @@ services:
           cpus: '0.2'  
           memory: '216M'        
           
-  # notifier-service-part0-rep1:
-    # container_name: notifier-service-part0-rep1
-    # build:
-      # context: ./NotifierService/app
-      # dockerfile: Dockerfile
-    # environment:
-     # - PARTITION=0
-     # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # - CONSUMER_GROUP_ID=NotifierService
-     # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # - PRODUCER_CLIENT_ID=NotifierService
-     # - GROUP_ID=NotifierService
-     # - DOCKER_ENVIRONMENT=True
-     # - DATABASE_USERNAME=root
-     # - DATABASE_PASSWORD=root
-     # - DATABASE_PORTA=3306
-     # - DATABASE_IP=notifier-db-part0
-     # - DATABASE_NAME=Notifier
-     # - SLAMANAGER=sla-manager
-     # - HEARTBEAT_FREQUENCY=10
-    # networks:
-      # - microservices-network  
-    # depends_on:
-      # - kafka
-      # - notifier-db-part0
-      # - sla-manager
-    # deploy:
-      # resources:
-        # limits:
-          # cpus: '0.2'  
-          # memory: '216M'
           
   notifier-db-part0:
     container_name: notifier-db-part0
@@ -400,8 +328,10 @@ services:
     networks:
       - microservices-network        
         
-  scheduler-service-part0-rep0:
-    container_name: scheduler-service-part0-rep0
+  scheduler-service-part0:
+    container_name: scheduler-service-part0
+    ports:
+    - "8087:8087"  
     build:
       context: ./SchedulerService/app
       dockerfile: Dockerfile
@@ -431,40 +361,7 @@ services:
       resources:
         limits:
           cpus: '0.2'  
-          memory: '216M'   
-          
-  # scheduler-service-part0-rep1:
-    # container_name: scheduler-service-part0-rep1
-    # build:
-      # context: ./SchedulerService/app
-      # dockerfile: Dockerfile
-    # environment:
-     # - PARTITION=0
-     # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # - CONSUMER_GROUP_ID=SchedulerService
-     # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # - PRODUCER_CLIENT_ID=SchedulerService
-     # - GROUP_ID=SchedulerService
-     # - DOCKER_ENVIRONMENT=True
-     # - DATABASE_USERNAME=root
-     # - DATABASE_PASSWORD=root
-     # - DATABASE_PORTA=3306
-     # - DATABASE_IP=scheduler-db-part0
-     # - DATABASE_NAME=Scheduler
-     # - SLAMANAGER=sla-manager
-     # - HEARTBEAT_FREQUENCY=10
-    # networks:
-      # - microservices-network  
-    # depends_on:
-      # - kafka
-      # - scheduler-db-part0
-      # - sla-manager
-    # deploy:
-      # resources:
-        # limits:
-          # cpus: '0.2'  
-          # memory: '216M'
+          memory: '216M'            
       
   scheduler-db-part0:
     container_name: scheduler-db-part0
@@ -480,8 +377,10 @@ services:
     networks:
       - microservices-network  
        
-  telegram-service-part0-rep0:
-    container_name: telegram-service-part0-rep0
+  telegram-service-part0:
+    container_name: telegram-service-part0
+    ports:
+    - "8088:8088"  
     build:
       context: ./TelegramService/app
       dockerfile: Dockerfile
@@ -512,39 +411,6 @@ services:
         limits:
           cpus: '0.2'  
           memory: '216M'       
-          
-  # telegram-service-part0-rep1:
-    # container_name: telegram-service-part0-rep1
-    # build:
-      # context: ./TelegramService/app
-      # dockerfile: Dockerfile
-    # environment:
-     # - PARTITION=0
-     # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # - CONSUMER_GROUP_ID=TelegramService
-     # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # - PRODUCER_CLIENT_ID=TelegramService
-     # - GROUP_ID=TelegramService
-     # - DOCKER_ENVIRONMENT=True
-     # - DATABASE_USERNAME=root
-     # - DATABASE_PASSWORD=root
-     # - DATABASE_PORTA=3306
-     # - DATABASE_IP=telegram-db-part0
-     # - DATABASE_NAME=Telegram
-     # - SLAMANAGER=sla-manager
-     # - HEARTBEAT_FREQUENCY=10
-    # networks:
-      # - microservices-network  
-    # depends_on:
-      # - kafka
-      # - telegram-db-part0
-      #- sla-manager
-    # deploy:
-      # resources:
-        # limits:
-          # cpus: '0.2'  
-          # memory: '216M'
       
   telegram-db-part0:
     container_name: telegram-db-part0
@@ -560,8 +426,10 @@ services:
     networks:
       - microservices-network  
        
-  weather-service-part0-rep0:
-    container_name: weather-service-part0-rep0
+  weather-service-part0:
+    container_name: weather-service-part0
+    ports:
+    - "8089:8089"  
     build:
       context: ./WeatherService/app
       dockerfile: Dockerfile
@@ -594,38 +462,6 @@ services:
           cpus: '0.2'  
           memory: '216M'  
           
-  # weather-service-part0-rep1:
-    # container_name: weather-service-part0-rep1
-    # build:
-      # context: ./WeatherService/app
-      # dockerfile: Dockerfile
-    # environment:
-     # - PARTITION=0
-     # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # - CONSUMER_GROUP_ID=WeatherService
-     # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # - PRODUCER_CLIENT_ID=WeatherService
-     # - GROUP_ID=WeatherService
-     # - DOCKER_ENVIRONMENT=True
-     # - DATABASE_USERNAME=root
-     # - DATABASE_PASSWORD=root
-     # - DATABASE_PORTA=3306
-     # - DATABASE_IP=weather-db
-     # - DATABASE_NAME=Weather
-     # - SLAMANAGER=sla-manager
-     # - HEARTBEAT_FREQUENCY=10
-    # networks:
-      # - microservices-network  
-    # depends_on:
-      # - kafka
-      # - weather-db-part0    
-      # - sla-manager      
-    # deploy:
-      # resources:
-        # limits:
-          # cpus: '0.2'  
-          # memory: '216M'
       
   weather-db-part0:
     container_name: weather-db-part0
@@ -644,8 +480,8 @@ services:
 #to this  
 
 #PARTITION 1  
-  # configurator-service-part1-rep0:
-    # container_name: configurator-service-part1-rep0
+  # configurator-service-part1:
+    # container_name: configurator-service-part1
     # build:
       # context: ./ConfiguratorService/app
       # dockerfile: Dockerfile
@@ -677,38 +513,7 @@ services:
           # cpus: '0.2'  
           # memory: '216M'      
           
-  # # configurator-service-part1-rep1:
-    # # container_name: configurator-service-part1-rep1
-    # # build:
-      # # context: ./ConfiguratorService/app
-      # # dockerfile: Dockerfile
-    # # environment:
-     # # - PARTITION=1
-     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - CONSUMER_GROUP_ID=ConfiguratorService
-     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - PRODUCER_CLIENT_ID=ConfiguratorService
-     # # - GROUP_ID=ConfiguratorService
-     # # - DOCKER_ENVIRONMENT=True
-     # # - DATABASE_USERNAME=root
-     # # - DATABASE_PASSWORD=root
-     # # - DATABASE_PORTA=3306
-     # # - DATABASE_IP=configurator-db-part1
-     # # - DATABASE_NAME=ConfigurationAlert
-     #   - SLAMANAGER=sla-manager
-     #   - HEARTBEAT_FREQUENCY=10
-    # # networks:
-      # # - microservices-network  
-    # # depends_on:
-      # # - kafka
-      # # - configurator-db-part1
-      # - sla-manager
-    # # deploy:
-      # # resources:
-        # # limits:
-          # # cpus: '0.2'  
-          # # memory: '216M'
+
       
   # configurator-db-part1:
     # container_name: configurator-db-part1
@@ -724,8 +529,8 @@ services:
     # networks:
       # - microservices-network     
    
-  # mail-service-part1-rep0:
-    # container_name: mail-service-part1-rep0
+  # mail-service-part1:
+    # container_name: mail-service-part1
     # build:
       # context: ./MailService/app
       # dockerfile: Dockerfile
@@ -757,38 +562,6 @@ services:
           # cpus: '0.2'  
           # memory: '216M'        
           
-  # # mail-service-part1-rep1:
-    # # container_name: mail-service-part1-rep1
-    # # build:
-      # # context: ./MailService/app
-      # # dockerfile: Dockerfile
-    # # environment:
-     # # - PARTITION=1
-     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - CONSUMER_GROUP_ID=MailService
-     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - PRODUCER_CLIENT_ID=MailService
-     # # - GROUP_ID=MailService
-     # # - DOCKER_ENVIRONMENT=True
-     # # - DATABASE_USERNAME=root
-     # # - DATABASE_PASSWORD=root
-     # # - DATABASE_PORTA=3306
-     # # - DATABASE_IP=mail-db-part1
-     # # - DATABASE_NAME=Mail
-     #   - SLAMANAGER=sla-manager
-     #   - HEARTBEAT_FREQUENCY=10
-    # # networks:
-      # # - microservices-network  
-    # # depends_on:
-      # # - kafka
-      # # - mail-db-part1 
-      # - sla-manager
-    # # deploy:
-      # # resources:
-        # # limits:
-          # # cpus: '0.2'  
-          # # memory: '216M'
       
   # mail-db-part1:
     # container_name: mail-db-part1
@@ -804,8 +577,8 @@ services:
     # networks:
       # - microservices-network    
      
-  # notifier-service-part1-rep0:
-    # container_name: notifier-service-part1-rep0
+  # notifier-service-part1:
+    # container_name: notifier-service-part1
     # build:
       # context: ./NotifierService/app
       # dockerfile: Dockerfile
@@ -837,38 +610,6 @@ services:
           # cpus: '0.2'  
           # memory: '216M'
           
-  # # notifier-service-part1-rep1:
-    # # container_name: notifier-service-part1-rep1
-    # # build:
-      # # context: ./NotifierService/app
-      # # dockerfile: Dockerfile
-    # # environment:
-     # # - PARTITION=1
-     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - CONSUMER_GROUP_ID=NotifierService
-     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - PRODUCER_CLIENT_ID=NotifierService
-     # # - GROUP_ID=NotifierService
-     # # - DOCKER_ENVIRONMENT=True
-     # # - DATABASE_USERNAME=root
-     # # - DATABASE_PASSWORD=root
-     # # - DATABASE_PORTA=3306
-     # # - DATABASE_IP=notifier-db-part1
-     # # - DATABASE_NAME=Notifier
-     #   - SLAMANAGER=sla-manager
-     #   - HEARTBEAT_FREQUENCY=10
-    # # networks:
-      # # - microservices-network  
-    # # depends_on:
-      # # - kafka
-      # # - notifier-db-part1 
-      # - sla-manager
-    # # deploy:
-      # # resources:
-        # # limits:
-          # # cpus: '0.2'  
-          # # memory: '216M'
       
   # notifier-db-part1:
     # container_name: notifier-db-part1
@@ -884,8 +625,8 @@ services:
     # networks:
       # - microservices-network 
       
-  # scheduler-service-part1-rep0:
-    # container_name: scheduler-service-part1-rep0
+  # scheduler-service-part1:
+    # container_name: scheduler-service-part1
     # build:
       # context: ./SchedulerService/app
       # dockerfile: Dockerfile
@@ -917,38 +658,6 @@ services:
           # cpus: '0.2'  
           # memory: '216M'
           
-  # # scheduler-service-part1-rep1:
-    # # container_name: scheduler-service-part1-rep1
-    # # build:
-      # # context: ./SchedulerService/app
-      # # dockerfile: Dockerfile
-    # # environment:
-     # # - PARTITION=1
-     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - CONSUMER_GROUP_ID=SchedulerService
-     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - PRODUCER_CLIENT_ID=SchedulerService
-     # # - GROUP_ID=SchedulerService
-     # # - DOCKER_ENVIRONMENT=True
-     # # - DATABASE_USERNAME=root
-     # # - DATABASE_PASSWORD=root
-     # # - DATABASE_PORTA=3306
-     # # - DATABASE_IP=scheduler-db-part1
-     # # - DATABASE_NAME=Scheduler
-     #   - SLAMANAGER=sla-manager
-     #   - HEARTBEAT_FREQUENCY=10
-    # # networks:
-      # # - microservices-network  
-    # # depends_on:
-      # # - kafka
-      # # - scheduler-db-part1   
-      # - sla-manager
-    # # deploy:
-      # # resources:
-        # # limits:
-          # # cpus: '0.2'  
-          # # memory: '216M'
       
   # scheduler-db-part1:
     # container_name: scheduler-db-part1
@@ -964,8 +673,8 @@ services:
     # networks:
       # - microservices-network 
        
-  # telegram-service-part1-rep0:
-    # container_name: telegram-service-part1-rep0
+  # telegram-service-part1:
+    # container_name: telegram-service-part1
     # build:
       # context: ./TelegramService/app
       # dockerfile: Dockerfile
@@ -997,38 +706,6 @@ services:
           # cpus: '0.2'  
           # memory: '216M'     
           
-  # # telegram-service-part1-rep1:
-    # # container_name: telegram-service-part1-rep1
-    # # build:
-      # # context: ./TelegramService/app
-      # # dockerfile: Dockerfile
-    # # environment:
-     # # - PARTITION=1
-     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - CONSUMER_GROUP_ID=TelegramService
-     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - PRODUCER_CLIENT_ID=TelegramService
-     # # - GROUP_ID=TelegramService
-     # # - DOCKER_ENVIRONMENT=True
-     # # - DATABASE_USERNAME=root
-     # # - DATABASE_PASSWORD=root
-     # # - DATABASE_PORTA=3306
-     # # - DATABASE_IP=telegram-db-part1
-     # # - DATABASE_NAME=Telegram
-     #   - SLAMANAGER=sla-manager
-     #   - HEARTBEAT_FREQUENCY=10
-    # # networks:
-      # # - microservices-network  
-    # # depends_on:
-      # # - kafka
-      # # - telegram-db-part1    
-        # - sla-manager      
-    # # deploy:
-      # # resources:
-        # # limits:
-          # # cpus: '0.2'  
-          # # memory: '216M'
       
   # telegram-db-part1:
     # container_name: telegram-db-part1
@@ -1044,8 +721,8 @@ services:
     # networks:
       # - microservices-network 
      
-  # weather-service-part1-rep0:
-    # container_name: weather-service-part1-rep0
+  # weather-service-part1:
+    # container_name: weather-service-part1
     # build:
       # context: ./WeatherService/app
       # dockerfile: Dockerfile
@@ -1077,38 +754,6 @@ services:
           # cpus: '0.2'  
           # memory: '216M'  
           
-  # # weather-service-part1-rep1:
-    # # container_name: weather-service-part1-rep1
-    # # build:
-      # # context: ./WeatherService/app
-      # # dockerfile: Dockerfile
-    # # environment:
-     # # - PARTITION=1
-     # # - CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - CONSUMER_GROUP_ID=WeatherService
-     # # - CONSUMER_AUTO_OFFSET_RESET=earliest
-     # # - PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
-     # # - PRODUCER_CLIENT_ID=WeatherService
-     # # - GROUP_ID=WeatherService
-     # # - DOCKER_ENVIRONMENT=True
-     # # - DATABASE_USERNAME=root
-     # # - DATABASE_PASSWORD=root
-     # # - DATABASE_PORTA=3306
-     # # - DATABASE_IP=weather-db-part1
-     # # - DATABASE_NAME=Weather
-     #   - SLAMANAGER=sla-manager
-     #   - HEARTBEAT_FREQUENCY=10
-    # # networks:
-      # # - microservices-network  
-    # # depends_on:
-      # # - kafka
-      # # - weather-db-part1
-      #  - sla-manager
-    # # deploy:
-      # # resources:
-        # # limits:
-          # # cpus: '0.2'  
-          # # memory: '216M'
       
   # weather-db-part1:
     # container_name: weather-db-part1
