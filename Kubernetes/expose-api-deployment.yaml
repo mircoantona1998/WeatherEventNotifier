@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: expose-api
+  name: expose-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: expose-api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/microservices-network: "true"
+        io.kompose.service: expose-api
+    spec:
+      containers:
+        - env:
+            - name: AllowedHosts
+              value: '*'
+            - name: ConnectionStrings
+              value: Data Source=expose-api-db,1433;Initial Catalog=Userdata;User ID=sa;Password=RootRoot.1; Encrypt=False;
+            - name: ConnectionStringsMaster
+              value: Data Source=expose-api-db,1433;User ID=sa;Password=RootRoot.1;Encrypt=False;
+            - name: HowManyPartition
+              value: "1"
+            - name: Jwt
+              value: c5eKUcbKfkzGq6HfpnFhP7/G2pgS3S++YH33ue/A5uc=
+            - name: bootstrapServers
+              value: kafka:9093
+            - name: groupID
+              value: ExposeAPIService
+          image: mirco98/weathereventnotifier:expose-api
+          name: expose-api
+          ports:
+            - containerPort: 8080
+              hostPort: 8080
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}
+
+---

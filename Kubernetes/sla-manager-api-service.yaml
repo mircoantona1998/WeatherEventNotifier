@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: sla-manager
+  name: sla-manager
+spec:
+  ports:
+    - name: "8081"
+      port: 8081
+      targetPort: 8081
+  selector:
+    io.kompose.service: sla-manager
+status:
+  loadBalancer: {}
+
+---

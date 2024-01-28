@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: forecast-service
+  name: forecast-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: forecast-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/microservices-network: "true"
+        io.kompose.service: forecast-service
+    spec:
+      containers:
+        - env:
+            - name: CONSUMER_AUTO_OFFSET_RESET
+              value: earliest
+            - name: CONSUMER_BOOTSTRAP_SERVERS
+              value: kafka:9093
+            - name: CONSUMER_GROUP_ID
+              value: ForecastService
+            - name: DATABASE_IP
+              value: sla-manager-db
+            - name: DATABASE_NAME
+              value: SLAManager
+            - name: DATABASE_PASSWORD
+              value: RootRoot.1
+            - name: DATABASE_PORTA
+              value: "1434"
+            - name: DATABASE_USERNAME
+              value: sa
+            - name: DOCKER_ENVIRONMENT
+              value: "True"
+            - name: GROUP_ID
+              value: ForecastService
+            - name: PRODUCER_BOOTSTRAP_SERVERS
+              value: kafka:9093
+            - name: PRODUCER_CLIENT_ID
+              value: ForecastService
+          image: mirco98/weathereventnotifier:forecast-service
+          name: forecast-service
+          ports:
+            - containerPort: 8083
+              hostPort: 8083
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: "226492416"
+      restartPolicy: Always
+status: {}
+---

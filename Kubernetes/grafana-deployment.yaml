@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: grafana
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana 
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: grafana  
+        io.kompose.network/microservices-network: "true"
+        io.kompose.service: grafana
+    spec:
+      containers:
+        - env:
+            - name: GF_INSTALL_PLUGINS
+              value: grafana-piechart-panel,grafana-worldmap-panel,vertamedia-clickhouse-datasource
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: admin
+            - name: GF_SECURITY_ADMIN_USER
+              value: admin
+            - name: GF_USERS_DEFAULT_THEME
+              value: light
+          image: grafana/grafana
+          name: grafana-service
+          ports:
+            - containerPort: 3000
+              hostPort: 3000
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-pv-volume
+      volumes:
+        - name: grafana-pv-volume
+          persistentVolumeClaim:
+            claimName: grafana-pvc

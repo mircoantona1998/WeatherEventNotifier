@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: telegram-service-part0
+  name: telegram-service-part0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: telegram-service-part0
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/microservices-network: "true"
+        io.kompose.service: telegram-service-part0
+    spec:
+      containers:
+        - env:
+            - name: CONSUMER_AUTO_OFFSET_RESET
+              value: earliest
+            - name: CONSUMER_BOOTSTRAP_SERVERS
+              value: kafka:9093
+            - name: CONSUMER_GROUP_ID
+              value: TelegramService
+            - name: DATABASE_IP
+              value: telegram-db-part0
+            - name: DATABASE_NAME
+              value: Telegram
+            - name: DATABASE_PASSWORD
+              value: root
+            - name: DATABASE_PORTA
+              value: "3311"
+            - name: DATABASE_USERNAME
+              value: root
+            - name: DOCKER_ENVIRONMENT
+              value: "True"
+            - name: GROUP_ID
+              value: TelegramService
+            - name: HEARTBEAT_FREQUENCY
+              value: "10"
+            - name: PARTITION
+              value: "0"
+            - name: PRODUCER_BOOTSTRAP_SERVERS
+              value: kafka:9093
+            - name: PRODUCER_CLIENT_ID
+              value: TelegramService
+            - name: SLAMANAGER
+              value: sla-manager
+          image: mirco98/weathereventnotifier:telegram-service-part0
+          name: telegram-service-part0
+          ports:
+            - containerPort: 8088
+              hostPort: 8088
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: "226492416"
+      restartPolicy: Always
+status: {}
+
+---

@@ -1,4 +1,0 @@
-lowercaseOutputName: true
-rules:
-  - pattern: ".*"
-    name: "${1}"

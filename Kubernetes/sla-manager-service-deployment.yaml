@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: sla-manager-service
+  name: sla-manager-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: sla-manager-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/microservices-network: "true"
+        io.kompose.service: sla-manager-service
+    spec:
+      containers:
+        - env:
+            - name: DATABASE_IP
+              value: sla-manager-db
+            - name: DATABASE_NAME
+              value: SLAManager
+            - name: DATABASE_PASSWORD
+              value: RootRoot.1
+            - name: DATABASE_PORTA
+              value: "1434"
+            - name: DATABASE_USERNAME
+              value: sa
+            - name: DOCKER_ENVIRONMENT
+              value: "True"
+            - name: PROMETHEUS_IP
+              value: prometheus
+          image: mirco98/weathereventnotifier:sla-manager-service
+          name: sla-manager-service
+          ports:
+            - containerPort: 8082
+              hostPort: 8082
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: "226492416"
+      restartPolicy: Always
+status: {}
+
+---

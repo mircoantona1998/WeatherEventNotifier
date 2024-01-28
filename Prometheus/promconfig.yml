@@ -9,6 +9,3 @@ scrape_configs:
     tls_config:
       insecure_skip_verify: true  
 
-  # - job_name: 'kafka'
-    # static_configs:
-      # - targets: ['kafka-exporter:9094']
