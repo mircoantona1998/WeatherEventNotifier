@@ -22,7 +22,7 @@ spec:
         - env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
-          image: mirco98/weathereventnotifier:telegram-db-part0
+          image: mircoantona/weathereventnotifier:telegram-db-part0
           name: telegram-db-part0
           ports:
             - containerPort: 3306

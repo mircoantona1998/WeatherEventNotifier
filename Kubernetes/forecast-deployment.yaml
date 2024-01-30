@@ -43,7 +43,7 @@ spec:
               value: kafka:9093
             - name: PRODUCER_CLIENT_ID
               value: ForecastService
-          image: mirco98/weathereventnotifier:forecast-service
+          image: mircoantona/weathereventnotifier:forecast-service
           name: forecast-service
           ports:
             - containerPort: 8083

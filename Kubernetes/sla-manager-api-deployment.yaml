@@ -33,7 +33,7 @@ spec:
               value: kafka:9093
             - name: groupID
               value: SLAManager
-          image: mirco98/weathereventnotifier:sla-manager
+          image: mircoantona/weathereventnotifier:sla-manager
           name: sla-manager
           ports:
             - containerPort: 8081

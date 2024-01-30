@@ -33,7 +33,7 @@ spec:
               value: "True"
             - name: PROMETHEUS_IP
               value: prometheus
-          image: mirco98/weathereventnotifier:sla-manager-service
+          image: mircoantona/weathereventnotifier:sla-manager-service
           name: sla-manager-service
           ports:
             - containerPort: 8082

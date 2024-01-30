@@ -51,7 +51,7 @@ spec:
               value: WeatherService
             - name: SLAMANAGER
               value: sla-manager
-          image: mirco98/weathereventnotifier:weather-service-part0
+          image: mircoantona/weathereventnotifier:weather-service-part0
           name: weather-service-part0
           ports:
             - containerPort: 8089

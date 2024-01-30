@@ -33,7 +33,7 @@ spec:
               value: kafka:9093
             - name: groupID
               value: ExposeAPIService
-          image: mirco98/weathereventnotifier:expose-api
+          image: mircoantona/weathereventnotifier:expose-api
           name: expose-api
           ports:
             - containerPort: 8080

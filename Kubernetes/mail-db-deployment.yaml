@@ -22,7 +22,7 @@ spec:
         - env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
-          image: mirco98/weathereventnotifier:mail-db-part0
+          image: mircoantona/weathereventnotifier:mail-db-part0
           name: mail-db-part0
           ports:
             - containerPort: 3306

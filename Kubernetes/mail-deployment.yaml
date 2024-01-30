@@ -49,7 +49,7 @@ spec:
               value: MailService
             - name: SLAMANAGER
               value: sla-manager
-          image: mirco98/weathereventnotifier:mail-service-part0
+          image: mircoantona/weathereventnotifier:mail-service-part0
           name: mail-service-part0
           ports:
             - containerPort: 8085

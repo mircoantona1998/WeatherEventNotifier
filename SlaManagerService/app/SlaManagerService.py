@@ -23,75 +23,78 @@ if __name__ == "__main__":
     while True:
         timestamp1=datetime.utcnow()
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - repeat start  - {inspect.currentframe().f_globals['__file__']}")
-        metrics=MonitoringMetricRepo.get_all()
-        for metric in metrics:
-            datas = Prometheus.get_metric_value(metric["Metric"])
-            for data in datas:
-                try:
-                    metric_name = metric["Metric"]
-                except:
-                    metric_name =None
-                try:
-                    instance = data['metric']['instance']
-                except:
-                    instance =None
-                try:
-                    job = data['metric']['job']
-                except:
-                    job =None
-                try:
-                    value1, value2 = data['value']
-                except:
-                   value1=None
-                   value2=None
-                try:
-                    action = data['metric']['action']
-                except:
-                    action = None
-                try:
-                    controller = data['metric']['controller']
-                except:
-                    controller =None
-                try:
-                    endpoint = data['metric']['endpoint']
-                except:
-                    endpoint = None
-                try:
-                    method = data['metric']['method']
-                except:
-                    method =None
-                try:
-                    code = data['metric']['code']
-                except:
-                    code = None
-                metric_data = MetricData(Metric_name=metric_name,Action=action,Code=code,Controller=controller,Endpoint=endpoint,Method=method, Instance= instance, Job=job, Value1=value1, Value2=value2)
-                MetricDataRepo.add_element(metric_data)
-                sla=SlaRepo.get_by_id_metric(metric["Id"])
-                if sla is not None:
-                    if sla["FromDesiredValue"] is None:
-                        confrontoFrom=float(-inf)
-                    else:
-                        confrontoFrom=sla["FromDesiredValue"]
-                        sla["FromDesiredValue"]=float(sla["FromDesiredValue"])
-                    if sla["ToDesiredValue"] is None:
-                        confrontoTo=float(inf)
-                    else:
-                        confrontoTo=sla["ToDesiredValue"]
-                        sla["ToDesiredValue"]=float(sla["ToDesiredValue"])
-                    if value2 is not None:
-                        if float(value2)>=confrontoFrom and float(value2)<=confrontoTo:
-                            statusOk=StatusRepo.get_by_code("OK")
-                            slaMetricStatus=SlaMetricStatus(sla["Id"],statusOk["Id"],action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2))
-                            SlaMetricStatusRepo.patch_element(slaMetricStatus)
+        try:
+            metrics=MonitoringMetricRepo.get_all()
+            for metric in metrics:
+                datas = Prometheus.get_metric_value(metric["Metric"])
+                for data in datas:
+                    try:
+                        metric_name = metric["Metric"]
+                    except:
+                        metric_name =None
+                    try:
+                        instance = data['metric']['instance']
+                    except:
+                        instance =None
+                    try:
+                        job = data['metric']['job']
+                    except:
+                        job =None
+                    try:
+                        value1, value2 = data['value']
+                    except:
+                       value1=None
+                       value2=None
+                    try:
+                        action = data['metric']['action']
+                    except:
+                        action = None
+                    try:
+                        controller = data['metric']['controller']
+                    except:
+                        controller =None
+                    try:
+                        endpoint = data['metric']['endpoint']
+                    except:
+                        endpoint = None
+                    try:
+                        method = data['metric']['method']
+                    except:
+                        method =None
+                    try:
+                        code = data['metric']['code']
+                    except:
+                        code = None
+                    metric_data = MetricData(Metric_name=metric_name,Action=action,Code=code,Controller=controller,Endpoint=endpoint,Method=method, Instance= instance, Job=job, Value1=value1, Value2=value2)
+                    MetricDataRepo.add_element(metric_data)
+                    sla=SlaRepo.get_by_id_metric(metric["Id"])
+                    if sla is not None:
+                        if sla["FromDesiredValue"] is None:
+                            confrontoFrom=float(-inf)
                         else:
-                            statusError=StatusRepo.get_by_code("KO")
-                            slaMetricStatus= SlaMetricStatus(sla["Id"],statusError["Id"],action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2))
-                            slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2),sla["Metric"],sla["Description"])
-                            SlaMetricStatusRepo.patch_element(slaMetricStatus)
-                            SlaMetricViolationRepo.add_element(slaMetricViolation)
-        timestamp2=datetime.utcnow()
-        if 60-(timestamp2 - timestamp1).total_seconds() > 0:
-                sleep(60-(timestamp2 - timestamp1).total_seconds())         
+                            confrontoFrom=sla["FromDesiredValue"]
+                            sla["FromDesiredValue"]=float(sla["FromDesiredValue"])
+                        if sla["ToDesiredValue"] is None:
+                            confrontoTo=float(inf)
+                        else:
+                            confrontoTo=sla["ToDesiredValue"]
+                            sla["ToDesiredValue"]=float(sla["ToDesiredValue"])
+                        if value2 is not None:
+                            if float(value2)>=confrontoFrom and float(value2)<=confrontoTo:
+                                statusOk=StatusRepo.get_by_code("OK")
+                                slaMetricStatus=SlaMetricStatus(sla["Id"],statusOk["Id"],action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2))
+                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
+                            else:
+                                statusError=StatusRepo.get_by_code("KO")
+                                slaMetricStatus= SlaMetricStatus(sla["Id"],statusError["Id"],action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2))
+                                slaMetricViolation= SlaMetricViolation(sla["Id"],"VIOLAZIONE",action,code,controller,endpoint,instance,job,method,sla["FromDesiredValue"],sla["ToDesiredValue"],float(value2),sla["Metric"],sla["Description"])
+                                SlaMetricStatusRepo.patch_element(slaMetricStatus)
+                                SlaMetricViolationRepo.add_element(slaMetricViolation)
+            timestamp2=datetime.utcnow()
+            if 60-(timestamp2 - timestamp1).total_seconds() > 0:
+                    sleep(60-(timestamp2 - timestamp1).total_seconds())         
+        except:
+            pass
        
     
 
