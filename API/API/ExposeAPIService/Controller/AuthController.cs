@@ -25,9 +25,10 @@ public class AuthController : ControllerBase
         {
             Logger log = new();
             log.LogAction("AuthController  Create");
-            string valueEnv = Environment.GetEnvironmentVariable("HowManyPartition") ?? "2";
-            int partition=await userRepo.GetMinPartition(Convert.ToInt32(valueEnv));
-            var newItemID = await userRepo.Create(newItemDTO,partition);
+            string partitionsStr = Environment.GetEnvironmentVariable("HowManyPartition") ?? "2";
+            string clusterStr = Environment.GetEnvironmentVariable("HowManyCluster") ?? "2";
+            (int,int) clusterpartition=await userRepo.GetMinClusterPartition(Convert.ToInt32(clusterStr),Convert.ToInt32(partitionsStr));
+            var newItemID = await userRepo.Create(newItemDTO, clusterpartition.Item2, clusterpartition.Item1);
             return (bool)newItemID ? Ok(newItemID) : Problem(null, null, 401);
         }
 
@@ -41,7 +42,7 @@ public class AuthController : ControllerBase
             var res = await userRepo.Login(loginDTO);
             if (res.Item1 !=null)
             {
-                 authResponse = await AuthResponse.GenerateAuthResponse(res.Item1,_configuration, res.Item2);
+                 authResponse = await AuthResponse.GenerateAuthResponse(res.Item1,_configuration, res.Item2, res.Item3);
             }
             return authResponse != null ? Ok(authResponse) : Unauthorized();
         }

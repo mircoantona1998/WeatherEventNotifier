@@ -23,58 +23,51 @@ namespace Userdata.Models
                 cfg.CreateMap<UserInsertDTO, User>();
             });
         }
-        public async Task<int> GetMinPartition(int maxPartition)
+        public async Task<(int Cluster, int Partition)> GetMinClusterPartition(int maxCluster, int maxPartition)
         {
             try
             {
-                List<(int, bool)> partitions = [];
-                int x = 0;
-                while (x < maxPartition)
-                {
-                    partitions.Add((x, false));
-                    x++;
-                }
+                List<(int, int)> clustersPartitions = new List<(int, int)>();
 
+                for (int cluster = 0; cluster < maxCluster; cluster++)
+                {
+                    for (int partition = 0; partition < maxPartition; partition++)
+                    {
+                        clustersPartitions.Add((cluster, partition));
+                    }
+                }
                 using var context = new UserdataContext(DB.Options);
-                var partitionCounts = await context.Users
-                    .Where(u => u.Partition >= 0 && u.Partition <= maxPartition)
-                    .GroupBy(u => u.Partition)
-                    .Select(g => new { Partition = g.Key, Count = g.Count() })
-                    .OrderBy(u=> u.Partition)
+                var counts = await context.Users
+                    .Where(u => u.Cluster >= 0 && u.Cluster < maxCluster && u.Partition >= 0 && u.Partition < maxPartition)
+                    .GroupBy(u => new { u.Cluster, u.Partition })
+                    .Select(g => new { g.Key.Cluster, g.Key.Partition, Count = g.Count() })
                     .ToListAsync()
                     .ConfigureAwait(false);
-
-
-                x = 0;
-                while(x < partitionCounts.Count)
+                var unusedCombinations = new List<(int, int)>();
+                foreach (var combination in clustersPartitions)
                 {
-                    partitions[x] = (x, true);
-                    x++;
+                    var count = counts.FirstOrDefault(c => c.Cluster == combination.Item1 && c.Partition == combination.Item2);
+                    if (count == null || count.Count == 0)
+                    {
+                        unusedCombinations.Add(combination);
+                    }
                 }
-
-                x = 0;
-                while (x < partitions.Count)
+                if (unusedCombinations.Any())
                 {
-                    if (partitions[x] == (x, false))
-                        return x;
-                    x++;
+                    return unusedCombinations.First();
                 }
-
-                var minPartitionCount = partitionCounts
-                    .OrderBy(g => g.Count)
-                    .FirstOrDefault();
-
-                int minPartition = minPartitionCount?.Partition ?? 0;
-
-                return minPartition;
+                var minCount = counts.OrderBy(c => c.Count).First();
+                return ((int)minCount.Cluster, (int)minCount.Partition);
             }
             catch (Exception ex)
             {
-                Logger log = new();
+                Logger log = new Logger(); // Assicurati di definire una classe Logger appropriata
                 log.LogAction($"An error occurred: {ex.Message}");
                 throw;
             }
         }
+
+
 
         public async Task<int> GetTotalUsersCount()
         {
@@ -125,7 +118,7 @@ namespace Userdata.Models
         }
 
         #region POST
-        public async Task<bool?> Create(UserCreateDTO newItemDTO,int partition)
+        public async Task<bool?> Create(UserCreateDTO newItemDTO,int partition,int cluster)
         {
             bool? isCreated = false;
             try
@@ -139,7 +132,8 @@ namespace Userdata.Models
                     City = newItemDTO.City,
                     Cognome = newItemDTO.Cognome,
                     Nome = newItemDTO.Nome,
-                    Partition = partition
+                    Partition = partition,
+                    Cluster=cluster
                 };
                 using var context = new UserdataContext(DB.Options);
                 var mapper = mapperConfig.CreateMapper();
@@ -177,7 +171,7 @@ namespace Userdata.Models
             return isCreated;
         }
 
-        public async Task<(IdentityUser,int?)> Login(LoginDTO loginDTO)
+        public async Task<(IdentityUser,int?,int?)> Login(LoginDTO loginDTO)
         {
             IdentityUser usr =new IdentityUser();
             try
@@ -194,14 +188,14 @@ namespace Userdata.Models
                         Id = usr1.Id.ToString(),
                         UserName = usr1.Username,
                     };
-                    return (usr,usr1.Partition);
+                    return (usr,usr1.Cluster,usr1.Partition);
                 }
-                return (null,null);
+                return (null,null,null);
             }
             catch (Exception ex)
             {
             }
-            return (null,null);
+            return (null,null,null);
         }
 
         public async Task<IdentityUser> Get_user_Login(string Username)
@@ -233,5 +227,29 @@ namespace Userdata.Models
         }
         #endregion
 
+        #region PATCH
+        public async Task DistributeClustersPartitions(int clusters,int numPartitions)
+        {
+            try
+            {
+                using var context = new UserdataContext(DB.Options);
+                var existingUsers = await context.Users.ToListAsync().ConfigureAwait(false);
+                int totalUsers = existingUsers.Count;             
+                for (int i = 0; i < totalUsers; i++)
+                {
+
+                    (int, int) clusterpartition = await GetMinClusterPartition(clusters, numPartitions);
+                    existingUsers[i].Partition = clusterpartition.Item2;
+                    existingUsers[i].Cluster = clusterpartition.Item1;
+                    await context.SaveChangesAsync().ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger log = new();
+                log.LogAction($"An error occurred: {ex.Message}");
+            }
+        }
+        #endregion
     }
 }

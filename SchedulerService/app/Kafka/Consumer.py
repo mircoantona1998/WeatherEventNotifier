@@ -3,6 +3,7 @@ from confluent_kafka import Consumer, KafkaError, TopicPartition
 from Configurations.Configurations import Configurations
 from DB.Repository.HeartbeatSentRepo import HeartbeatSentRepo
 from DB.Repository.MessageReceivedRepo import MessageReceivedRepo
+from DBUsers.Repository.UsersRepo import UsersRepo
 from DB.Repository.ScheduleRequestRepo import ScheduleRequestRepo
 from DB.Repository.RequestNotificationRepo import RequestNotificationRepo
 from DB.Repository.ScheduleResponseRepo import ScheduleResponseRepo
@@ -15,7 +16,7 @@ from Utils.EnumMessageType import MessageType
 from Utils.Json import Json
 from DB.Model import MessageReceived
 from Handler.event_handlers import EventHandlers
-from confluent_kafka.admin import AdminClient, NewTopic
+from confluent_kafka.admin import AdminClient, NewTopic,NewPartitions
 from Utils.Logger import Logger
 import inspect
 from datetime import datetime, timedelta
@@ -28,28 +29,6 @@ class ConsumerClass:
         creator=Configurations().group_id
         consumer = Consumer(consumer)
         topic = Configurations().topic_to_scheduler
-        admin_client_config = {'bootstrap.servers': Configurations().consumer_bootstrap_servers}
-        admin_client = AdminClient(admin_client_config)
-        new_topic = NewTopic(
-            topic=topic,
-            num_partitions=1,
-            replication_factor=1  
-        )
-        topic_created = False
-        while not topic_created:
-            try:
-                admin_client.create_topics([new_topic])
-                topic_created = True
-                print("Topic  creato con successo.")
-                Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Topic  creato con successo. - {inspect.currentframe().f_globals['__file__']}")
-            except Exception as e:
-                if "AlreadyExistsError" in str(e):
-                    topic_created = True
-                    print("Il topic  esiste.")
-                    Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Il topic  esiste. - {inspect.currentframe().f_globals['__file__']}")
-                else:
-                    print(f"Errore durante la creazione del topic: {e}")
-                    Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Errore durante la creazione del topic: {e} - {inspect.currentframe().f_globals['__file__']}")
         partitions_to_subscribe= [int(part) for part in Configurations().partition]
         consumer.assign([TopicPartition(topic=topic, partition=part) for part in partitions_to_subscribe])
         try:
@@ -65,7 +44,9 @@ class ConsumerClass:
                 elif  ScheduleRequestRepo.get_last_element()==None or ScheduleRequestRepo.get_last_element().date!=datetime.utcnow().date() :
                     #produrre richiesta per avere tutte le configurazioni con isactive=true e datetimeactivation < della data di oggi alle 23:59, e aggiungere a schedulazioni
                     headersRequest= KafkaHeader(IdOffsetResponse=-1,Type=MessageType.Request.value ,Tag="GetConfigurationForToday", Creator=creator, Code = MessageCode.Ok.value)
-                    ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': ""}, indent=2),GestoreDestinatari().determina_destinatario("ConfiguratorService"))            
+                    handler = EventHandlers.tag_handlers.get("UsersCurrent", lambda: f"Tag UsersCurrent non gestito")
+                    response = handler()
+                    ProducerClass.send_message(headersRequest.headers_list,json.dumps({'Data': response}, indent=2),GestoreDestinatari().determina_destinatario("ConfiguratorService"))            
                     print(f'{str(headersRequest.to_string())}')
                     Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - {str(headersRequest.to_string())} - {inspect.currentframe().f_globals['__file__']}")
                     ScheduleRequestRepo.add_request_schedule()

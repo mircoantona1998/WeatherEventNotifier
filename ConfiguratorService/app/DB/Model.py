@@ -12,7 +12,8 @@ class HeartbeatSent(Base):
 
     id = Column(Integer, primary_key=True)
     datetime = Column(DateTime)
-    
+    partition = Column(Integer)
+    cluster = Column(Integer)
 
 class Frequency(Base):
     __tablename__ = 'Frequency'

@@ -24,14 +24,15 @@ namespace ExposeAPI.Controllers
             {
                 var idUserClaim = User.FindFirst("Id");
                 int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+                string cluster = User.FindFirst("Cluster").Value;
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var dto = new
                     {
                         IdUser = idUser
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetTelegramSent, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
-                    messages = await Kafka.Kafka.consumer.ConsumeResponse<List<TelegramSent>>((int)result.Offset);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetTelegramSent,cluster, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
+                    messages = await Kafka.Kafka.consumer.ConsumeResponse<List<TelegramSent>>((int)result.Offset, cluster);
                 }
             }
             else

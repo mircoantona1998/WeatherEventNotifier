@@ -1,0 +1,529 @@
+version: '3'
+
+services:
+#Cluster 0
+  zookeeper_0:
+    image: wurstmeister/zookeeper:latest
+    container_name: zookeeper_0
+    ports:
+      - "2181:2181"
+    networks:
+      - microservices-network
+     
+  kafka_0:
+    image: wurstmeister/kafka:latest
+    container_name: kafka_0
+    ports:
+      - "9092:9092"
+    expose:
+      - "9093"
+    environment:
+      KAFKA_PORT: 9093
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka_0:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper_0:2181
+      KAFKA_CREATE_TOPICS: "topic_to_scheduler:3:1,topic_to_weather:3:1,topic_to_mail:3:1,topic_to_telegram:3:1,topic_to_notifier:3:1,topic_to_configuration:3:1,topic_to_userdata:3:1,topic_to_manager:1:1,topic_to_forecast:1:1"  
+    volumes:
+      - kafka-data-0:/var/lib/kafka/data 
+    depends_on:
+      - zookeeper_0
+    networks:
+      - microservices-network     
+#end Cluster 0
+
+  expose-api:
+    extends:
+      file: API/docker-compose.yml
+      service: expose-api
+    environment:
+      - HowManyPartition=1
+      - groupID=ExposeAPIService
+      #per cluster
+      - HowManyCluster=1
+      - cluster_0=kafka_0:9093
+      #
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka_0
+     
+  expose-api-db:
+    extends:
+      file: API/docker-compose.yml
+      service: expose-api-db
+      
+      
+  sla-manager:
+    extends:
+      file: SLAManager/docker-compose.yml
+      service: sla-manager
+    environment:
+      - HowManyPartition=1
+      - groupID=SLAManager
+      - bootstrapServers=kafka_0:9093
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka_0
+     
+  sla-manager-db:
+    extends:
+      file: SLAManager/docker-compose.yml
+      service: sla-manager-db
+      
+  sla-manager-service:
+    container_name: sla-manager-service
+    ports:
+    - "8082:8082"
+    build:
+      context: ./SlaManagerService/app
+      dockerfile: Dockerfile
+    environment:
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=sa
+     - DATABASE_PASSWORD=RootRoot.1
+     - DATABASE_PORTA=1433
+     - DATABASE_IP=sla-manager-db
+     - DATABASE_NAME=SLAManager
+     - PROMETHEUS_IP=prometheus
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka_0
+      - sla-manager-db
+      - sla-manager
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'  
+          memory: '216M' 
+          
+  forecast-service:
+    container_name: forecast-service
+    ports:
+    - "8083:8083"  
+    build:
+      context: ./ForecastService/app
+      dockerfile: Dockerfile
+    environment:
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=sa
+     - DATABASE_PASSWORD=RootRoot.1
+     - DATABASE_PORTA=1433
+     - DATABASE_IP=sla-manager-db
+     - DATABASE_NAME=SLAManager
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - CONSUMER_GROUP_ID=ForecastService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - PRODUCER_CLIENT_ID=ForecastService
+     - GROUP_ID=ForecastService
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka_0
+      - sla-manager-db
+      - sla-manager
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'  
+          memory: '216M'          
+
+  prometheus:
+      image: prom/prometheus
+      container_name: prometheus-service
+      ports:
+        - "9090:9090"
+      networks:
+        - microservices-network
+      volumes:
+        - ./Prometheus/promconfig.yml:/etc/prometheus/prometheus.yml
+        - prometheus_data:/etc/prometheus/data
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+        - '--web.enable-lifecycle'
+      depends_on:
+        - expose-api  
+ 
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-service
+    ports:
+      - "3000:3000"
+    restart: always 
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_DEFAULT_THEME=light
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,vertamedia-clickhouse-datasource
+    networks:
+      - microservices-network 
+    volumes:
+      - ./Grafana/data/:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - sla-manager-db
+          
+  configurator-db:
+    container_name: configurator-db
+    build:
+      context: ./ConfiguratorService/Configuratordata
+      dockerfile: Dockerfile
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - configurator-database:/var/lib/mysql
+    networks:
+      - microservices-network        
+
+  mail-db:
+    container_name: mail-db
+    build:
+      context: ./MailService/Maildata
+      dockerfile: Dockerfile
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mail-database:/var/lib/mysql
+    networks:
+      - microservices-network  
+      
+  notifier-db:
+    container_name: notifier-db
+    build:
+      context: ./NotifierService/Notifierdata
+      dockerfile: Dockerfile
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - notifier-database:/var/lib/mysql
+    networks:
+      - microservices-network   
+ 
+  scheduler-db:
+    container_name: scheduler-db
+    build:
+      context: ./SchedulerService/Schedulerdata
+      dockerfile: Dockerfile
+    ports:
+      - "3310:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - scheduler-database:/var/lib/mysql
+    networks:
+      - microservices-network  
+  
+  telegram-db:
+    container_name: telegram-db
+    build:
+      context: ./TelegramService/Telegramdata
+      dockerfile: Dockerfile
+    ports:
+      - "3311:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - telegram-database:/var/lib/mysql
+    networks:
+      - microservices-network  
+  
+  weather-db:
+    container_name: weather-db
+    build:
+      context: ./WeatherService/Weatherdata
+      dockerfile: Dockerfile
+    ports:
+      - "3312:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - weather-database:/var/lib/mysql
+    networks:
+      - microservices-network
+#
+#CLUSTER 0
+#to add a partition duplicate from this and change the PARTITION= last partition+1 and change the names and the ports number and configure kafka with correct partition number 
+#PARTITION 0
+#to add a partition duplicate from this and change the PARTITION= last partition+1 and change the names and the ports number and configure kafka with correct partition number 
+  configurator-service-cluster0-part0:
+    container_name: configurator-service-cluster0-part0
+    ports:
+    - "8084:8084"  
+    build:
+      context: ./ConfiguratorService/app
+      dockerfile: Dockerfile
+    environment:
+     - CLUSTER=0
+     - PARTITION=0
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - CONSUMER_GROUP_ID=ConfiguratorService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - PRODUCER_CLIENT_ID=ConfiguratorService
+     - GROUP_ID=ConfiguratorService
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=root
+     - DATABASE_PASSWORD=root
+     - DATABASE_PORTA=3306
+     - DATABASE_IP=configurator-db
+     - DATABASE_NAME=ConfigurationAlert
+     - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka_0
+      - configurator-db
+      - sla-manager
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'  
+          memory: '216M'  
+             
+
+    
+  mail-service-cluster0-part0:
+    container_name: mail-service-cluster0-part0
+    ports:
+    - "8085:8085"  
+    build:
+      context: ./MailService/app
+      dockerfile: Dockerfile
+    environment:
+     - CLUSTER=0
+     - PARTITION=0
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - CONSUMER_GROUP_ID=MailService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - PRODUCER_CLIENT_ID=MailService
+     - GROUP_ID=MailService
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=root
+     - DATABASE_PASSWORD=root
+     - DATABASE_PORTA=3306
+     - DATABASE_IP=mail-db
+     - DATABASE_NAME=Mail
+     - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka_0
+      - mail-db
+      - sla-manager
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'  
+          memory: '216M'   
+          
+       
+
+       
+  notifier-service-cluster0-part0:
+    container_name: notifier-service-cluster0-part0
+    ports:
+    - "8086:8086"  
+    build:
+      context: ./NotifierService/app
+      dockerfile: Dockerfile
+    environment:
+     - CLUSTER=0
+     - PARTITION=0
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - CONSUMER_GROUP_ID=NotifierService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - PRODUCER_CLIENT_ID=NotifierService
+     - GROUP_ID=NotifierService
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=root
+     - DATABASE_PASSWORD=root
+     - DATABASE_PORTA=3306
+     - DATABASE_IP=notifier-db
+     - DATABASE_NAME=Notifier
+     - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka_0
+      - notifier-db
+      - sla-manager
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'  
+          memory: '216M'        
+          
+          
+     
+        
+  scheduler-service-cluster0-part0:
+    container_name: scheduler-service-cluster0-part0
+    ports:
+    - "8087:8087"  
+    build:
+      context: ./SchedulerService/app
+      dockerfile: Dockerfile
+    environment:
+     - CLUSTER=0
+     - PARTITION=0
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - CONSUMER_GROUP_ID=SchedulerService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - PRODUCER_CLIENT_ID=SchedulerService
+     - GROUP_ID=SchedulerService
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=root
+     - DATABASE_PASSWORD=root
+     - DATABASE_PORTA=3306
+     - DATABASE_IP=scheduler-db
+     - DATABASE_NAME=Scheduler
+     - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
+     - USER_DATABASE_USERNAME=sa
+     - USER_DATABASE_PASSWORD=RootRoot.1
+     - USER_DATABASE_PORTA=1433
+     - USER_DATABASE_IP=expose-api-db
+     - USER_DATABASE_NAME=Userdata
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka_0
+      - expose-api-db
+      - scheduler-db
+      - sla-manager
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'  
+          memory: '216M'            
+      
+
+       
+  telegram-service-cluster0-part0:
+    container_name: telegram-service-cluster0-part0
+    ports:
+    - "8088:8088"  
+    build:
+      context: ./TelegramService/app
+      dockerfile: Dockerfile
+    environment:
+     - CLUSTER=0
+     - PARTITION=0
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - CONSUMER_GROUP_ID=TelegramService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - PRODUCER_CLIENT_ID=TelegramService
+     - GROUP_ID=TelegramService
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=root
+     - DATABASE_PASSWORD=root
+     - DATABASE_PORTA=3306
+     - DATABASE_IP=telegram-db
+     - DATABASE_NAME=Telegram
+     - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka_0
+      - telegram-db
+      - sla-manager
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'  
+          memory: '216M'       
+      
+
+       
+  weather-service-cluster0-part0:
+    container_name: weather-service-cluster0-part0
+    ports:
+    - "8089:8089"  
+    build:
+      context: ./WeatherService/app
+      dockerfile: Dockerfile
+    environment:
+     - CLUSTER=0
+     - PARTITION=0
+     - CONSUMER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - CONSUMER_GROUP_ID=WeatherService
+     - CONSUMER_AUTO_OFFSET_RESET=earliest
+     - PRODUCER_BOOTSTRAP_SERVERS=kafka_0:9093
+     - PRODUCER_CLIENT_ID=WeatherService
+     - GROUP_ID=WeatherService
+     - DOCKER_ENVIRONMENT=True
+     - DATABASE_USERNAME=root
+     - DATABASE_PASSWORD=root
+     - DATABASE_PORTA=3306
+     - DATABASE_IP=weather-db
+     - DATABASE_NAME=Weather
+     - SLAMANAGER=sla-manager
+     - HEARTBEAT_FREQUENCY=10
+     - DISTANCE_REUSE_WEATHER_KM=5
+    networks:
+      - microservices-network  
+    depends_on:
+      - kafka_0
+      - weather-db 
+      - sla-manager
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'  
+          memory: '216M'  
+          
+      
+
+      
+#to this  
+#END PARTITION 0
+#END CLUSTER 0
+
+
+volumes:
+  #per cluster
+  kafka-data-0:  
+    name: kafka-data-0
+  userdata-database:
+    name: userdata-database
+  configurator-database:  
+    name: configurator-database
+  mail-database:  
+    name: mail-database
+  telegram-database:  
+    name: telegram-database
+  notifier-database:
+    name: notifier-database
+  weather-database:  
+    name: weather-database
+  scheduler-database:  
+    name: scheduler-database
+  prometheus_data:
+    name: prometheus_data
+  sla-manager-database:
+    name: sla-manager-database
+networks:
+  microservices-network:
+    name: microservices-network
+    driver: bridge
+
+

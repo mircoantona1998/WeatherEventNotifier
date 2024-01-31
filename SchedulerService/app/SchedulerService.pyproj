@@ -23,6 +23,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Configurations\Configurations.py" />
+    <Compile Include="DBUsers\Model.py" />
+    <Compile Include="DBUsers\Repository\UsersRepo.py" />
+    <Compile Include="DBUsers\Session.py" />
     <Compile Include="DB\Model.py" />
     <Compile Include="DB\Repository\HeartbeatSentRepo.py" />
     <Compile Include="DB\Repository\RequestNotificationRepo.py" />
@@ -57,10 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Configurations\" />
+    <Folder Include="DBUsers\Repository\" />
     <Folder Include="DB\" />
     <Folder Include="DB\Repository\" />
     <Folder Include="Handler\" />
     <Folder Include="Kafka\" />
+    <Folder Include="DBUsers\" />
     <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>

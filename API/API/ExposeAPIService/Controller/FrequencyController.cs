@@ -25,10 +25,11 @@ namespace ExposeAPI.Controllers
             {
                 var idUserClaim = User.FindFirst("Id");
                 int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+                string cluster = User.FindFirst("Cluster").Value;
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>("", MessageType.Request, MessageTag.GetFrequency, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
-                    Frequencys = await Kafka.Kafka.consumer.ConsumeResponse<List<Frequency>>((int)result.Offset);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>("", MessageType.Request, MessageTag.GetFrequency,cluster, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
+                    Frequencys = await Kafka.Kafka.consumer.ConsumeResponse<List<Frequency>>((int)result.Offset, cluster);
                     return Frequencys != null ? Ok(Frequencys) : Problem(null, null, 401);
                 }
             }

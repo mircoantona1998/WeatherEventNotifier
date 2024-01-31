@@ -24,14 +24,15 @@ namespace ExposeAPI.Controllers
             {
                 var idUserClaim = User.FindFirst("Id");
                 int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+                string cluster = User.FindFirst("Cluster").Value;
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var dto = new
                     {
                         IdUser = idUser
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
-                    configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<ConfigurationUser>>((int)result.Offset);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetConfiguration,cluster, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
+                    configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<ConfigurationUser>>((int)result.Offset,cluster);
                 }
             }
             else
@@ -55,13 +56,14 @@ namespace ExposeAPI.Controllers
             {
                 var idUserClaim = User.FindFirst("Id");
                 int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+                string cluster = User.FindFirst("Cluster").Value;
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     if (newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
                     {
                         var kafkaRequest = ConfigurationCreateRequestKafka.ConvertConfigurationCreateToRequestKafka(newItemDTO, idUser);
-                        var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
-                        res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
+                        var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddConfiguration,cluster, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
+                        res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
                     }else return Problem("Inserire un simbolo valido", null, 500);
                 }
             }
@@ -86,13 +88,14 @@ namespace ExposeAPI.Controllers
             {
                 var idUserClaim = User.FindFirst("Id");
                 int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+                string cluster = User.FindFirst("Cluster").Value;
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     if (newItemDTO.Symbol==null || newItemDTO.Symbol == ">" || newItemDTO.Symbol == ">=" || newItemDTO.Symbol == "==" || newItemDTO.Symbol == "<" || newItemDTO.Symbol == "<=")
                     {
                         var kafkaRequest = ConfigurationPatchRequestKafka.ConvertConfigurationPatchToRequestKafka(newItemDTO, idUser);
-                        var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"],partition);
-                        res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
+                        var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchConfiguration,cluster, ExposeAPI.Configurations.config.configuration["topic_to_configuration"],partition);
+                        res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
                     }
                     else return Problem("Inserire un simbolo valido", null, 500);
                 }
@@ -118,6 +121,7 @@ namespace ExposeAPI.Controllers
             {
                 var idUserClaim = User.FindFirst("Id");
                 int partition = Convert.ToInt32(User.FindFirst("Partition").Value);
+                string cluster = User.FindFirst("Cluster").Value;
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var deleteItemDTO = new
@@ -125,8 +129,8 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser,
                         IdConfiguration = IdConfiguration,
                     };
-                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteConfiguration, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
-                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset);
+                    var result = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteConfiguration,cluster, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
+                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
                 }
             }
             else

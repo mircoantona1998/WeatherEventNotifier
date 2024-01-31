@@ -26,9 +26,17 @@ namespace ExposeAPI.Kafka
             this.topic = topic;
         }
 
-        public async Task<T> ConsumeResponse<T>(int offset)
+        public async Task<T> ConsumeResponse<T>(int offset,string cluster)
         {
             T response = default(T);
+            Kafka.consumerConfig = new ConsumerConfig
+            {
+                BootstrapServers = Environment.GetEnvironmentVariable(cluster) ?? ExposeAPI.Configurations.config.configuration["bootstrapServers"],
+                GroupId = Environment.GetEnvironmentVariable("groupID") ?? ExposeAPI.Configurations.config.configuration["groupID"],
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                EnableAutoCommit = true
+            };
+
             var config = new ConsumerConfig
             {
                 GroupId = Kafka.consumerConfig.GroupId,

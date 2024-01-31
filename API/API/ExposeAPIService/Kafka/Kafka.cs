@@ -10,5 +10,10 @@ namespace ExposeAPI.Kafka
         public static ProducerConfig producerConfig;
         public static string topic_to_configuration;
         public static string topic_to_userdata;
+        public static string topic_to_notifier;
+        public static string topic_to_weather;
+        public static string topic_to_scheduler;
+        public static string topic_to_mail;
+        public static string topic_to_telegram;
     }
 }

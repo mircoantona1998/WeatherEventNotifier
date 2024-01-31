@@ -170,7 +170,9 @@ class EventHandlers:
 
     def handle_tag_GetConfigurationForToday( data):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_GetConfigurationForToday  - {inspect.currentframe().f_globals['__file__']}")
-        return ConfigurationUserRepo.get_all_for_today()
+        return ConfigurationUserRepo.get_all_for_today(data)
+    #filtrare configurazioni per scheduler service che gli ha fatto richiesta
+    #cioe che appartiene al suo cluster e la sua partizione
     
     #METRIC
     def handle_tag_AddMetric( data):

@@ -18,6 +18,8 @@ class Configurations:
             print(f'{str(self.heartbeatfrequency)}')
             self.slamanager= os.getenv("SLAMANAGER", "localhost")
             print(f'{str(self.slamanager)}')
+            self.cluster = os.getenv("CLUSTER", "0")
+            print(f'{str(self.cluster)}')
             self.partition = os.getenv("PARTITION", "0")
             print(f'{str(self.partition)}')
             self.consumer_bootstrap_servers = os.getenv("CONSUMER_BOOTSTRAP_SERVERS", "127.0.0.1:9092")

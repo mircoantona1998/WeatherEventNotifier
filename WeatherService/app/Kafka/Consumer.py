@@ -12,7 +12,7 @@ from Utils.EnumMessageCode import MessageCode
 from Utils.EnumMessageType import MessageType
 from DB.Model import MessageReceived
 from Handler.event_handlers import EventHandlers
-from confluent_kafka.admin import AdminClient, NewTopic
+from confluent_kafka.admin import AdminClient, NewTopic, NewPartitions
 from Utils.Logger import Logger
 import inspect
 from datetime import datetime
@@ -25,29 +25,6 @@ class ConsumerClass:
         creator=Configurations().group_id
         consumer = Consumer(consumer)
         topic = Configurations().topic_to_weather
-        admin_client_config = {'bootstrap.servers': Configurations().consumer_bootstrap_servers}
-        admin_client = AdminClient(admin_client_config)
-        new_topic = NewTopic(
-            topic=topic,
-            num_partitions=1,
-            replication_factor=1  
-        )
-        topic_created = False
-        while not topic_created:
-            try:
-                admin_client.create_topics([new_topic])
-                topic_created = True
-                print("Topic  creato con successo.")
-                Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Topic  creato con successo. - {inspect.currentframe().f_globals['__file__']}")
-            except Exception as e:
-                if "AlreadyExistsError" in str(e):
-                    topic_created = True
-                    print("Il topic  esiste.")
-                    Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Il topic  esiste. - {inspect.currentframe().f_globals['__file__']}")
-                else:
-                    print(f"Errore durante la creazione del topic: {e}")
-                    Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - Errore durante la creazione del topic: {e} - {inspect.currentframe().f_globals['__file__']}")
-
         partitions_to_subscribe= [int(part) for part in Configurations().partition]
         consumer.assign([TopicPartition(topic=topic, partition=part) for part in partitions_to_subscribe])
         try:

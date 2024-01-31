@@ -7,8 +7,8 @@ class Heartbeat:
     def message():
         url = f"http://{Configurations().slamanager}:8081/Heartbeat/Send"
         data = {
-            "Servicename": Configurations().group_id +'_part'+ Configurations().partition,
-            "password": Configurations().group_id +'_part'+ Configurations().partition,
+            "Servicename": Configurations().group_id+'_cluster'+ Configurations().cluster +'_part'+ Configurations().partition,
+            "password": Configurations().group_id +'_cluster'+ Configurations().cluster +'_part'+ Configurations().partition,
         }
         try:
             response = requests.post(url, json=data)

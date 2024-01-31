@@ -16,7 +16,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://*:80",
+      "applicationUrl": "http://*:8080",
       // "applicationUrl": "http://*:80", //serve per debbuggare l'app mobile
       "dotnetRunMessages": true
     },

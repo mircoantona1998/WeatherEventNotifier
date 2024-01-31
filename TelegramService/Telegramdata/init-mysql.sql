@@ -27,8 +27,10 @@ DROP TABLE IF EXISTS `HeartbeatSent`;
 CREATE TABLE `HeartbeatSent` (
   `id` int NOT NULL AUTO_INCREMENT,
   `datetime` datetime DEFAULT NULL,
+  `partition` int DEFAULT NULL,
+  `cluster` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 LOCK TABLES `HeartbeatSent` WRITE;
 /*!40000 ALTER TABLE `HeartbeatSent` DISABLE KEYS */;

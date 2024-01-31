@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
+from Configurations.Configurations import Configurations
 from DB.Session import Session
+from DBUsers.Repository.UsersRepo import UsersRepo
 from DB.Model import Schedule
 from sqlalchemy import  func, cast, DateTime,desc
 from Utils.Logger import Logger
@@ -97,13 +99,16 @@ class ScheduleRepo:
         current_datetime = datetime.utcnow().replace( second=0, microsecond=0)
         rounded_minute = (current_datetime.minute // 5) * 5
         current_datetime = current_datetime.replace(minute=rounded_minute)
-        with Session.get_database_session() as session:
-            resultList = (
+        UsersRepo.get()  
+        result_dicts = []
+        for user in UsersRepo.get():
+            with Session.get_database_session() as session:
+                resultList = (
                     session.query(Schedule)
                     .filter(cast(Schedule.DateTimeToSchedule, DateTime) == current_datetime)
+                    .filter_by(IdUser=int(user.Id))
                     .all()
-                )
-            result_dicts = []
+                )   
             for result in resultList:
                 result_dict = {
                     "Id": result.Id,
@@ -122,5 +127,5 @@ class ScheduleRepo:
                     "Description":result.Description,
                 }
                 result_dicts.append(result_dict)
-            return result_dicts
+        return result_dicts
         

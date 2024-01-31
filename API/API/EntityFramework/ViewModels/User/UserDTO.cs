@@ -20,6 +20,7 @@ namespace Userdata.ViewModels
     public class UserInsertDTO:UserCreateDTO
     {
         public int Partition { get; set; }
+        public int Cluster { get; set; }
     }
     public class LoginDTO
     {

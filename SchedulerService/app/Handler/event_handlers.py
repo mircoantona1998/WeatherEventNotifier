@@ -1,6 +1,7 @@
 from Utils.Logger import Logger
 import inspect
 from datetime import datetime
+from DBUsers.Repository.UsersRepo import UsersRepo
 from DB.Repository.ScheduleRepo import ScheduleRepo
 from DB.Repository.ScheduleResponseRepo import ScheduleResponseRepo
 
@@ -102,6 +103,17 @@ class EventHandlers:
         ScheduleResponseRepo.add_response_schedule()
         return None
     
+    def handle_tag_UsersCurrent():
+        Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_UsersCurrent - {inspect.currentframe().f_globals['__file__']}")
+        users=UsersRepo.get()
+        result_dicts = []
+        for user in users:
+            result_dict = {
+                'IdUser': user.Id,
+                }
+            result_dicts.append(result_dict)                        
+        return result_dicts 
+    
     def handle_tag_SchedulationCurrent():
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - handle_tag_SchedulationCurrent- {inspect.currentframe().f_globals['__file__']}")
         return ScheduleRepo.get_all_current()
@@ -117,5 +129,7 @@ class EventHandlers:
     "GetConfigurationForToday": handle_tag_GetConfigurationForToday,
     "SchedulationCurrent": handle_tag_SchedulationCurrent,
     
+    "UsersCurrent": handle_tag_UsersCurrent,
+
      "GetSchedulation": handle_tag_GetSchedulation,
     }

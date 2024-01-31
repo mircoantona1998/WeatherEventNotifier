@@ -11,7 +11,9 @@ class HeartbeatSent(Base):
 
     id = Column(Integer, primary_key=True)
     datetime = Column(DateTime)
-
+    partition = Column(Integer)
+    cluster = Column(Integer)
+    
 class MessageReceived(Base):
     __tablename__ = 'MessageReceived'
 
@@ -81,3 +83,5 @@ class Schedule(Base):
     ParentMetric = Column(String(50))
     ValueUnit = Column(String(50))
     Description = Column(String(200))
+ #   Partition= Column(Integer)
+ #   Cluster= Column(Integer)

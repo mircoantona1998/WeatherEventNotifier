@@ -9,6 +9,8 @@ using System.Text;
 using Confluent.Kafka.Admin;
 using ExposeAPI.Utils;
 using Prometheus;
+using Userdata.Models;
+
 
 config.configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -43,75 +45,10 @@ foreach (string command in DB.GetSqlCommands(sqlServerDump))
     else DB.ExecuteSqlCommand(connectionString, command);
 }
 config.confdb = Environment.GetEnvironmentVariable("ConnectionStrings") ?? config.configuration["ConnectionStrings:Userdata"];
+
 Kafka.producer = new KafkaProducer();
 Kafka.consumer = new KafkaConsumer(Environment.GetEnvironmentVariable("topic_to_userdata") ?? config.configuration["topic_to_userdata"]);
-Kafka.consumerConfig = new ConsumerConfig
-{
-    BootstrapServers = Environment.GetEnvironmentVariable("bootstrapServers") ?? config.configuration["bootstrapServers"] ,
-    GroupId = Environment.GetEnvironmentVariable("groupID") ?? config.configuration["groupID"]  ,
-    AutoOffsetReset = AutoOffsetReset.Earliest,
-    EnableAutoCommit=true
-};
-Kafka.producerConfig = new ProducerConfig {
-    BootstrapServers = Environment.GetEnvironmentVariable("bootstrapServers") ?? config.configuration["bootstrapServers"]   ,
-    ClientId= Environment.GetEnvironmentVariable("groupID") ?? config.configuration["groupID"]
-};
-Kafka.topic_to_configuration = Environment.GetEnvironmentVariable("topic_to_configuration") ?? config.configuration["topic_to_configuration"];
-Kafka.topic_to_userdata = Environment.GetEnvironmentVariable("topic_to_userdata") ?? config.configuration["topic_to_userdata"] ;
-var adminClientConfig = new AdminClientConfig
-{
-    BootstrapServers = Environment.GetEnvironmentVariable("bootstrapServers") ?? config.configuration["bootstrapServers"]
-};
-using (var adminClient = new AdminClientBuilder(adminClientConfig).Build())
-{
-    bool topicCreated = false;
 
-    while (!topicCreated)
-    {
-        try
-        {
-            var topicSpecification = new TopicSpecification
-            {
-                Name = Kafka.topic_to_userdata,
-                NumPartitions = 1,
-                ReplicationFactor = 1
-            };
-
-            adminClient.CreateTopicsAsync(new List<TopicSpecification> { topicSpecification }).Wait();
-            Console.WriteLine($"Topic '{Kafka.topic_to_userdata}' created successfully.");
-            log.LogAction($"Topic '{Kafka.topic_to_userdata}' created successfully.");
-            topicCreated = true;
-        }
-        catch (AggregateException ae)
-        {
-            foreach (var innerException in ae.InnerExceptions)
-            {
-                if (innerException is CreateTopicsException createTopicsException)
-                {
-                    foreach (var topicError in createTopicsException.Results)
-                    {
-                        if (topicError.Error.Code == ErrorCode.TopicAlreadyExists)
-                        {
-                            Console.WriteLine($"The topic '{Kafka.topic_to_userdata}' already exists.");
-                            log.LogAction($"The topic '{Kafka.topic_to_userdata}' already exists.");
-                            topicCreated = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Error creating topic: {topicError.Error.Reason}");
-                            log.LogAction($"Error creating topic: {topicError.Error.Reason}");
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Unexpected exception: {innerException.Message}");
-                    log.LogAction($"Unexpected exception: {innerException.Message}");
-                }
-            }
-        }
-    }
-}
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddAuthentication(opt =>
@@ -177,16 +114,14 @@ builder.Services.AddCors(options =>
         .AllowAnyHeader()
     );
 });
+string clusters = Environment.GetEnvironmentVariable("HowManyCluster") ?? "2";
+string partitions = Environment.GetEnvironmentVariable("HowManyPartition") ?? "2";
+UserRepository userRepo;
+userRepo = new UserRepository(connectionString);
+await userRepo.DistributeClustersPartitions(Convert.ToInt32(clusters),Convert.ToInt32(partitions));
+
 var app = builder.Build();
-//if (env.IsDevelopment())
-//{
-    app.UseDeveloperExceptionPage();
-//}
-//else
-//{
-//    app.UseExceptionHandler("/Home/Error");
-//    app.UseHsts();
-//}
+app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseHttpMetrics();
@@ -205,3 +140,4 @@ app.UseDeveloperExceptionPage();
 app.MapControllers();
 app.MapMetrics();
 app.Run();
+

@@ -78,16 +78,18 @@ class ConfigurationUserRepo:
                 }
                 return result_dict
         
-    def get_all_for_today():
+    def get_all_for_today(data):
         Logger().log_action(f"{str(datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'))} - get_all_for_today  - {inspect.currentframe().f_globals['__file__']}")
         today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         midnight = today + timedelta(days=1)
+        user_ids = [user["IdUser"] for user in data["Data"]]
         with Session.get_database_session() as session:
             resultList = (
                 session.query(t_View_ConfigurationUser)
                 .filter(
                     text("DateTimeActivation < :midnight").params(midnight=midnight),
-                    t_View_ConfigurationUser.c.IsActive == True 
+                    t_View_ConfigurationUser.c.IsActive == True,
+                    t_View_ConfigurationUser.c.IdUser.in_(user_ids) 
                 )
                 .all()
             )

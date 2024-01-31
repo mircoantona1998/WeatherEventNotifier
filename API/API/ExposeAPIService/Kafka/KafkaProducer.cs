@@ -15,8 +15,14 @@ namespace ExposeAPI.Kafka
         {
             messSentRepo = new MessageSentRepository(config.confdb);
         }
-        public async Task<DeliveryResult<Null, string>> ProduceRequest<T>(Object message,MessageType type,MessageTag tag,string topic,int partition)
+
+        public async Task<DeliveryResult<Null, string>> ProduceRequest<T>(Object message,MessageType type,MessageTag tag,string cluster,string topic,int partition)
         {
+            Kafka.producerConfig = new ProducerConfig
+            {
+                BootstrapServers = Environment.GetEnvironmentVariable(cluster) ?? config.configuration["bootstrapServers"],
+                ClientId = Environment.GetEnvironmentVariable("groupID") ?? config.configuration["groupID"]
+            };
             string mess = Json.ConvertObjectToJson(message);
             using var producer = new ProducerBuilder<Null, string>(Kafka.producerConfig).Build();
             var headers = new Headers {
