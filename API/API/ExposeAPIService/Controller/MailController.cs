@@ -31,7 +31,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetMailSent, cluster, ExposeAPI.Configurations.config.configuration["topic_to_mail"],partition);
-                    messages = await Kafka.Kafka.consumer.ConsumeResponse<List<MailSent>>((int)result.Offset, cluster);
+                    messages = await Kafka.Kafka.consumer.ConsumeResponse<List<MailSent>>((int)result.Offset, cluster, partition);
                 }
             }
             else

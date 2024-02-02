@@ -32,7 +32,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetNotify,cluster, ExposeAPI.Configurations.config.configuration["topic_to_notifier"], partition);
-                    configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<Notifier>>((int)result.Offset,cluster);
+                    configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<Notifier>>((int)result.Offset,cluster,partition);
                 }
             }
             else

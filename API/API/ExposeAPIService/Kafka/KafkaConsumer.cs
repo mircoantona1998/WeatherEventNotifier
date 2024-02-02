@@ -26,7 +26,7 @@ namespace ExposeAPI.Kafka
             this.topic = topic;
         }
 
-        public async Task<T> ConsumeResponse<T>(int offset,string cluster)
+        public async Task<T> ConsumeResponse<T>(int offset,string cluster,int partition)
         {
             T response = default(T);
             Kafka.consumerConfig = new ConsumerConfig
@@ -44,7 +44,8 @@ namespace ExposeAPI.Kafka
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
             using var consumer = new ConsumerBuilder<Ignore, string>(config).Build();
-            consumer.Subscribe(topic);
+            consumer.Assign(new TopicPartition(topic, partition));
+           // consumer.Subscribe(topic);
             while (true)
             {
                 try

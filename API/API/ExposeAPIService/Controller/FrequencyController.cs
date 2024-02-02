@@ -29,7 +29,7 @@ namespace ExposeAPI.Controllers
                 if (idUserClaim != null && int.TryParse(idUserClaim.Value, out int idUser))
                 {
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>("", MessageType.Request, MessageTag.GetFrequency,cluster, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
-                    Frequencys = await Kafka.Kafka.consumer.ConsumeResponse<List<Frequency>>((int)result.Offset, cluster);
+                    Frequencys = await Kafka.Kafka.consumer.ConsumeResponse<List<Frequency>>((int)result.Offset, cluster, partition);
                     return Frequencys != null ? Ok(Frequencys) : Problem(null, null, 401);
                 }
             }

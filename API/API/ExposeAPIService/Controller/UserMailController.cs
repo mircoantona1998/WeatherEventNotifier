@@ -34,7 +34,7 @@ namespace ExposeAPI.Controllers
                         All = all
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetUserMail,cluster, ExposeAPI.Configurations.config.configuration["topic_to_mail"], partition);
-                    usermail = await Kafka.Kafka.consumer.ConsumeResponse<List<UserMail>>((int)result.Offset,cluster);
+                    usermail = await Kafka.Kafka.consumer.ConsumeResponse<List<UserMail>>((int)result.Offset,cluster, partition);
                 }
             }
             else
@@ -63,7 +63,7 @@ namespace ExposeAPI.Controllers
                 {
                     var kafkaRequest = MailCreateRequestKafka.ConvertMailCreateToRequestKafka(newItemDTO, idUser);
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddUserMail,cluster, ExposeAPI.Configurations.config.configuration["topic_to_mail"], partition);
-                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
+                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster,partition);
                 }
             }
             else
@@ -92,7 +92,7 @@ namespace ExposeAPI.Controllers
                 {
                     var kafkaRequest = MailPatchRequestKafka.ConvertMailPatchToRequestKafka(newItemDTO, idUser);
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchUserMail,cluster, ExposeAPI.Configurations.config.configuration["topic_to_mail"], partition);
-                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
+                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster,partition);
                 }
             }
             else
@@ -124,7 +124,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.DeleteUserMail, cluster,ExposeAPI.Configurations.config.configuration["topic_to_mail"], partition);
-                    isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
+                    isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster,partition);
                 }
             }
             else

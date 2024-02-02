@@ -32,7 +32,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetConfiguration,cluster, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
-                    configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<ConfigurationUser>>((int)result.Offset,cluster);
+                    configurations = await Kafka.Kafka.consumer.ConsumeResponse<List<ConfigurationUser>>((int)result.Offset,cluster, partition);
                 }
             }
             else
@@ -63,7 +63,7 @@ namespace ExposeAPI.Controllers
                     {
                         var kafkaRequest = ConfigurationCreateRequestKafka.ConvertConfigurationCreateToRequestKafka(newItemDTO, idUser);
                         var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddConfiguration,cluster, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
-                        res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
+                        res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster,partition);
                     }else return Problem("Inserire un simbolo valido", null, 500);
                 }
             }
@@ -95,7 +95,7 @@ namespace ExposeAPI.Controllers
                     {
                         var kafkaRequest = ConfigurationPatchRequestKafka.ConvertConfigurationPatchToRequestKafka(newItemDTO, idUser);
                         var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchConfiguration,cluster, ExposeAPI.Configurations.config.configuration["topic_to_configuration"],partition);
-                        res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
+                        res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster,partition);
                     }
                     else return Problem("Inserire un simbolo valido", null, 500);
                 }
@@ -130,7 +130,7 @@ namespace ExposeAPI.Controllers
                         IdConfiguration = IdConfiguration,
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(deleteItemDTO, MessageType.Request, MessageTag.DeleteConfiguration,cluster, ExposeAPI.Configurations.config.configuration["topic_to_configuration"], partition);
-                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
+                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster,partition);
                 }
             }
             else

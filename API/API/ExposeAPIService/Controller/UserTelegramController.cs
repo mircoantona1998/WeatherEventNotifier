@@ -32,7 +32,7 @@ namespace ExposeAPI.Controllers
                         All=all
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetUserTelegram,cluster, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
-                    usertel = await Kafka.Kafka.consumer.ConsumeResponse<List<UserTelegram>>((int)result.Offset, cluster);
+                    usertel = await Kafka.Kafka.consumer.ConsumeResponse<List<UserTelegram>>((int)result.Offset, cluster, partition);
                 }
             }
             else
@@ -61,7 +61,7 @@ namespace ExposeAPI.Controllers
                 {
                     var kafkaRequest = TelegramCreateRequestKafka.ConvertTelegramCreateToRequestKafka(newItemDTO, idUser);
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.AddUserTelegram,cluster, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
-                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
+                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster,partition);
                 }
             }
             else
@@ -90,7 +90,7 @@ namespace ExposeAPI.Controllers
                 {
                     var kafkaRequest = TelegramPatchRequestKafka.ConvertTelegramPatchToRequestKafka(newItemDTO, idUser);
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(kafkaRequest, MessageType.Request, MessageTag.PatchUserTelegram,cluster, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
-                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
+                    res = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster,partition);
                 }
             }
             else
@@ -122,7 +122,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.DeleteUserTelegram,cluster, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
-                    isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster);
+                    isDeleted = await Kafka.Kafka.consumer.ConsumeResponse<string>((int)result.Offset, cluster,partition);
                 }
             }
             else

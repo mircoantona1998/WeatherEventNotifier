@@ -32,7 +32,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetSchedulation,cluster, ExposeAPI.Configurations.config.configuration["topic_to_scheduler"], partition);
-                    schedulations = await Kafka.Kafka.consumer.ConsumeResponse<List<Schedulation>>((int)result.Offset,cluster);
+                    schedulations = await Kafka.Kafka.consumer.ConsumeResponse<List<Schedulation>>((int)result.Offset,cluster, partition);
                 }
             }
             else

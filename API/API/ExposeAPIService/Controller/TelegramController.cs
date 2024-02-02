@@ -32,7 +32,7 @@ namespace ExposeAPI.Controllers
                         IdUser = idUser
                     };
                     var result = await Kafka.Kafka.producer.ProduceRequest<string>(dto, MessageType.Request, MessageTag.GetTelegramSent,cluster, ExposeAPI.Configurations.config.configuration["topic_to_telegram"], partition);
-                    messages = await Kafka.Kafka.consumer.ConsumeResponse<List<TelegramSent>>((int)result.Offset, cluster);
+                    messages = await Kafka.Kafka.consumer.ConsumeResponse<List<TelegramSent>>((int)result.Offset, cluster, partition);
                 }
             }
             else
