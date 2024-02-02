@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: mail-service-cluster0-part0
+  name: mail-service-cluster0-part0
+spec:
+  ports:
+    - name: "8085"
+      port: 8085
+      targetPort: 8085
+  selector:
+    io.kompose.service: mail-service-cluster0-part0
+status:
+  loadBalancer: {}
+
+---

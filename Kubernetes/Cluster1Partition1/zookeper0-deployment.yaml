@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: zookeeper0
+  name: zookeeper0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: zookeeper0
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/microservices-network: "true"
+        io.kompose.service: zookeeper0
+    spec:
+      containers:
+        - image: wurstmeister/zookeeper:latest
+          name: zookeeper0
+          ports:
+            - containerPort: 2181
+              hostPort: 2181
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}

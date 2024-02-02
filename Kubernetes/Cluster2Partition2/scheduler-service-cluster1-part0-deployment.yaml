@@ -1,0 +1,77 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: scheduler-service-cluster1-part0
+  name: scheduler-service-cluster1-part0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: scheduler-service-cluster1-part0
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/microservices-network: "true"
+        io.kompose.service: scheduler-service-cluster1-part0
+    spec:
+      containers:
+        - env:
+            - name: CONSUMER_AUTO_OFFSET_RESET
+              value: earliest
+            - name: CONSUMER_BOOTSTRAP_SERVERS
+              value: kafka1:9094
+            - name: CONSUMER_GROUP_ID
+              value: schedulerService
+            - name: DATABASE_IP
+              value: scheduler-db
+            - name: DATABASE_NAME
+              value: Scheduler
+            - name: DATABASE_PASSWORD
+              value: root
+            - name: DATABASE_PORTA
+              value: "3310"
+            - name: DATABASE_USERNAME
+              value: root
+            - name: DOCKER_ENVIRONMENT
+              value: "True"
+            - name: GROUP_ID
+              value: SchedulerService
+            - name: HEARTBEAT_FREQUENCY
+              value: "10"
+            - name: CLUSTER
+              value: "1"
+            - name: PARTITION
+              value: "0"
+            - name: PRODUCER_BOOTSTRAP_SERVERS
+              value: kafka1:9094
+            - name: PRODUCER_CLIENT_ID
+              value: SchedulerService
+            - name: SLAMANAGER
+              value: sla-manager          
+            - name: USER_DATABASE_USERNAME
+              value: sa
+            - name: USER_DATABASE_PASSWORD
+              value: RootRoot.1
+            - name: USER_DATABASE_IP
+              value: expose-api-db
+            - name: USER_DATABASE_PORTA
+              value: "1433"
+            - name: USER_DATABASE_NAME
+              value: Userdata
+          image: mircoantona/weathereventnotifier:scheduler-service-cluster1-part0
+          name: scheduler-service-cluster1-part0
+          ports:
+            - containerPort: 8098
+              hostPort: 8098
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: "226492416"
+      restartPolicy: Always
+status: {}
+
+---

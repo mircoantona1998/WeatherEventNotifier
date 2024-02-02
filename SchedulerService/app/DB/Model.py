@@ -51,21 +51,25 @@ class RequestNotification(Base):
 
     idRequestNotification = Column(Integer, primary_key=True)
     datetime = Column(DateTime)
-
+    partition = Column(Integer)
+    cluster = Column(Integer)
 
 class RequestSchedulation(Base):
     __tablename__ = 'RequestSchedulation'
 
     idRequestSchedulation = Column(Integer, primary_key=True)
     date = Column(Date)
-
+    partition = Column(Integer)
+    cluster = Column(Integer)
 
 class ResponseSchedulation(Base):
     __tablename__ = 'ResponseSchedulation'
 
     idResponseSchedulation = Column(Integer, primary_key=True)
     date = Column(Date)
-
+    partition = Column(Integer)
+    cluster = Column(Integer)
+    
 class Schedule(Base):
     __tablename__ = 'Schedule'
 

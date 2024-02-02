@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: telegram-service-cluster1-part1
+  name: telegram-service-cluster1-part1
+spec:
+  ports:
+    - name: "8103"
+      port: 8103
+      targetPort: 8103
+  selector:
+    io.kompose.service: telegram-service-cluster1-part1
+status:
+  loadBalancer: {}
+
+---

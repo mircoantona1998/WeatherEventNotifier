@@ -130,8 +130,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M' 
+          cpus: '0.1'  
+          memory: '108M' 
           
   forecast-service:
     container_name: forecast-service
@@ -162,8 +162,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'          
+          cpus: '0.1'  
+          memory: '108M'          
 
   prometheus:
       image: prom/prometheus
@@ -320,8 +320,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'  
+          cpus: '0.1'  
+          memory: '108M'  
              
 
     
@@ -358,8 +358,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'   
+          cpus: '0.1'  
+          memory: '108M'   
           
        
 
@@ -397,8 +397,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'        
+          cpus: '0.1'  
+          memory: '108M'        
           
           
      
@@ -442,8 +442,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'            
+          cpus: '0.1'  
+          memory: '108M'            
       
 
        
@@ -480,8 +480,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'       
+          cpus: '0.1'  
+          memory: '108M'       
       
 
        
@@ -519,8 +519,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'  
+          cpus: '0.1'  
+          memory: '108M'  
           
       
 
@@ -561,8 +561,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'  
+          cpus: '0.1'  
+          memory: '108M'  
              
 
     
@@ -599,8 +599,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'   
+          cpus: '0.1'  
+          memory: '108M'   
           
        
 
@@ -638,8 +638,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'        
+          cpus: '0.1'  
+          memory: '108M'        
           
           
      
@@ -683,8 +683,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'            
+          cpus: '0.1'  
+          memory: '108M'            
       
 
        
@@ -721,8 +721,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'       
+          cpus: '0.1'  
+          memory: '108M'       
       
 
        
@@ -760,8 +760,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'  
+          cpus: '0.1'  
+          memory: '108M'  
           
       
 
@@ -806,8 +806,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'  
+          cpus: '0.1'  
+          memory: '108M'  
              
 
     
@@ -844,8 +844,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'   
+          cpus: '0.1'  
+          memory: '108M'   
           
        
 
@@ -883,8 +883,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'        
+          cpus: '0.1'  
+          memory: '108M'        
           
           
      
@@ -928,8 +928,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'            
+          cpus: '0.1'  
+          memory: '108M'            
       
 
        
@@ -966,8 +966,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'       
+          cpus: '0.1'  
+          memory: '108M'       
       
 
        
@@ -1005,8 +1005,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'  
+          cpus: '0.1'  
+          memory: '108M'  
           
       
 
@@ -1047,8 +1047,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'  
+          cpus: '0.1'  
+          memory: '108M'  
              
 
     
@@ -1085,8 +1085,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'   
+          cpus: '0.1'  
+          memory: '108M'   
           
        
 
@@ -1124,8 +1124,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'        
+          cpus: '0.1'  
+          memory: '108M'        
           
           
      
@@ -1169,8 +1169,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'            
+          cpus: '0.1'  
+          memory: '108M'            
       
 
        
@@ -1207,8 +1207,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'       
+          cpus: '0.1'  
+          memory: '108M'       
       
 
        
@@ -1246,8 +1246,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'  
-          memory: '216M'  
+          cpus: '0.1'  
+          memory: '108M'  
           
       
 

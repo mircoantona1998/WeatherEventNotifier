@@ -110,6 +110,8 @@ DROP TABLE IF EXISTS `RequestNotification`;
 CREATE TABLE `RequestNotification` (
   `idRequestNotification` int NOT NULL AUTO_INCREMENT,
   `datetime` datetime DEFAULT NULL,
+  `partition` int DEFAULT NULL,
+  `cluster` int DEFAULT NULL,
   PRIMARY KEY (`idRequestNotification`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -133,6 +135,8 @@ DROP TABLE IF EXISTS `RequestSchedulation`;
 CREATE TABLE `RequestSchedulation` (
   `idRequestSchedulation` int NOT NULL AUTO_INCREMENT,
   `date` date DEFAULT NULL,
+   `partition` int DEFAULT NULL,
+  `cluster` int DEFAULT NULL,
   PRIMARY KEY (`idRequestSchedulation`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -156,6 +160,8 @@ DROP TABLE IF EXISTS `ResponseSchedulation`;
 CREATE TABLE `ResponseSchedulation` (
   `idResponseSchedulation` int NOT NULL AUTO_INCREMENT,
   `date` date DEFAULT NULL,
+  `partition` int DEFAULT NULL,
+  `cluster` int DEFAULT NULL,
   PRIMARY KEY (`idResponseSchedulation`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

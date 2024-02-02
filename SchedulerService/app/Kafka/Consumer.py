@@ -31,6 +31,9 @@ class ConsumerClass:
         topic = Configurations().topic_to_scheduler
         partitions_to_subscribe= [int(part) for part in Configurations().partition]
         consumer.assign([TopicPartition(topic=topic, partition=part) for part in partitions_to_subscribe])
+        ScheduleRequestRepo.delete_schedule_request()
+        ScheduleResponseRepo.delete_schedule_response()
+        RequestNotificationRepo.delete_schedule_request_notification()
         try:
             while True:
                 if (HeartbeatSentRepo.get_last_element() is None  
