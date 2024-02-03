@@ -3,19 +3,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    io.kompose.service: forecast-service
+    app.service: forecast-service
   name: forecast-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: forecast-service
+      app.service: forecast-service
   strategy: {}
   template:
     metadata:
       labels:
-        io.kompose.network/microservices-network: "true"
-        io.kompose.service: forecast-service
+        app.network/microservices-network: "true"
+        app.service: forecast-service
     spec:
       containers:
         - env:
@@ -51,8 +51,8 @@ spec:
               protocol: TCP
           resources:
             limits:
-              cpu: 200m
-              memory: "226492416"
+              cpu: 100m
+              memory: '108M'
       restartPolicy: Always
 status: {}
 ---

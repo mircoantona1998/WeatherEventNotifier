@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    io.kompose.service: weather-db
+    app.service: weather-db
   name: weather-db
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       port: 3312
       targetPort: 3306
   selector:
-    io.kompose.service: weather-db
+    app.service: weather-db
 status:
   loadBalancer: {}
 

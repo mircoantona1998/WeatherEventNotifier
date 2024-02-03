@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    io.kompose.service: grafana
+    app.service: grafana
   name: grafana
 spec:
   replicas: 1
@@ -15,8 +15,8 @@ spec:
     metadata:
       labels:
         app: grafana  
-        io.kompose.network/microservices-network: "true"
-        io.kompose.service: grafana
+        app.network/microservices-network: "true"
+        app.service: grafana
     spec:
       containers:
         - env:
@@ -34,7 +34,10 @@ spec:
             - containerPort: 3000
               hostPort: 3000
               protocol: TCP
-          resources: {}
+          resources:
+            limits:
+              cpu: 100m
+              memory: '108M'
           volumeMounts:
             - mountPath: /var/lib/grafana
               name: grafana-pv-volume

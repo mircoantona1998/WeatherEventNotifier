@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    io.kompose.service: kafka1
+    app.service: kafka1
   name: kafka1
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       port: 9094
       targetPort: 9094
   selector:
-    io.kompose.service: kafka1
+    app.service: kafka1
 status:
   loadBalancer: {}
 

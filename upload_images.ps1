@@ -1,4 +1,4 @@
-$dockerComposeFile = ".\docker-compose-clustercount2-partitioncount2.yml"
+$dockerComposeFile = ".\docker-compose-clustercount1-partitioncount1.yml"
 $dockerHubUsername = "mircoantona"
 $dockerRepository = "weathereventnotifier"
 docker login -u $dockerHubUsername

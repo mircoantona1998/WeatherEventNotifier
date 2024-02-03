@@ -3,19 +3,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    io.kompose.service: sla-manager-service
+    app.service: sla-manager-service
   name: sla-manager-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: sla-manager-service
+      app.service: sla-manager-service
   strategy: {}
   template:
     metadata:
       labels:
-        io.kompose.network/microservices-network: "true"
-        io.kompose.service: sla-manager-service
+        app.network/microservices-network: "true"
+        app.service: sla-manager-service
     spec:
       containers:
         - env:
@@ -41,8 +41,8 @@ spec:
               protocol: TCP
           resources:
             limits:
-              cpu: 200m
-              memory: "226492416"
+              cpu: 100m
+              memory: '108M'
       restartPolicy: Always
 status: {}
 

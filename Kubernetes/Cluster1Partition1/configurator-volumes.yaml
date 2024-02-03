@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: configurator-database
+    app.service: configurator-database
   name: configurator-database
 spec:
   accessModes:

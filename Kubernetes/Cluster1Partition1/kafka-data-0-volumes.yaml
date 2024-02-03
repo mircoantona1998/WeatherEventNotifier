@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: kafka-data-0
+    app.service: kafka-data-0
   name: kafka-data-0
 spec:
   accessModes:

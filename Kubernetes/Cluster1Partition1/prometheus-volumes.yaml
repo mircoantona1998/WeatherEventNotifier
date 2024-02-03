@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: prometheus-data
+    app.service: prometheus-data
   name: prometheus-data
 spec:
   accessModes:

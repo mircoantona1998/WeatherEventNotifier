@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: mail-database
+    app.service: mail-database
   name: mail-database
 spec:
   accessModes:

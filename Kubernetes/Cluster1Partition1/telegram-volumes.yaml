@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: telegram-database
+    app.service: telegram-database
   name: telegram-database
 spec:
   accessModes:

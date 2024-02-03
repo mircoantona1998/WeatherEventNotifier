@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    io.kompose.service: sla-manager-db
+    app.service: sla-manager-db
   name: sla-manager-db
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       port: 1434
       targetPort: 1433
   selector:
-    io.kompose.service: sla-manager-db
+    app.service: sla-manager-db
 status:
   loadBalancer: {}
 

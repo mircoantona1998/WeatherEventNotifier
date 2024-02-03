@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: scheduler-database
+    app.service: scheduler-database
   name: scheduler-database
 spec:
   accessModes:

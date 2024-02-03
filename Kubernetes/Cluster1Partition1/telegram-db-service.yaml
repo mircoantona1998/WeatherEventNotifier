@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    io.kompose.service: telegram-db
+    app.service: telegram-db
   name: telegram-db
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       port: 3311
       targetPort: 3306
   selector:
-    io.kompose.service: telegram-db
+    app.service: telegram-db
 status:
   loadBalancer: {}
 

@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: sla-manager-database
+    app.service: sla-manager-database
   name: sla-manager-database
 spec:
   accessModes:

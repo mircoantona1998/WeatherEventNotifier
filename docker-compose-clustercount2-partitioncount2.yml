@@ -5,14 +5,21 @@ services:
   zookeeper_0:
     image: wurstmeister/zookeeper:latest
     container_name: zookeeper_0
+    restart: always
     ports:
       - "2181:2181"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'  
+          memory: '108M'  
     networks:
       - microservices-network
      
   kafka_0:
     image: wurstmeister/kafka:latest
     container_name: kafka_0
+    restart: always
     ports:
       - "9092:9092"
     expose:
@@ -36,14 +43,21 @@ services:
   zookeeper_1:
     image: wurstmeister/zookeeper:latest
     container_name: zookeeper_1
+    restart: always
     ports:
       - "2182:2181"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'  
+          memory: '108M'  
     networks:
       - microservices-network
      
   kafka_1:
     image: wurstmeister/kafka:latest
     container_name: kafka_1
+    restart: always
     ports:
       - "9093:9093"
     expose:
@@ -67,6 +81,7 @@ services:
     extends:
       file: API/docker-compose.yml
       service: expose-api
+    restart: always
     environment:
       - HowManyPartition=2
       - groupID=ExposeAPIService
@@ -75,6 +90,11 @@ services:
       - cluster_0=kafka_0:9093
       - cluster_1=kafka_1:9094
       #
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'  
+          memory: '108M'  
     networks:
       - microservices-network  
     depends_on:
@@ -85,16 +105,22 @@ services:
     extends:
       file: API/docker-compose.yml
       service: expose-api-db
-      
+    restart: always      
       
   sla-manager:
     extends:
       file: SLAManager/docker-compose.yml
       service: sla-manager
+    restart: always
     environment:
       - HowManyPartition=1
       - groupID=SLAManager
       - bootstrapServers=kafka_0:9093
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'  
+          memory: '108M'  
     networks:
       - microservices-network  
     depends_on:
@@ -104,7 +130,8 @@ services:
     extends:
       file: SLAManager/docker-compose.yml
       service: sla-manager-db
-      
+    restart: always
+    
   sla-manager-service:
     container_name: sla-manager-service
     ports:
@@ -112,6 +139,7 @@ services:
     build:
       context: ./SlaManagerService/app
       dockerfile: Dockerfile
+    restart: always
     environment:
      - DOCKER_ENVIRONMENT=True
      - DATABASE_USERNAME=sa
@@ -120,6 +148,11 @@ services:
      - DATABASE_IP=sla-manager-db
      - DATABASE_NAME=SLAManager
      - PROMETHEUS_IP=prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'  
+          memory: '108M'  
     networks:
       - microservices-network  
     depends_on:
@@ -127,11 +160,7 @@ services:
       - sla-manager-db
       - sla-manager
       - prometheus
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'  
-          memory: '108M' 
+
           
   forecast-service:
     container_name: forecast-service
@@ -140,6 +169,7 @@ services:
     build:
       context: ./ForecastService/app
       dockerfile: Dockerfile
+    restart: always
     environment:
      - DOCKER_ENVIRONMENT=True
      - DATABASE_USERNAME=sa
@@ -153,23 +183,30 @@ services:
      - PRODUCER_BOOTSTRAP_SERVERS=kafka_0:9093
      - PRODUCER_CLIENT_ID=ForecastService
      - GROUP_ID=ForecastService
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'  
+          memory: '108M'  
     networks:
       - microservices-network  
     depends_on:
       - kafka_0
       - sla-manager-db
       - sla-manager
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'  
-          memory: '108M'          
+         
 
   prometheus:
       image: prom/prometheus
       container_name: prometheus-service
       ports:
         - "9090:9090"
+      deploy:
+        resources:
+          limits:
+            cpus: '0.1'  
+            memory: '108M'  
+      restart: always
       networks:
         - microservices-network
       volumes:
@@ -192,6 +229,11 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_DEFAULT_THEME=light
       - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,vertamedia-clickhouse-datasource
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'  
+          memory: '108M'  
     networks:
       - microservices-network 
     volumes:
@@ -205,6 +247,7 @@ services:
     build:
       context: ./ConfiguratorService/Configuratordata
       dockerfile: Dockerfile
+    restart: always
     ports:
       - "3307:3306"
     environment:
@@ -221,6 +264,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3308:3306"
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
@@ -233,6 +277,7 @@ services:
     build:
       context: ./NotifierService/Notifierdata
       dockerfile: Dockerfile
+    restart: always
     ports:
       - "3309:3306"
     environment:
@@ -249,6 +294,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3310:3306"
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
@@ -263,6 +309,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3311:3306"
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
@@ -277,6 +324,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3312:3306"
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
@@ -294,6 +342,7 @@ services:
     build:
       context: ./ConfiguratorService/app
       dockerfile: Dockerfile
+    restart: always
     environment:
      - CLUSTER=0
      - PARTITION=0
@@ -332,6 +381,7 @@ services:
     build:
       context: ./MailService/app
       dockerfile: Dockerfile
+    restart: always
     environment:
      - CLUSTER=0
      - PARTITION=0
@@ -371,6 +421,7 @@ services:
     build:
       context: ./NotifierService/app
       dockerfile: Dockerfile
+    restart: always
     environment:
      - CLUSTER=0
      - PARTITION=0
@@ -407,6 +458,7 @@ services:
     container_name: scheduler-service-cluster0-part0
     ports:
     - "8087:8087"  
+    restart: always
     build:
       context: ./SchedulerService/app
       dockerfile: Dockerfile
@@ -451,6 +503,7 @@ services:
     container_name: telegram-service-cluster0-part0
     ports:
     - "8088:8088"  
+    restart: always
     build:
       context: ./TelegramService/app
       dockerfile: Dockerfile
@@ -489,6 +542,7 @@ services:
     container_name: weather-service-cluster0-part0
     ports:
     - "8089:8089"  
+    restart: always
     build:
       context: ./WeatherService/app
       dockerfile: Dockerfile
@@ -532,6 +586,7 @@ services:
     container_name: configurator-service-cluster0-part1
     ports:
     - "8090:8090"  
+    restart: always
     build:
       context: ./ConfiguratorService/app
       dockerfile: Dockerfile
@@ -570,6 +625,7 @@ services:
     container_name: mail-service-cluster0-part1
     ports:
     - "8091:8091"  
+    restart: always
     build:
       context: ./MailService/app
       dockerfile: Dockerfile
@@ -609,6 +665,7 @@ services:
     container_name: notifier-service-cluster0-part1
     ports:
     - "8092:8092"  
+    restart: always
     build:
       context: ./NotifierService/app
       dockerfile: Dockerfile
@@ -648,6 +705,7 @@ services:
     container_name: scheduler-service-cluster0-part1
     ports:
     - "8093:8093"  
+    restart: always
     build:
       context: ./SchedulerService/app
       dockerfile: Dockerfile
@@ -692,6 +750,7 @@ services:
     container_name: telegram-service-cluster0-part1
     ports:
     - "8094:8094"  
+    restart: always
     build:
       context: ./TelegramService/app
       dockerfile: Dockerfile
@@ -730,6 +789,7 @@ services:
     container_name: weather-service-cluster0-part1
     ports:
     - "8095:8095"  
+    restart: always
     build:
       context: ./WeatherService/app
       dockerfile: Dockerfile
@@ -777,6 +837,7 @@ services:
     container_name: configurator-service-cluster1-part0
     ports:
     - "8096:8096"  
+    restart: always
     build:
       context: ./ConfiguratorService/app
       dockerfile: Dockerfile
@@ -815,6 +876,7 @@ services:
     container_name: mail-service-cluster1-part0
     ports:
     - "8097:8097"  
+    restart: always
     build:
       context: ./MailService/app
       dockerfile: Dockerfile
@@ -854,6 +916,7 @@ services:
     container_name: notifier-service-cluster1-part0
     ports:
     - "8098:8098"  
+    restart: always
     build:
       context: ./NotifierService/app
       dockerfile: Dockerfile
@@ -893,6 +956,7 @@ services:
     container_name: scheduler-service-cluster1-part0
     ports:
     - "8099:8099"
+    restart: always
     build:
       context: ./SchedulerService/app
       dockerfile: Dockerfile
@@ -937,6 +1001,7 @@ services:
     container_name: telegram-service-cluster1-part0
     ports:
     - "8100:8100"
+    restart: always
     build:
       context: ./TelegramService/app
       dockerfile: Dockerfile
@@ -975,6 +1040,7 @@ services:
     container_name: weather-service-cluster1-part0
     ports:
     - "8101:8101"
+    restart: always
     build:
       context: ./WeatherService/app
       dockerfile: Dockerfile
@@ -1018,6 +1084,7 @@ services:
     container_name: configurator-service-cluster1-part1
     ports:
     - "8102:8102" 
+    restart: always
     build:
       context: ./ConfiguratorService/app
       dockerfile: Dockerfile
@@ -1056,6 +1123,7 @@ services:
     container_name: mail-service-cluster1-part1
     ports:
     - "8103:8103" 
+    restart: always
     build:
       context: ./MailService/app
       dockerfile: Dockerfile
@@ -1095,6 +1163,7 @@ services:
     container_name: notifier-service-cluster1-part1
     ports:
     - "8104:8104"  
+    restart: always
     build:
       context: ./NotifierService/app
       dockerfile: Dockerfile
@@ -1134,6 +1203,7 @@ services:
     container_name: scheduler-service-cluster1-part1
     ports:
     - "8105:8105"
+    restart: always
     build:
       context: ./SchedulerService/app
       dockerfile: Dockerfile
@@ -1178,6 +1248,7 @@ services:
     container_name: telegram-service-cluster1-part1
     ports:
     - "8106:8106"
+    restart: always
     build:
       context: ./TelegramService/app
       dockerfile: Dockerfile
@@ -1216,6 +1287,7 @@ services:
     container_name: weather-service-cluster1-part1
     ports:
     - "8107:8107"
+    restart: always
     build:
       context: ./WeatherService/app
       dockerfile: Dockerfile

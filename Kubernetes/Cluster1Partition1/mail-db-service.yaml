@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    io.kompose.service: mail-db
+    app.service: mail-db
   name: mail-db
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       port: 3308
       targetPort: 3306
   selector:
-    io.kompose.service: mail-db
+    app.service: mail-db
 status:
   loadBalancer: {}
 

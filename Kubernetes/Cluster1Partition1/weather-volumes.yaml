@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: weather-database
+    app.service: weather-database
   name: weather-database
 spec:
   accessModes:

@@ -3,20 +3,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    io.kompose.service: mail-db
+    app.service: mail-db
   name: mail-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: mail-db
+      app.service: mail-db
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        io.kompose.network/microservices-network: "true"
-        io.kompose.service: mail-db
+        app.network/microservices-network: "true"
+        app.service: mail-db
     spec:
       containers:
         - env:

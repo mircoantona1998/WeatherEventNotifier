@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: notifier-database
+    app.service: notifier-database
   name: notifier-database
 spec:
   accessModes:

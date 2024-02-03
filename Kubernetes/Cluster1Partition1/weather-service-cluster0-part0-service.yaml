@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    io.kompose.service: weather-service-cluster0-part0
+    app.service: weather-service-cluster0-part0
   name: weather-service-cluster0-part0
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       port: 8089
       targetPort: 8089
   selector:
-    io.kompose.service: weather-service-cluster0-part0
+    app.service: weather-service-cluster0-part0
 status:
   loadBalancer: {}
 
