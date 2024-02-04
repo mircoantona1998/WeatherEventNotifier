@@ -61,8 +61,8 @@ spec:
               protocol: TCP
           resources:
             limits:
-              cpu: 100m
-              memory: '108M'
+              cpu: 300m
+              memory: '216M'
       restartPolicy: Always
 status: {}
 
