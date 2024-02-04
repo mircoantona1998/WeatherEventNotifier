@@ -1,17 +1,15 @@
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.service: scheduler-db
   name: scheduler-db
 spec:
+  serviceName: "scheduler-db"
   replicas: 1
   selector:
     matchLabels:
       app.service: scheduler-db
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -19,24 +17,22 @@ spec:
         app.service: scheduler-db
     spec:
       containers:
-        - env:
+        - name: scheduler-db
+          image: mircoantona/weathereventnotifier:scheduler-db
+          env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
-          image: mircoantona/weathereventnotifier:scheduler-db
-          name: scheduler-db
           ports:
             - containerPort: 3306
               hostPort: 3310
-              protocol: TCP
-          resources: {}
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: scheduler-database
-      restartPolicy: Always
-      volumes:
-        - name: scheduler-database
-          persistentVolumeClaim:
-            claimName: scheduler-database
-status: {}
-
----
+  volumeClaimTemplates:
+    - metadata:
+        name: scheduler-database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi 

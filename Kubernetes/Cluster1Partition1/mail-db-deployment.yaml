@@ -1,17 +1,15 @@
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.service: mail-db
   name: mail-db
 spec:
+  serviceName: "mail-db"
   replicas: 1
   selector:
     matchLabels:
       app.service: mail-db
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -19,24 +17,22 @@ spec:
         app.service: mail-db
     spec:
       containers:
-        - env:
+        - name: mail-db
+          image: mircoantona/weathereventnotifier:mail-db
+          env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
-          image: mircoantona/weathereventnotifier:mail-db
-          name: mail-db
           ports:
             - containerPort: 3306
               hostPort: 3308
-              protocol: TCP
-          resources: {}
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mail-database
-      restartPolicy: Always
-      volumes:
-        - name: mail-database
-          persistentVolumeClaim:
-            claimName: mail-database
-status: {}
-
----
+  volumeClaimTemplates:
+    - metadata:
+        name: mail-database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi  

@@ -1,17 +1,15 @@
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.service: configurator-db
   name: configurator-db
 spec:
+  serviceName: "configurator-db"
   replicas: 1
   selector:
     matchLabels:
       app.service: configurator-db
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -19,24 +17,22 @@ spec:
         app.service: configurator-db
     spec:
       containers:
-        - env:
+        - name: configurator-db
+          image: mircoantona/weathereventnotifier:configurator-db
+          env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
-          image: mircoantona/weathereventnotifier:configurator-db
-          name: configurator-db
           ports:
             - containerPort: 3306
               hostPort: 3307
-              protocol: TCP
-          resources: {}
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: configurator-database
-      restartPolicy: Always
-      volumes:
-        - name: configurator-database
-          persistentVolumeClaim:
-            claimName: configurator-database
-status: {}
-
----
+  volumeClaimTemplates:
+    - metadata:
+        name: configurator-database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi  

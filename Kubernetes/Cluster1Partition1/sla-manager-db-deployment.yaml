@@ -1,17 +1,15 @@
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.service: sla-manager-db
   name: sla-manager-db
 spec:
+  serviceName: "sla-manager-db"
   replicas: 1
   selector:
     matchLabels:
       app.service: sla-manager-db
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -19,28 +17,26 @@ spec:
         app.service: sla-manager-db
     spec:
       containers:
-        - env:
+        - name: sla-manager-db
+          image: mcr.microsoft.com/mssql/server
+          env:
             - name: ACCEPT_EULA
               value: "Y"
             - name: MSSQL_PID
               value: Express
             - name: SA_PASSWORD
               value: RootRoot.1
-          image: mcr.microsoft.com/mssql/server
-          name: sla-manager-db
           ports:
             - containerPort: 1433
               hostPort: 1434
-              protocol: TCP
-          resources: {}
           volumeMounts:
             - mountPath: /var/opt/mssql
               name: sla-manager-database
-      restartPolicy: Always
-      volumes:
-        - name: sla-manager-database
-          persistentVolumeClaim:
-            claimName: sla-manager-database
-status: {}
-
----
+  volumeClaimTemplates:
+    - metadata:
+        name: sla-manager-database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi 

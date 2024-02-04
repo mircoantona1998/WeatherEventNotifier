@@ -1,17 +1,15 @@
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.service: weather-db
   name: weather-db
 spec:
+  serviceName: "weather-db"
   replicas: 1
   selector:
     matchLabels:
       app.service: weather-db
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -19,24 +17,22 @@ spec:
         app.service: weather-db
     spec:
       containers:
-        - env:
+        - name: weather-db
+          image: mircoantona/weathereventnotifier:weather-db
+          env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
-          image: mircoantona/weathereventnotifier:weather-db
-          name: weather-db
           ports:
             - containerPort: 3306
               hostPort: 3312
-              protocol: TCP
-          resources: {}
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: weather-database
-      restartPolicy: Always
-      volumes:
-        - name: weather-database
-          persistentVolumeClaim:
-            claimName: weather-database
-status: {}
-
----
+  volumeClaimTemplates:
+    - metadata:
+        name: weather-database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi  

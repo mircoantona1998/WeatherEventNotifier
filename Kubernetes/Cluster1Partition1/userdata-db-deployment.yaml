@@ -1,17 +1,15 @@
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.service: expose-api-db
   name: expose-api-db
 spec:
+  serviceName: "expose-api-db"
   replicas: 1
   selector:
     matchLabels:
       app.service: expose-api-db
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -19,28 +17,26 @@ spec:
         app.service: expose-api-db
     spec:
       containers:
-        - env:
+        - name: expose-api-db
+          image: mcr.microsoft.com/mssql/server
+          env:
             - name: ACCEPT_EULA
               value: "Y"
             - name: MSSQL_PID
               value: Express
             - name: SA_PASSWORD
               value: RootRoot.1
-          image: mcr.microsoft.com/mssql/server
-          name: expose-api-db
           ports:
             - containerPort: 1433
               hostPort: 1433
-              protocol: TCP
-          resources: {}
           volumeMounts:
             - mountPath: /var/opt/mssql
               name: userdata-database
-      restartPolicy: Always
-      volumes:
-        - name: userdata-database
-          persistentVolumeClaim:
-            claimName: userdata-database
-status: {}
-
----
+  volumeClaimTemplates:
+    - metadata:
+        name: userdata-database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi 

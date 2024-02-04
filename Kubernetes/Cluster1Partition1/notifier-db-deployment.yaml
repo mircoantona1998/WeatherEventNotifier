@@ -1,17 +1,15 @@
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.service: notifier-db
   name: notifier-db
 spec:
+  serviceName: "notifier-db"
   replicas: 1
   selector:
     matchLabels:
       app.service: notifier-db
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -19,24 +17,22 @@ spec:
         app.service: notifier-db
     spec:
       containers:
-        - env:
+        - name: notifier-db
+          image: mircoantona/weathereventnotifier:notifier-db
+          env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
-          image: mircoantona/weathereventnotifier:notifier-db
-          name: notifier-db
           ports:
             - containerPort: 3306
               hostPort: 3309
-              protocol: TCP
-          resources: {}
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: notifier-database
-      restartPolicy: Always
-      volumes:
-        - name: notifier-database
-          persistentVolumeClaim:
-            claimName: notifier-database
-status: {}
-
----
+  volumeClaimTemplates:
+    - metadata:
+        name: notifier-database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi  

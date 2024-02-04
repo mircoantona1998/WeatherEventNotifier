@@ -1,17 +1,15 @@
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.service: telegram-db
   name: telegram-db
 spec:
+  serviceName: "telegram-db"
   replicas: 1
   selector:
     matchLabels:
       app.service: telegram-db
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -19,24 +17,22 @@ spec:
         app.service: telegram-db
     spec:
       containers:
-        - env:
+        - name: telegram-db
+          image: mircoantona/weathereventnotifier:telegram-db
+          env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
-          image: mircoantona/weathereventnotifier:telegram-db
-          name: telegram-db
           ports:
             - containerPort: 3306
               hostPort: 3311
-              protocol: TCP
-          resources: {}
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: telegram-database
-      restartPolicy: Always
-      volumes:
-        - name: telegram-database
-          persistentVolumeClaim:
-            claimName: telegram-database
-status: {}
-
----
+  volumeClaimTemplates:
+    - metadata:
+        name: telegram-database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi 
